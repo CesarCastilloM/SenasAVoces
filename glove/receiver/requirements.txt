@@ -1,0 +1,25 @@
+# Requirements para Raspberry Pi Zero 2W - Guante Derecho
+# Instalar con: pip3 install -r requirements.txt
+
+# I2C y sensores
+adafruit-circuitpython-ads1x15==2.2.21
+adafruit-circuitpython-mpu6050==1.2.8
+adafruit-blinka==8.20.0
+
+# Display OLED
+luma.oled==3.12.0
+luma.core==2.4.0
+Pillow==10.0.0
+
+# Text-to-Speech
+pyttsx3==2.90
+
+# Speech-to-Text
+SpeechRecognition==3.10.0
+PyAudio==0.2.13
+
+# Networking
+pyzmq==25.1.1
+
+# Utilities
+RPi.GPIO==0.7.1

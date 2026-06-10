@@ -1,0 +1,29 @@
+# LSM ML Pipeline — Dependencias
+# ==============================
+
+# Core
+numpy>=1.24.0
+opencv-python>=4.8.0
+mediapipe>=0.10.0
+
+# Machine Learning
+tensorflow>=2.13.0
+scikit-learn>=1.3.0
+
+# Utilidades
+tqdm>=4.65.0
+matplotlib>=3.7.0  # Para visualización de métricas
+
+# Opcional: para exportación a ONNX (alternativa a TFLite)
+# onnx>=1.14.0
+# tf2onnx>=1.15.0
+
+# Notas de instalación:
+# 1. TensorFlow puede requerir configuración específica para GPU:
+#    pip install tensorflow[and-cuda]  # para GPU NVIDIA
+#
+# 2. En Windows, MediaPipe puede requerir:
+#    pip install mediapipe --no-cache-dir
+#
+# 3. Para sistemas con poca RAM, usar versión CPU-only de TensorFlow:
+#    pip install tensorflow-cpu

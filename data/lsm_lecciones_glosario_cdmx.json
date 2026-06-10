@@ -1,0 +1,3293 @@
+{
+  "fuente": "Glosario Digital LSM — INDISCAPACIDAD CDMX",
+  "url": "https://lsm.indiscapacidad.cdmx.gob.mx/",
+  "total_videos": 719,
+  "total_categorias": 19,
+  "fecha_extraccion": "2026-05-27",
+  "nota_legal": "Contenido del Gobierno de la Ciudad de México. Reproducción requiere autorización de INDISCAPACIDAD CDMX.",
+  "categorias": [
+    {
+      "id": "abecedario",
+      "nombre": "Abecedario",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/abecedario/",
+      "leccion_academia": "L1.1",
+      "total_senas": 0,
+      "senas": []
+    },
+    {
+      "id": "numeros",
+      "nombre": "Números",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/numeros/",
+      "leccion_academia": "L1.2",
+      "total_senas": 49,
+      "senas": [
+        {
+          "palabra": "1",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=zcd4GfYz-fA",
+          "video_embed": "https://www.youtube.com/embed/zcd4GfYz-fA",
+          "thumbnail_url": "https://img.youtube.com/vi/zcd4GfYz-fA/mqdefault.jpg",
+          "youtube_id": "zcd4GfYz-fA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "1,000",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=NwsaMp30r7E",
+          "video_embed": "https://www.youtube.com/embed/NwsaMp30r7E",
+          "thumbnail_url": "https://img.youtube.com/vi/NwsaMp30r7E/mqdefault.jpg",
+          "youtube_id": "NwsaMp30r7E",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "1,000,000",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Hw81XkRVe6o",
+          "video_embed": "https://www.youtube.com/embed/Hw81XkRVe6o",
+          "thumbnail_url": "https://img.youtube.com/vi/Hw81XkRVe6o/mqdefault.jpg",
+          "youtube_id": "Hw81XkRVe6o",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "10",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=EabGQcQOTQM",
+          "video_embed": "https://www.youtube.com/embed/EabGQcQOTQM",
+          "thumbnail_url": "https://img.youtube.com/vi/EabGQcQOTQM/mqdefault.jpg",
+          "youtube_id": "EabGQcQOTQM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "100 (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Ay92jfl3J_w",
+          "video_embed": "https://www.youtube.com/embed/Ay92jfl3J_w",
+          "thumbnail_url": "https://img.youtube.com/vi/Ay92jfl3J_w/mqdefault.jpg",
+          "youtube_id": "Ay92jfl3J_w",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "100 (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=NyPyX392NYg",
+          "video_embed": "https://www.youtube.com/embed/NyPyX392NYg",
+          "thumbnail_url": "https://img.youtube.com/vi/NyPyX392NYg/mqdefault.jpg",
+          "youtube_id": "NyPyX392NYg",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "11",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=zmMrM5V-dE0",
+          "video_embed": "https://www.youtube.com/embed/zmMrM5V-dE0",
+          "thumbnail_url": "https://img.youtube.com/vi/zmMrM5V-dE0/mqdefault.jpg",
+          "youtube_id": "zmMrM5V-dE0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "12",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=HYKqgBDi9e8",
+          "video_embed": "https://www.youtube.com/embed/HYKqgBDi9e8",
+          "thumbnail_url": "https://img.youtube.com/vi/HYKqgBDi9e8/mqdefault.jpg",
+          "youtube_id": "HYKqgBDi9e8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "13",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=VTz4qsr_d7A",
+          "video_embed": "https://www.youtube.com/embed/VTz4qsr_d7A",
+          "thumbnail_url": "https://img.youtube.com/vi/VTz4qsr_d7A/mqdefault.jpg",
+          "youtube_id": "VTz4qsr_d7A",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "14",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=1AmGEk1mzRE",
+          "video_embed": "https://www.youtube.com/embed/1AmGEk1mzRE",
+          "thumbnail_url": "https://img.youtube.com/vi/1AmGEk1mzRE/mqdefault.jpg",
+          "youtube_id": "1AmGEk1mzRE",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "15 (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=yZ3X38cFWUM",
+          "video_embed": "https://www.youtube.com/embed/yZ3X38cFWUM",
+          "thumbnail_url": "https://img.youtube.com/vi/yZ3X38cFWUM/mqdefault.jpg",
+          "youtube_id": "yZ3X38cFWUM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "15 (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=64jBCZXv6rY",
+          "video_embed": "https://www.youtube.com/embed/64jBCZXv6rY",
+          "thumbnail_url": "https://img.youtube.com/vi/64jBCZXv6rY/mqdefault.jpg",
+          "youtube_id": "64jBCZXv6rY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "16",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=qIuSkQRkElg",
+          "video_embed": "https://www.youtube.com/embed/qIuSkQRkElg",
+          "thumbnail_url": "https://img.youtube.com/vi/qIuSkQRkElg/mqdefault.jpg",
+          "youtube_id": "qIuSkQRkElg",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "17",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=zEJWCoiiA5o",
+          "video_embed": "https://www.youtube.com/embed/zEJWCoiiA5o",
+          "thumbnail_url": "https://img.youtube.com/vi/zEJWCoiiA5o/mqdefault.jpg",
+          "youtube_id": "zEJWCoiiA5o",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "18",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=tHAWINUWv_I",
+          "video_embed": "https://www.youtube.com/embed/tHAWINUWv_I",
+          "thumbnail_url": "https://img.youtube.com/vi/tHAWINUWv_I/mqdefault.jpg",
+          "youtube_id": "tHAWINUWv_I",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "19",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=R3Yrnd9ryws",
+          "video_embed": "https://www.youtube.com/embed/R3Yrnd9ryws",
+          "thumbnail_url": "https://img.youtube.com/vi/R3Yrnd9ryws/mqdefault.jpg",
+          "youtube_id": "R3Yrnd9ryws",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "2",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=1Fau1Nh7rPY",
+          "video_embed": "https://www.youtube.com/embed/1Fau1Nh7rPY",
+          "thumbnail_url": "https://img.youtube.com/vi/1Fau1Nh7rPY/mqdefault.jpg",
+          "youtube_id": "1Fau1Nh7rPY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "20",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=-BIeP8EKzrE",
+          "video_embed": "https://www.youtube.com/embed/-BIeP8EKzrE",
+          "thumbnail_url": "https://img.youtube.com/vi/-BIeP8EKzrE/mqdefault.jpg",
+          "youtube_id": "-BIeP8EKzrE",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "200 (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=tUIHnfHefmo",
+          "video_embed": "https://www.youtube.com/embed/tUIHnfHefmo",
+          "thumbnail_url": "https://img.youtube.com/vi/tUIHnfHefmo/mqdefault.jpg",
+          "youtube_id": "tUIHnfHefmo",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "200 (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Z1Ra5MiaF7g",
+          "video_embed": "https://www.youtube.com/embed/Z1Ra5MiaF7g",
+          "thumbnail_url": "https://img.youtube.com/vi/Z1Ra5MiaF7g/mqdefault.jpg",
+          "youtube_id": "Z1Ra5MiaF7g",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "25",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=g3jMkpVsM6Q",
+          "video_embed": "https://www.youtube.com/embed/g3jMkpVsM6Q",
+          "thumbnail_url": "https://img.youtube.com/vi/g3jMkpVsM6Q/mqdefault.jpg",
+          "youtube_id": "g3jMkpVsM6Q",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "3",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=EYEMXK7Eeq0",
+          "video_embed": "https://www.youtube.com/embed/EYEMXK7Eeq0",
+          "thumbnail_url": "https://img.youtube.com/vi/EYEMXK7Eeq0/mqdefault.jpg",
+          "youtube_id": "EYEMXK7Eeq0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "30",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=3tafNB_oN8M",
+          "video_embed": "https://www.youtube.com/embed/3tafNB_oN8M",
+          "thumbnail_url": "https://img.youtube.com/vi/3tafNB_oN8M/mqdefault.jpg",
+          "youtube_id": "3tafNB_oN8M",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "300 (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=1bT_Mj5c00I",
+          "video_embed": "https://www.youtube.com/embed/1bT_Mj5c00I",
+          "thumbnail_url": "https://img.youtube.com/vi/1bT_Mj5c00I/mqdefault.jpg",
+          "youtube_id": "1bT_Mj5c00I",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "300 (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=xNXVbEpLuNQ",
+          "video_embed": "https://www.youtube.com/embed/xNXVbEpLuNQ",
+          "thumbnail_url": "https://img.youtube.com/vi/xNXVbEpLuNQ/mqdefault.jpg",
+          "youtube_id": "xNXVbEpLuNQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "4",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=wedKjwNQYgw",
+          "video_embed": "https://www.youtube.com/embed/wedKjwNQYgw",
+          "thumbnail_url": "https://img.youtube.com/vi/wedKjwNQYgw/mqdefault.jpg",
+          "youtube_id": "wedKjwNQYgw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "40",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=AZVHrfjN6lU",
+          "video_embed": "https://www.youtube.com/embed/AZVHrfjN6lU",
+          "thumbnail_url": "https://img.youtube.com/vi/AZVHrfjN6lU/mqdefault.jpg",
+          "youtube_id": "AZVHrfjN6lU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "400 (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ziUrH4Q5S4w",
+          "video_embed": "https://www.youtube.com/embed/ziUrH4Q5S4w",
+          "thumbnail_url": "https://img.youtube.com/vi/ziUrH4Q5S4w/mqdefault.jpg",
+          "youtube_id": "ziUrH4Q5S4w",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "400 (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=8zfeq7PELlM",
+          "video_embed": "https://www.youtube.com/embed/8zfeq7PELlM",
+          "thumbnail_url": "https://img.youtube.com/vi/8zfeq7PELlM/mqdefault.jpg",
+          "youtube_id": "8zfeq7PELlM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "5",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=d3MvmWXK3HE",
+          "video_embed": "https://www.youtube.com/embed/d3MvmWXK3HE",
+          "thumbnail_url": "https://img.youtube.com/vi/d3MvmWXK3HE/mqdefault.jpg",
+          "youtube_id": "d3MvmWXK3HE",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "50",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=PY1rxsRHhXw",
+          "video_embed": "https://www.youtube.com/embed/PY1rxsRHhXw",
+          "thumbnail_url": "https://img.youtube.com/vi/PY1rxsRHhXw/mqdefault.jpg",
+          "youtube_id": "PY1rxsRHhXw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "500 (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=PzxN8qUHhs0",
+          "video_embed": "https://www.youtube.com/embed/PzxN8qUHhs0",
+          "thumbnail_url": "https://img.youtube.com/vi/PzxN8qUHhs0/mqdefault.jpg",
+          "youtube_id": "PzxN8qUHhs0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "500 (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=5U-V9J_43nA",
+          "video_embed": "https://www.youtube.com/embed/5U-V9J_43nA",
+          "thumbnail_url": "https://img.youtube.com/vi/5U-V9J_43nA/mqdefault.jpg",
+          "youtube_id": "5U-V9J_43nA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "6",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=yQ5GJzVxUYQ",
+          "video_embed": "https://www.youtube.com/embed/yQ5GJzVxUYQ",
+          "thumbnail_url": "https://img.youtube.com/vi/yQ5GJzVxUYQ/mqdefault.jpg",
+          "youtube_id": "yQ5GJzVxUYQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "60",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=yiDXO661RAg",
+          "video_embed": "https://www.youtube.com/embed/yiDXO661RAg",
+          "thumbnail_url": "https://img.youtube.com/vi/yiDXO661RAg/mqdefault.jpg",
+          "youtube_id": "yiDXO661RAg",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "600 (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=o8qXaBP-xX0",
+          "video_embed": "https://www.youtube.com/embed/o8qXaBP-xX0",
+          "thumbnail_url": "https://img.youtube.com/vi/o8qXaBP-xX0/mqdefault.jpg",
+          "youtube_id": "o8qXaBP-xX0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "600 (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=jz-ur8CNdok",
+          "video_embed": "https://www.youtube.com/embed/jz-ur8CNdok",
+          "thumbnail_url": "https://img.youtube.com/vi/jz-ur8CNdok/mqdefault.jpg",
+          "youtube_id": "jz-ur8CNdok",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "7",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ynp7TLZIEYc",
+          "video_embed": "https://www.youtube.com/embed/ynp7TLZIEYc",
+          "thumbnail_url": "https://img.youtube.com/vi/ynp7TLZIEYc/mqdefault.jpg",
+          "youtube_id": "ynp7TLZIEYc",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "70",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=keMStoc9dNU",
+          "video_embed": "https://www.youtube.com/embed/keMStoc9dNU",
+          "thumbnail_url": "https://img.youtube.com/vi/keMStoc9dNU/mqdefault.jpg",
+          "youtube_id": "keMStoc9dNU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "700 (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=nx_L1bXWJow",
+          "video_embed": "https://www.youtube.com/embed/nx_L1bXWJow",
+          "thumbnail_url": "https://img.youtube.com/vi/nx_L1bXWJow/mqdefault.jpg",
+          "youtube_id": "nx_L1bXWJow",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "700 (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=KKwJcd5tJcY",
+          "video_embed": "https://www.youtube.com/embed/KKwJcd5tJcY",
+          "thumbnail_url": "https://img.youtube.com/vi/KKwJcd5tJcY/mqdefault.jpg",
+          "youtube_id": "KKwJcd5tJcY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "8",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=QzkfbPIdXAI",
+          "video_embed": "https://www.youtube.com/embed/QzkfbPIdXAI",
+          "thumbnail_url": "https://img.youtube.com/vi/QzkfbPIdXAI/mqdefault.jpg",
+          "youtube_id": "QzkfbPIdXAI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "80",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=LZmmIFqXdDo",
+          "video_embed": "https://www.youtube.com/embed/LZmmIFqXdDo",
+          "thumbnail_url": "https://img.youtube.com/vi/LZmmIFqXdDo/mqdefault.jpg",
+          "youtube_id": "LZmmIFqXdDo",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "800  (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=jFpgfl8SVrg",
+          "video_embed": "https://www.youtube.com/embed/jFpgfl8SVrg",
+          "thumbnail_url": "https://img.youtube.com/vi/jFpgfl8SVrg/mqdefault.jpg",
+          "youtube_id": "jFpgfl8SVrg",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "800 (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=rfxovdZLBzs",
+          "video_embed": "https://www.youtube.com/embed/rfxovdZLBzs",
+          "thumbnail_url": "https://img.youtube.com/vi/rfxovdZLBzs/mqdefault.jpg",
+          "youtube_id": "rfxovdZLBzs",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "9",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=MgnvumQM-cQ",
+          "video_embed": "https://www.youtube.com/embed/MgnvumQM-cQ",
+          "thumbnail_url": "https://img.youtube.com/vi/MgnvumQM-cQ/mqdefault.jpg",
+          "youtube_id": "MgnvumQM-cQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "90",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=dYANCSgo7XY",
+          "video_embed": "https://www.youtube.com/embed/dYANCSgo7XY",
+          "thumbnail_url": "https://img.youtube.com/vi/dYANCSgo7XY/mqdefault.jpg",
+          "youtube_id": "dYANCSgo7XY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "900 (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=zYqPRPHgbz8",
+          "video_embed": "https://www.youtube.com/embed/zYqPRPHgbz8",
+          "thumbnail_url": "https://img.youtube.com/vi/zYqPRPHgbz8/mqdefault.jpg",
+          "youtube_id": "zYqPRPHgbz8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "900 (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=pV8y0Bj22Ho",
+          "video_embed": "https://www.youtube.com/embed/pV8y0Bj22Ho",
+          "thumbnail_url": "https://img.youtube.com/vi/pV8y0Bj22Ho/mqdefault.jpg",
+          "youtube_id": "pV8y0Bj22Ho",
+          "fuente": "glosario_cdmx"
+        }
+      ]
+    },
+    {
+      "id": "colores",
+      "nombre": "Colores",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/colores/",
+      "leccion_academia": "L1.5",
+      "total_senas": 18,
+      "senas": [
+        {
+          "palabra": "AMARILLO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=hBrEHqJE3VA",
+          "video_embed": "https://www.youtube.com/embed/hBrEHqJE3VA",
+          "thumbnail_url": "https://img.youtube.com/vi/hBrEHqJE3VA/mqdefault.jpg",
+          "youtube_id": "hBrEHqJE3VA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "AZUL",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=iFTPg9bwqdM",
+          "video_embed": "https://www.youtube.com/embed/iFTPg9bwqdM",
+          "thumbnail_url": "https://img.youtube.com/vi/iFTPg9bwqdM/mqdefault.jpg",
+          "youtube_id": "iFTPg9bwqdM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BEIGE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=1QQhgazf5lQ",
+          "video_embed": "https://www.youtube.com/embed/1QQhgazf5lQ",
+          "thumbnail_url": "https://img.youtube.com/vi/1QQhgazf5lQ/mqdefault.jpg",
+          "youtube_id": "1QQhgazf5lQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BLANCO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=YTXONSSiEDI",
+          "video_embed": "https://www.youtube.com/embed/YTXONSSiEDI",
+          "thumbnail_url": "https://img.youtube.com/vi/YTXONSSiEDI/mqdefault.jpg",
+          "youtube_id": "YTXONSSiEDI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BRONCE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Y5jb7j3SY7E",
+          "video_embed": "https://www.youtube.com/embed/Y5jb7j3SY7E",
+          "thumbnail_url": "https://img.youtube.com/vi/Y5jb7j3SY7E/mqdefault.jpg",
+          "youtube_id": "Y5jb7j3SY7E",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CAFÉ",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=xUj46hCynTg",
+          "video_embed": "https://www.youtube.com/embed/xUj46hCynTg",
+          "thumbnail_url": "https://img.youtube.com/vi/xUj46hCynTg/mqdefault.jpg",
+          "youtube_id": "xUj46hCynTg",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CLARO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Y0jSGb3ZQRw",
+          "video_embed": "https://www.youtube.com/embed/Y0jSGb3ZQRw",
+          "thumbnail_url": "https://img.youtube.com/vi/Y0jSGb3ZQRw/mqdefault.jpg",
+          "youtube_id": "Y0jSGb3ZQRw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "COBRE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=27LbnZGuL7s",
+          "video_embed": "https://www.youtube.com/embed/27LbnZGuL7s",
+          "thumbnail_url": "https://img.youtube.com/vi/27LbnZGuL7s/mqdefault.jpg",
+          "youtube_id": "27LbnZGuL7s",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "GRIS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=XJTGwNGVNgo",
+          "video_embed": "https://www.youtube.com/embed/XJTGwNGVNgo",
+          "thumbnail_url": "https://img.youtube.com/vi/XJTGwNGVNgo/mqdefault.jpg",
+          "youtube_id": "XJTGwNGVNgo",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MORADO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=rAS9Y53Qy14",
+          "video_embed": "https://www.youtube.com/embed/rAS9Y53Qy14",
+          "thumbnail_url": "https://img.youtube.com/vi/rAS9Y53Qy14/mqdefault.jpg",
+          "youtube_id": "rAS9Y53Qy14",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "NARANJA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Ylq-DJVuEIY",
+          "video_embed": "https://www.youtube.com/embed/Ylq-DJVuEIY",
+          "thumbnail_url": "https://img.youtube.com/vi/Ylq-DJVuEIY/mqdefault.jpg",
+          "youtube_id": "Ylq-DJVuEIY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "NEGRO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=k_LxZ0tisls",
+          "video_embed": "https://www.youtube.com/embed/k_LxZ0tisls",
+          "thumbnail_url": "https://img.youtube.com/vi/k_LxZ0tisls/mqdefault.jpg",
+          "youtube_id": "k_LxZ0tisls",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "OBSCURO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=atV8wS_N750",
+          "video_embed": "https://www.youtube.com/embed/atV8wS_N750",
+          "thumbnail_url": "https://img.youtube.com/vi/atV8wS_N750/mqdefault.jpg",
+          "youtube_id": "atV8wS_N750",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ORO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=xcjZFcQtg8Q",
+          "video_embed": "https://www.youtube.com/embed/xcjZFcQtg8Q",
+          "thumbnail_url": "https://img.youtube.com/vi/xcjZFcQtg8Q/mqdefault.jpg",
+          "youtube_id": "xcjZFcQtg8Q",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PLATA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=uTeToDVs3z0",
+          "video_embed": "https://www.youtube.com/embed/uTeToDVs3z0",
+          "thumbnail_url": "https://img.youtube.com/vi/uTeToDVs3z0/mqdefault.jpg",
+          "youtube_id": "uTeToDVs3z0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ROJO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=FzwIpUdNfSM",
+          "video_embed": "https://www.youtube.com/embed/FzwIpUdNfSM",
+          "thumbnail_url": "https://img.youtube.com/vi/FzwIpUdNfSM/mqdefault.jpg",
+          "youtube_id": "FzwIpUdNfSM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ROSA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=WLC5_hezyhk",
+          "video_embed": "https://www.youtube.com/embed/WLC5_hezyhk",
+          "thumbnail_url": "https://img.youtube.com/vi/WLC5_hezyhk/mqdefault.jpg",
+          "youtube_id": "WLC5_hezyhk",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "VERDE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=fbnShrBFUFY",
+          "video_embed": "https://www.youtube.com/embed/fbnShrBFUFY",
+          "thumbnail_url": "https://img.youtube.com/vi/fbnShrBFUFY/mqdefault.jpg",
+          "youtube_id": "fbnShrBFUFY",
+          "fuente": "glosario_cdmx"
+        }
+      ]
+    },
+    {
+      "id": "familia",
+      "nombre": "Familia",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/familia/",
+      "leccion_academia": "L1.4",
+      "total_senas": 50,
+      "senas": [
+        {
+          "palabra": "ABUELA (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=gTwKNMY3Hr8",
+          "video_embed": "https://www.youtube.com/embed/gTwKNMY3Hr8",
+          "thumbnail_url": "https://img.youtube.com/vi/gTwKNMY3Hr8/mqdefault.jpg",
+          "youtube_id": "gTwKNMY3Hr8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ABUELA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=lckOvtr0lZU",
+          "video_embed": "https://www.youtube.com/embed/lckOvtr0lZU",
+          "thumbnail_url": "https://img.youtube.com/vi/lckOvtr0lZU/mqdefault.jpg",
+          "youtube_id": "lckOvtr0lZU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ABUELO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=zvGtewgpJBE",
+          "video_embed": "https://www.youtube.com/embed/zvGtewgpJBE",
+          "thumbnail_url": "https://img.youtube.com/vi/zvGtewgpJBE/mqdefault.jpg",
+          "youtube_id": "zvGtewgpJBE",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ADOLESCENTE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=abA8ZTmmxCY",
+          "video_embed": "https://www.youtube.com/embed/abA8ZTmmxCY",
+          "thumbnail_url": "https://img.youtube.com/vi/abA8ZTmmxCY/mqdefault.jpg",
+          "youtube_id": "abA8ZTmmxCY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ADULTO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=l2nGxQycEp8",
+          "video_embed": "https://www.youtube.com/embed/l2nGxQycEp8",
+          "thumbnail_url": "https://img.youtube.com/vi/l2nGxQycEp8/mqdefault.jpg",
+          "youtube_id": "l2nGxQycEp8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BEBÉ (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=hMn8ztLaqPg",
+          "video_embed": "https://www.youtube.com/embed/hMn8ztLaqPg",
+          "thumbnail_url": "https://img.youtube.com/vi/hMn8ztLaqPg/mqdefault.jpg",
+          "youtube_id": "hMn8ztLaqPg",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BEBÉ (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=rlwtpTQbcZs",
+          "video_embed": "https://www.youtube.com/embed/rlwtpTQbcZs",
+          "thumbnail_url": "https://img.youtube.com/vi/rlwtpTQbcZs/mqdefault.jpg",
+          "youtube_id": "rlwtpTQbcZs",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CUÑADA (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=KS1XeCRck_Q",
+          "video_embed": "https://www.youtube.com/embed/KS1XeCRck_Q",
+          "thumbnail_url": "https://img.youtube.com/vi/KS1XeCRck_Q/mqdefault.jpg",
+          "youtube_id": "KS1XeCRck_Q",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CUÑADA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=me-PDb6voCI",
+          "video_embed": "https://www.youtube.com/embed/me-PDb6voCI",
+          "thumbnail_url": "https://img.youtube.com/vi/me-PDb6voCI/mqdefault.jpg",
+          "youtube_id": "me-PDb6voCI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CUÑADO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=cFe65ZiwHMM",
+          "video_embed": "https://www.youtube.com/embed/cFe65ZiwHMM",
+          "thumbnail_url": "https://img.youtube.com/vi/cFe65ZiwHMM/mqdefault.jpg",
+          "youtube_id": "cFe65ZiwHMM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ESPOSA (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=4Gi2ojnObd0",
+          "video_embed": "https://www.youtube.com/embed/4Gi2ojnObd0",
+          "thumbnail_url": "https://img.youtube.com/vi/4Gi2ojnObd0/mqdefault.jpg",
+          "youtube_id": "4Gi2ojnObd0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ESPOSA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=rIw6sB8vqlk",
+          "video_embed": "https://www.youtube.com/embed/rIw6sB8vqlk",
+          "thumbnail_url": "https://img.youtube.com/vi/rIw6sB8vqlk/mqdefault.jpg",
+          "youtube_id": "rIw6sB8vqlk",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ESPOSO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=IbWYlwhtzaQ",
+          "video_embed": "https://www.youtube.com/embed/IbWYlwhtzaQ",
+          "thumbnail_url": "https://img.youtube.com/vi/IbWYlwhtzaQ/mqdefault.jpg",
+          "youtube_id": "IbWYlwhtzaQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "HERMANA (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ketxhWKZZlU",
+          "video_embed": "https://www.youtube.com/embed/ketxhWKZZlU",
+          "thumbnail_url": "https://img.youtube.com/vi/ketxhWKZZlU/mqdefault.jpg",
+          "youtube_id": "ketxhWKZZlU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "HERMANA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=qtP12MiagXU",
+          "video_embed": "https://www.youtube.com/embed/qtP12MiagXU",
+          "thumbnail_url": "https://img.youtube.com/vi/qtP12MiagXU/mqdefault.jpg",
+          "youtube_id": "qtP12MiagXU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "HERMANO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=1gmNcoQ__jY",
+          "video_embed": "https://www.youtube.com/embed/1gmNcoQ__jY",
+          "thumbnail_url": "https://img.youtube.com/vi/1gmNcoQ__jY/mqdefault.jpg",
+          "youtube_id": "1gmNcoQ__jY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "HIJA (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=jf1VDcNjq7k",
+          "video_embed": "https://www.youtube.com/embed/jf1VDcNjq7k",
+          "thumbnail_url": "https://img.youtube.com/vi/jf1VDcNjq7k/mqdefault.jpg",
+          "youtube_id": "jf1VDcNjq7k",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "HIJA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=-e-hKaHMbA4",
+          "video_embed": "https://www.youtube.com/embed/-e-hKaHMbA4",
+          "thumbnail_url": "https://img.youtube.com/vi/-e-hKaHMbA4/mqdefault.jpg",
+          "youtube_id": "-e-hKaHMbA4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "HIJO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=fvXmVbyV13g",
+          "video_embed": "https://www.youtube.com/embed/fvXmVbyV13g",
+          "thumbnail_url": "https://img.youtube.com/vi/fvXmVbyV13g/mqdefault.jpg",
+          "youtube_id": "fvXmVbyV13g",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "HOMBRE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=GJFBgp1bkPk",
+          "video_embed": "https://www.youtube.com/embed/GJFBgp1bkPk",
+          "thumbnail_url": "https://img.youtube.com/vi/GJFBgp1bkPk/mqdefault.jpg",
+          "youtube_id": "GJFBgp1bkPk",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "JOVEN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=v2k6mnxoiBM",
+          "video_embed": "https://www.youtube.com/embed/v2k6mnxoiBM",
+          "thumbnail_url": "https://img.youtube.com/vi/v2k6mnxoiBM/mqdefault.jpg",
+          "youtube_id": "v2k6mnxoiBM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MADRINA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=hxanq9y2teI",
+          "video_embed": "https://www.youtube.com/embed/hxanq9y2teI",
+          "thumbnail_url": "https://img.youtube.com/vi/hxanq9y2teI/mqdefault.jpg",
+          "youtube_id": "hxanq9y2teI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MAMÁ",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=osNRQD_qxXw",
+          "video_embed": "https://www.youtube.com/embed/osNRQD_qxXw",
+          "thumbnail_url": "https://img.youtube.com/vi/osNRQD_qxXw/mqdefault.jpg",
+          "youtube_id": "osNRQD_qxXw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MUJER",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=fLKh6lZK3Uw",
+          "video_embed": "https://www.youtube.com/embed/fLKh6lZK3Uw",
+          "thumbnail_url": "https://img.youtube.com/vi/fLKh6lZK3Uw/mqdefault.jpg",
+          "youtube_id": "fLKh6lZK3Uw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "NIETA (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Ls-otkSipXk",
+          "video_embed": "https://www.youtube.com/embed/Ls-otkSipXk",
+          "thumbnail_url": "https://img.youtube.com/vi/Ls-otkSipXk/mqdefault.jpg",
+          "youtube_id": "Ls-otkSipXk",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "NIETA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=jOedfXvfa5s",
+          "video_embed": "https://www.youtube.com/embed/jOedfXvfa5s",
+          "thumbnail_url": "https://img.youtube.com/vi/jOedfXvfa5s/mqdefault.jpg",
+          "youtube_id": "jOedfXvfa5s",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "NIETO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Qfcup2-owWw",
+          "video_embed": "https://www.youtube.com/embed/Qfcup2-owWw",
+          "thumbnail_url": "https://img.youtube.com/vi/Qfcup2-owWw/mqdefault.jpg",
+          "youtube_id": "Qfcup2-owWw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "NIÑA (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=b0a06cES46E",
+          "video_embed": "https://www.youtube.com/embed/b0a06cES46E",
+          "thumbnail_url": "https://img.youtube.com/vi/b0a06cES46E/mqdefault.jpg",
+          "youtube_id": "b0a06cES46E",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "NIÑA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=N3ehYITHl8A",
+          "video_embed": "https://www.youtube.com/embed/N3ehYITHl8A",
+          "thumbnail_url": "https://img.youtube.com/vi/N3ehYITHl8A/mqdefault.jpg",
+          "youtube_id": "N3ehYITHl8A",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "NIÑO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=a7Z8SkTlAjI",
+          "video_embed": "https://www.youtube.com/embed/a7Z8SkTlAjI",
+          "thumbnail_url": "https://img.youtube.com/vi/a7Z8SkTlAjI/mqdefault.jpg",
+          "youtube_id": "a7Z8SkTlAjI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "NUERA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=z4RQiUTbU8c",
+          "video_embed": "https://www.youtube.com/embed/z4RQiUTbU8c",
+          "thumbnail_url": "https://img.youtube.com/vi/z4RQiUTbU8c/mqdefault.jpg",
+          "youtube_id": "z4RQiUTbU8c",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PADRINO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=PC7dw0dgGrU",
+          "video_embed": "https://www.youtube.com/embed/PC7dw0dgGrU",
+          "thumbnail_url": "https://img.youtube.com/vi/PC7dw0dgGrU/mqdefault.jpg",
+          "youtube_id": "PC7dw0dgGrU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PAPÁ",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=7UHtMAwKXzI",
+          "video_embed": "https://www.youtube.com/embed/7UHtMAwKXzI",
+          "thumbnail_url": "https://img.youtube.com/vi/7UHtMAwKXzI/mqdefault.jpg",
+          "youtube_id": "7UHtMAwKXzI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PERSONA MAYOR (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=zqsutkXy5bA",
+          "video_embed": "https://www.youtube.com/embed/zqsutkXy5bA",
+          "thumbnail_url": "https://img.youtube.com/vi/zqsutkXy5bA/mqdefault.jpg",
+          "youtube_id": "zqsutkXy5bA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PERSONA MAYOR (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=KWwL2SV_mks",
+          "video_embed": "https://www.youtube.com/embed/KWwL2SV_mks",
+          "thumbnail_url": "https://img.youtube.com/vi/KWwL2SV_mks/mqdefault.jpg",
+          "youtube_id": "KWwL2SV_mks",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PRIMA (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=aX4106jVOtk",
+          "video_embed": "https://www.youtube.com/embed/aX4106jVOtk",
+          "thumbnail_url": "https://img.youtube.com/vi/aX4106jVOtk/mqdefault.jpg",
+          "youtube_id": "aX4106jVOtk",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PRIMA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=f78FrJcb5fk",
+          "video_embed": "https://www.youtube.com/embed/f78FrJcb5fk",
+          "thumbnail_url": "https://img.youtube.com/vi/f78FrJcb5fk/mqdefault.jpg",
+          "youtube_id": "f78FrJcb5fk",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PRIMO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=-LrIxYgHHWc",
+          "video_embed": "https://www.youtube.com/embed/-LrIxYgHHWc",
+          "thumbnail_url": "https://img.youtube.com/vi/-LrIxYgHHWc/mqdefault.jpg",
+          "youtube_id": "-LrIxYgHHWc",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "SOBRINA (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=kMZRv7RkP2Q",
+          "video_embed": "https://www.youtube.com/embed/kMZRv7RkP2Q",
+          "thumbnail_url": "https://img.youtube.com/vi/kMZRv7RkP2Q/mqdefault.jpg",
+          "youtube_id": "kMZRv7RkP2Q",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "SOBRINA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=bfUjOS4E6nw",
+          "video_embed": "https://www.youtube.com/embed/bfUjOS4E6nw",
+          "thumbnail_url": "https://img.youtube.com/vi/bfUjOS4E6nw/mqdefault.jpg",
+          "youtube_id": "bfUjOS4E6nw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "SOBRINO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=7sRjzxSnKnk",
+          "video_embed": "https://www.youtube.com/embed/7sRjzxSnKnk",
+          "thumbnail_url": "https://img.youtube.com/vi/7sRjzxSnKnk/mqdefault.jpg",
+          "youtube_id": "7sRjzxSnKnk",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "SUEGRA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=upgZQNddlsM",
+          "video_embed": "https://www.youtube.com/embed/upgZQNddlsM",
+          "thumbnail_url": "https://img.youtube.com/vi/upgZQNddlsM/mqdefault.jpg",
+          "youtube_id": "upgZQNddlsM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "SUEGRO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=PC7dWhmMx1o",
+          "video_embed": "https://www.youtube.com/embed/PC7dWhmMx1o",
+          "thumbnail_url": "https://img.youtube.com/vi/PC7dWhmMx1o/mqdefault.jpg",
+          "youtube_id": "PC7dWhmMx1o",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TÍA (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=EXkWWuHm6ZA",
+          "video_embed": "https://www.youtube.com/embed/EXkWWuHm6ZA",
+          "thumbnail_url": "https://img.youtube.com/vi/EXkWWuHm6ZA/mqdefault.jpg",
+          "youtube_id": "EXkWWuHm6ZA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TÍA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=6XN3V78RS1w",
+          "video_embed": "https://www.youtube.com/embed/6XN3V78RS1w",
+          "thumbnail_url": "https://img.youtube.com/vi/6XN3V78RS1w/mqdefault.jpg",
+          "youtube_id": "6XN3V78RS1w",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TÍA (3)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=OJX_dZUkb2k",
+          "video_embed": "https://www.youtube.com/embed/OJX_dZUkb2k",
+          "thumbnail_url": "https://img.youtube.com/vi/OJX_dZUkb2k/mqdefault.jpg",
+          "youtube_id": "OJX_dZUkb2k",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TÍO (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=x2ydJIFBmqI",
+          "video_embed": "https://www.youtube.com/embed/x2ydJIFBmqI",
+          "thumbnail_url": "https://img.youtube.com/vi/x2ydJIFBmqI/mqdefault.jpg",
+          "youtube_id": "x2ydJIFBmqI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TÍO (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=i90Q51wb7E8",
+          "video_embed": "https://www.youtube.com/embed/i90Q51wb7E8",
+          "thumbnail_url": "https://img.youtube.com/vi/i90Q51wb7E8/mqdefault.jpg",
+          "youtube_id": "i90Q51wb7E8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TÍO (3)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=QPZ2cJjzoIs",
+          "video_embed": "https://www.youtube.com/embed/QPZ2cJjzoIs",
+          "thumbnail_url": "https://img.youtube.com/vi/QPZ2cJjzoIs/mqdefault.jpg",
+          "youtube_id": "QPZ2cJjzoIs",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "YERNO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=twEkRuJie4w",
+          "video_embed": "https://www.youtube.com/embed/twEkRuJie4w",
+          "thumbnail_url": "https://img.youtube.com/vi/twEkRuJie4w/mqdefault.jpg",
+          "youtube_id": "twEkRuJie4w",
+          "fuente": "glosario_cdmx"
+        }
+      ]
+    },
+    {
+      "id": "expresiones-cotidianas",
+      "nombre": "Expresiones Cotidianas",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/expresiones-cotidianas/",
+      "leccion_academia": "L1.3",
+      "total_senas": 6,
+      "senas": [
+        {
+          "palabra": "DISCULPA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=bWwIisAtYCI",
+          "video_embed": "https://www.youtube.com/embed/bWwIisAtYCI",
+          "thumbnail_url": "https://img.youtube.com/vi/bWwIisAtYCI/mqdefault.jpg",
+          "youtube_id": "bWwIisAtYCI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "POR FAVOR",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=M5FowymHDx8",
+          "video_embed": "https://www.youtube.com/embed/M5FowymHDx8",
+          "thumbnail_url": "https://img.youtube.com/vi/M5FowymHDx8/mqdefault.jpg",
+          "youtube_id": "M5FowymHDx8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "¡QUÉ MILAGRO!",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=7CtGO4_71qA",
+          "video_embed": "https://www.youtube.com/embed/7CtGO4_71qA",
+          "thumbnail_url": "https://img.youtube.com/vi/7CtGO4_71qA/mqdefault.jpg",
+          "youtube_id": "7CtGO4_71qA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "¡SORPRESA!",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Q0OqTBjoIjU",
+          "video_embed": "https://www.youtube.com/embed/Q0OqTBjoIjU",
+          "thumbnail_url": "https://img.youtube.com/vi/Q0OqTBjoIjU/mqdefault.jpg",
+          "youtube_id": "Q0OqTBjoIjU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "¿CÓMO ESTÁS? (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=x7zFMacTe04",
+          "video_embed": "https://www.youtube.com/embed/x7zFMacTe04",
+          "thumbnail_url": "https://img.youtube.com/vi/x7zFMacTe04/mqdefault.jpg",
+          "youtube_id": "x7zFMacTe04",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "¿CÓMO TE LLAMAS?",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=lVeQV6cgUE8",
+          "video_embed": "https://www.youtube.com/embed/lVeQV6cgUE8",
+          "thumbnail_url": "https://img.youtube.com/vi/lVeQV6cgUE8/mqdefault.jpg",
+          "youtube_id": "lVeQV6cgUE8",
+          "fuente": "glosario_cdmx"
+        }
+      ]
+    },
+    {
+      "id": "salud",
+      "nombre": "Salud",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/salud/",
+      "leccion_academia": "L2.4",
+      "total_senas": 98,
+      "senas": [
+        {
+          "palabra": "ADICCIÓN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=tl1donTkFG0",
+          "video_embed": "https://www.youtube.com/embed/tl1donTkFG0",
+          "thumbnail_url": "https://img.youtube.com/vi/tl1donTkFG0/mqdefault.jpg",
+          "youtube_id": "tl1donTkFG0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "AGRURAS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=O0iwDwiq8o4",
+          "video_embed": "https://www.youtube.com/embed/O0iwDwiq8o4",
+          "thumbnail_url": "https://img.youtube.com/vi/O0iwDwiq8o4/mqdefault.jpg",
+          "youtube_id": "O0iwDwiq8o4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ALCOHOL (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=7rcFH43ct-M",
+          "video_embed": "https://www.youtube.com/embed/7rcFH43ct-M",
+          "thumbnail_url": "https://img.youtube.com/vi/7rcFH43ct-M/mqdefault.jpg",
+          "youtube_id": "7rcFH43ct-M",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ALCOHOL (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=1wlqRnSSnXk",
+          "video_embed": "https://www.youtube.com/embed/1wlqRnSSnXk",
+          "thumbnail_url": "https://img.youtube.com/vi/1wlqRnSSnXk/mqdefault.jpg",
+          "youtube_id": "1wlqRnSSnXk",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ALERGIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=i3Xcbwg4dls",
+          "video_embed": "https://www.youtube.com/embed/i3Xcbwg4dls",
+          "thumbnail_url": "https://img.youtube.com/vi/i3Xcbwg4dls/mqdefault.jpg",
+          "youtube_id": "i3Xcbwg4dls",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "AMBULANCIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=x6HdMcLyWtY",
+          "video_embed": "https://www.youtube.com/embed/x6HdMcLyWtY",
+          "thumbnail_url": "https://img.youtube.com/vi/x6HdMcLyWtY/mqdefault.jpg",
+          "youtube_id": "x6HdMcLyWtY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ANESTESIA (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=CzuPy9uDgjA",
+          "video_embed": "https://www.youtube.com/embed/CzuPy9uDgjA",
+          "thumbnail_url": "https://img.youtube.com/vi/CzuPy9uDgjA/mqdefault.jpg",
+          "youtube_id": "CzuPy9uDgjA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ANESTESIA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=9k-oV6Qsyy0",
+          "video_embed": "https://www.youtube.com/embed/9k-oV6Qsyy0",
+          "thumbnail_url": "https://img.youtube.com/vi/9k-oV6Qsyy0/mqdefault.jpg",
+          "youtube_id": "9k-oV6Qsyy0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ARDOR",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=wSCVl4qhej4",
+          "video_embed": "https://www.youtube.com/embed/wSCVl4qhej4",
+          "thumbnail_url": "https://img.youtube.com/vi/wSCVl4qhej4/mqdefault.jpg",
+          "youtube_id": "wSCVl4qhej4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ARTRITIS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Nfo5FPcTwFc",
+          "video_embed": "https://www.youtube.com/embed/Nfo5FPcTwFc",
+          "thumbnail_url": "https://img.youtube.com/vi/Nfo5FPcTwFc/mqdefault.jpg",
+          "youtube_id": "Nfo5FPcTwFc",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ASCO (NÁUSEAS)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=E9a92aqS8GU",
+          "video_embed": "https://www.youtube.com/embed/E9a92aqS8GU",
+          "thumbnail_url": "https://img.youtube.com/vi/E9a92aqS8GU/mqdefault.jpg",
+          "youtube_id": "E9a92aqS8GU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ASMA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=OjHwtylg3u4",
+          "video_embed": "https://www.youtube.com/embed/OjHwtylg3u4",
+          "thumbnail_url": "https://img.youtube.com/vi/OjHwtylg3u4/mqdefault.jpg",
+          "youtube_id": "OjHwtylg3u4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BACTERIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=W7eBlvekm5o",
+          "video_embed": "https://www.youtube.com/embed/W7eBlvekm5o",
+          "thumbnail_url": "https://img.youtube.com/vi/W7eBlvekm5o/mqdefault.jpg",
+          "youtube_id": "W7eBlvekm5o",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BIPOLARIDAD",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=imvVECm2SU0",
+          "video_embed": "https://www.youtube.com/embed/imvVECm2SU0",
+          "thumbnail_url": "https://img.youtube.com/vi/imvVECm2SU0/mqdefault.jpg",
+          "youtube_id": "imvVECm2SU0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BOTIQUÍN MÉDICO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=FHOcTmMJBr8",
+          "video_embed": "https://www.youtube.com/embed/FHOcTmMJBr8",
+          "thumbnail_url": "https://img.youtube.com/vi/FHOcTmMJBr8/mqdefault.jpg",
+          "youtube_id": "FHOcTmMJBr8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CÁNCER",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=le2K_k8nKfk",
+          "video_embed": "https://www.youtube.com/embed/le2K_k8nKfk",
+          "thumbnail_url": "https://img.youtube.com/vi/le2K_k8nKfk/mqdefault.jpg",
+          "youtube_id": "le2K_k8nKfk",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CANSANCIO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=DVBQ0brVcSo",
+          "video_embed": "https://www.youtube.com/embed/DVBQ0brVcSo",
+          "thumbnail_url": "https://img.youtube.com/vi/DVBQ0brVcSo/mqdefault.jpg",
+          "youtube_id": "DVBQ0brVcSo",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CARDIÓLOGO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=6LX50Fov-Ss",
+          "video_embed": "https://www.youtube.com/embed/6LX50Fov-Ss",
+          "thumbnail_url": "https://img.youtube.com/vi/6LX50Fov-Ss/mqdefault.jpg",
+          "youtube_id": "6LX50Fov-Ss",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CARNET MÉDICO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Sn3cirhw0FM",
+          "video_embed": "https://www.youtube.com/embed/Sn3cirhw0FM",
+          "thumbnail_url": "https://img.youtube.com/vi/Sn3cirhw0FM/mqdefault.jpg",
+          "youtube_id": "Sn3cirhw0FM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CENTRO DE SALUD",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=IQaRmJKOTt8",
+          "video_embed": "https://www.youtube.com/embed/IQaRmJKOTt8",
+          "thumbnail_url": "https://img.youtube.com/vi/IQaRmJKOTt8/mqdefault.jpg",
+          "youtube_id": "IQaRmJKOTt8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CIRUGÍA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=s4qTztLbvuM",
+          "video_embed": "https://www.youtube.com/embed/s4qTztLbvuM",
+          "thumbnail_url": "https://img.youtube.com/vi/s4qTztLbvuM/mqdefault.jpg",
+          "youtube_id": "s4qTztLbvuM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CITA MÉDICA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=0AGrLEb_jDI",
+          "video_embed": "https://www.youtube.com/embed/0AGrLEb_jDI",
+          "thumbnail_url": "https://img.youtube.com/vi/0AGrLEb_jDI/mqdefault.jpg",
+          "youtube_id": "0AGrLEb_jDI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CÓLICOS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=3a7A9Q2vVyY",
+          "video_embed": "https://www.youtube.com/embed/3a7A9Q2vVyY",
+          "thumbnail_url": "https://img.youtube.com/vi/3a7A9Q2vVyY/mqdefault.jpg",
+          "youtube_id": "3a7A9Q2vVyY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CONSTANCIA DE DISCAPACIDAD",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=_gYzxiVBFeM",
+          "video_embed": "https://www.youtube.com/embed/_gYzxiVBFeM",
+          "thumbnail_url": "https://img.youtube.com/vi/_gYzxiVBFeM/mqdefault.jpg",
+          "youtube_id": "_gYzxiVBFeM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CONSULTA MÉDICA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=e9O3KT-_tyU",
+          "video_embed": "https://www.youtube.com/embed/e9O3KT-_tyU",
+          "thumbnail_url": "https://img.youtube.com/vi/e9O3KT-_tyU/mqdefault.jpg",
+          "youtube_id": "e9O3KT-_tyU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CONVULSIÓN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=m-0Gou9JJEQ",
+          "video_embed": "https://www.youtube.com/embed/m-0Gou9JJEQ",
+          "thumbnail_url": "https://img.youtube.com/vi/m-0Gou9JJEQ/mqdefault.jpg",
+          "youtube_id": "m-0Gou9JJEQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "COPA MENSTRUAL",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=U5V0EVrNwXI",
+          "video_embed": "https://www.youtube.com/embed/U5V0EVrNwXI",
+          "thumbnail_url": "https://img.youtube.com/vi/U5V0EVrNwXI/mqdefault.jpg",
+          "youtube_id": "U5V0EVrNwXI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CORONAVIRUS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=mj_yaeP88XQ",
+          "video_embed": "https://www.youtube.com/embed/mj_yaeP88XQ",
+          "thumbnail_url": "https://img.youtube.com/vi/mj_yaeP88XQ/mqdefault.jpg",
+          "youtube_id": "mj_yaeP88XQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CUBREBOCAS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=DsRPiuVqckI",
+          "video_embed": "https://www.youtube.com/embed/DsRPiuVqckI",
+          "thumbnail_url": "https://img.youtube.com/vi/DsRPiuVqckI/mqdefault.jpg",
+          "youtube_id": "DsRPiuVqckI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DENTISTA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=wsj-0VCOWok",
+          "video_embed": "https://www.youtube.com/embed/wsj-0VCOWok",
+          "thumbnail_url": "https://img.youtube.com/vi/wsj-0VCOWok/mqdefault.jpg",
+          "youtube_id": "wsj-0VCOWok",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DEPRESIÓN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=AUkqGTnF3lI",
+          "video_embed": "https://www.youtube.com/embed/AUkqGTnF3lI",
+          "thumbnail_url": "https://img.youtube.com/vi/AUkqGTnF3lI/mqdefault.jpg",
+          "youtube_id": "AUkqGTnF3lI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DESMAYO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=YhCoWu5e1-k",
+          "video_embed": "https://www.youtube.com/embed/YhCoWu5e1-k",
+          "thumbnail_url": "https://img.youtube.com/vi/YhCoWu5e1-k/mqdefault.jpg",
+          "youtube_id": "YhCoWu5e1-k",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DIABETES",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Hph2pMPOJIQ",
+          "video_embed": "https://www.youtube.com/embed/Hph2pMPOJIQ",
+          "thumbnail_url": "https://img.youtube.com/vi/Hph2pMPOJIQ/mqdefault.jpg",
+          "youtube_id": "Hph2pMPOJIQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DIAGNÓSTICO MEDICO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=aCSUwaznL4I",
+          "video_embed": "https://www.youtube.com/embed/aCSUwaznL4I",
+          "thumbnail_url": "https://img.youtube.com/vi/aCSUwaznL4I/mqdefault.jpg",
+          "youtube_id": "aCSUwaznL4I",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DIARREA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=tWhEXxcwqRM",
+          "video_embed": "https://www.youtube.com/embed/tWhEXxcwqRM",
+          "thumbnail_url": "https://img.youtube.com/vi/tWhEXxcwqRM/mqdefault.jpg",
+          "youtube_id": "tWhEXxcwqRM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DOLOR",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=61NSOq-fpL8",
+          "video_embed": "https://www.youtube.com/embed/61NSOq-fpL8",
+          "thumbnail_url": "https://img.youtube.com/vi/61NSOq-fpL8/mqdefault.jpg",
+          "youtube_id": "61NSOq-fpL8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ENFERMERA (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=4HyO1b0TlC8",
+          "video_embed": "https://www.youtube.com/embed/4HyO1b0TlC8",
+          "thumbnail_url": "https://img.youtube.com/vi/4HyO1b0TlC8/mqdefault.jpg",
+          "youtube_id": "4HyO1b0TlC8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ENFERMERA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=hkkh_zyzbu4",
+          "video_embed": "https://www.youtube.com/embed/hkkh_zyzbu4",
+          "thumbnail_url": "https://img.youtube.com/vi/hkkh_zyzbu4/mqdefault.jpg",
+          "youtube_id": "hkkh_zyzbu4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ENFERMO/ENFERMEDAD",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ZdMKJSmK_RY",
+          "video_embed": "https://www.youtube.com/embed/ZdMKJSmK_RY",
+          "thumbnail_url": "https://img.youtube.com/vi/ZdMKJSmK_RY/mqdefault.jpg",
+          "youtube_id": "ZdMKJSmK_RY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ENYESAR",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=QHue5jlh04o",
+          "video_embed": "https://www.youtube.com/embed/QHue5jlh04o",
+          "thumbnail_url": "https://img.youtube.com/vi/QHue5jlh04o/mqdefault.jpg",
+          "youtube_id": "QHue5jlh04o",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "EPIDEMIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=SBBc-3KAVnQ",
+          "video_embed": "https://www.youtube.com/embed/SBBc-3KAVnQ",
+          "thumbnail_url": "https://img.youtube.com/vi/SBBc-3KAVnQ/mqdefault.jpg",
+          "youtube_id": "SBBc-3KAVnQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ESCALOFRÍOS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=mwjUA-z77dw",
+          "video_embed": "https://www.youtube.com/embed/mwjUA-z77dw",
+          "thumbnail_url": "https://img.youtube.com/vi/mwjUA-z77dw/mqdefault.jpg",
+          "youtube_id": "mwjUA-z77dw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ESPECIALISTA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=rGSQZxOdoaI",
+          "video_embed": "https://www.youtube.com/embed/rGSQZxOdoaI",
+          "thumbnail_url": "https://img.youtube.com/vi/rGSQZxOdoaI/mqdefault.jpg",
+          "youtube_id": "rGSQZxOdoaI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ESTUDIOS MÉDICOS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=QtTBwC1ZE9I",
+          "video_embed": "https://www.youtube.com/embed/QtTBwC1ZE9I",
+          "thumbnail_url": "https://img.youtube.com/vi/QtTBwC1ZE9I/mqdefault.jpg",
+          "youtube_id": "QtTBwC1ZE9I",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "EXAMEN MÉDICO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=MCB93qs_BHY",
+          "video_embed": "https://www.youtube.com/embed/MCB93qs_BHY",
+          "thumbnail_url": "https://img.youtube.com/vi/MCB93qs_BHY/mqdefault.jpg",
+          "youtube_id": "MCB93qs_BHY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "FALTA DE APETITO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=6GloUvSY2qU",
+          "video_embed": "https://www.youtube.com/embed/6GloUvSY2qU",
+          "thumbnail_url": "https://img.youtube.com/vi/6GloUvSY2qU/mqdefault.jpg",
+          "youtube_id": "6GloUvSY2qU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "FALTA DE RESPIRACIÓN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=D8gb_QI05cA",
+          "video_embed": "https://www.youtube.com/embed/D8gb_QI05cA",
+          "thumbnail_url": "https://img.youtube.com/vi/D8gb_QI05cA/mqdefault.jpg",
+          "youtube_id": "D8gb_QI05cA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "FALTA DE VISIÓN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=JnJnciFpgMA",
+          "video_embed": "https://www.youtube.com/embed/JnJnciFpgMA",
+          "thumbnail_url": "https://img.youtube.com/vi/JnJnciFpgMA/mqdefault.jpg",
+          "youtube_id": "JnJnciFpgMA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "FARMACIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=BJIgcJ7Sf2E",
+          "video_embed": "https://www.youtube.com/embed/BJIgcJ7Sf2E",
+          "thumbnail_url": "https://img.youtube.com/vi/BJIgcJ7Sf2E/mqdefault.jpg",
+          "youtube_id": "BJIgcJ7Sf2E",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "FIEBRE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=xTzmQOiP0Xw",
+          "video_embed": "https://www.youtube.com/embed/xTzmQOiP0Xw",
+          "thumbnail_url": "https://img.youtube.com/vi/xTzmQOiP0Xw/mqdefault.jpg",
+          "youtube_id": "xTzmQOiP0Xw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "FLEMAS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=hcnGp027wwc",
+          "video_embed": "https://www.youtube.com/embed/hcnGp027wwc",
+          "thumbnail_url": "https://img.youtube.com/vi/hcnGp027wwc/mqdefault.jpg",
+          "youtube_id": "hcnGp027wwc",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "FRACTURA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=5et184rz_qc",
+          "video_embed": "https://www.youtube.com/embed/5et184rz_qc",
+          "thumbnail_url": "https://img.youtube.com/vi/5et184rz_qc/mqdefault.jpg",
+          "youtube_id": "5et184rz_qc",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "FRECUENCIA CARDÍACA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=En49yhoEa7k",
+          "video_embed": "https://www.youtube.com/embed/En49yhoEa7k",
+          "thumbnail_url": "https://img.youtube.com/vi/En49yhoEa7k/mqdefault.jpg",
+          "youtube_id": "En49yhoEa7k",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "FUMAR",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ysR8x5UNB6Q",
+          "video_embed": "https://www.youtube.com/embed/ysR8x5UNB6Q",
+          "thumbnail_url": "https://img.youtube.com/vi/ysR8x5UNB6Q/mqdefault.jpg",
+          "youtube_id": "ysR8x5UNB6Q",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "GEL ANTIBACTERIAL",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=r07z4mPYVMU",
+          "video_embed": "https://www.youtube.com/embed/r07z4mPYVMU",
+          "thumbnail_url": "https://img.youtube.com/vi/r07z4mPYVMU/mqdefault.jpg",
+          "youtube_id": "r07z4mPYVMU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "GINECÓLOGO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=o0xCPJ3U8wE",
+          "video_embed": "https://www.youtube.com/embed/o0xCPJ3U8wE",
+          "thumbnail_url": "https://img.youtube.com/vi/o0xCPJ3U8wE/mqdefault.jpg",
+          "youtube_id": "o0xCPJ3U8wE",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "GRIPA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=3_aanz3Rg_U",
+          "video_embed": "https://www.youtube.com/embed/3_aanz3Rg_U",
+          "thumbnail_url": "https://img.youtube.com/vi/3_aanz3Rg_U/mqdefault.jpg",
+          "youtube_id": "3_aanz3Rg_U",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "HECES",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=cFvFDmxg3F0",
+          "video_embed": "https://www.youtube.com/embed/cFvFDmxg3F0",
+          "thumbnail_url": "https://img.youtube.com/vi/cFvFDmxg3F0/mqdefault.jpg",
+          "youtube_id": "cFvFDmxg3F0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "HERIDA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=xOkYIqM4fRQ",
+          "video_embed": "https://www.youtube.com/embed/xOkYIqM4fRQ",
+          "thumbnail_url": "https://img.youtube.com/vi/xOkYIqM4fRQ/mqdefault.jpg",
+          "youtube_id": "xOkYIqM4fRQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "HOSPITAL",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=kC7ZKHXyhfM",
+          "video_embed": "https://www.youtube.com/embed/kC7ZKHXyhfM",
+          "thumbnail_url": "https://img.youtube.com/vi/kC7ZKHXyhfM/mqdefault.jpg",
+          "youtube_id": "kC7ZKHXyhfM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "INFECCIÓN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=XGBWzOs0B6Y",
+          "video_embed": "https://www.youtube.com/embed/XGBWzOs0B6Y",
+          "thumbnail_url": "https://img.youtube.com/vi/XGBWzOs0B6Y/mqdefault.jpg",
+          "youtube_id": "XGBWzOs0B6Y",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "INSOMNIO (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=lD6jDJ3ShMM",
+          "video_embed": "https://www.youtube.com/embed/lD6jDJ3ShMM",
+          "thumbnail_url": "https://img.youtube.com/vi/lD6jDJ3ShMM/mqdefault.jpg",
+          "youtube_id": "lD6jDJ3ShMM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "INSOMNIO (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=8_AZ6viWx3U",
+          "video_embed": "https://www.youtube.com/embed/8_AZ6viWx3U",
+          "thumbnail_url": "https://img.youtube.com/vi/8_AZ6viWx3U/mqdefault.jpg",
+          "youtube_id": "8_AZ6viWx3U",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "LABORATORIO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=0bjCingxPC8",
+          "video_embed": "https://www.youtube.com/embed/0bjCingxPC8",
+          "thumbnail_url": "https://img.youtube.com/vi/0bjCingxPC8/mqdefault.jpg",
+          "youtube_id": "0bjCingxPC8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MAREOS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=RUBKTdIwbP0",
+          "video_embed": "https://www.youtube.com/embed/RUBKTdIwbP0",
+          "thumbnail_url": "https://img.youtube.com/vi/RUBKTdIwbP0/mqdefault.jpg",
+          "youtube_id": "RUBKTdIwbP0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MEDICAMENTO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=-na_HejIPyE",
+          "video_embed": "https://www.youtube.com/embed/-na_HejIPyE",
+          "thumbnail_url": "https://img.youtube.com/vi/-na_HejIPyE/mqdefault.jpg",
+          "youtube_id": "-na_HejIPyE",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MENOPAUSIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=eAvtdnUrmjM",
+          "video_embed": "https://www.youtube.com/embed/eAvtdnUrmjM",
+          "thumbnail_url": "https://img.youtube.com/vi/eAvtdnUrmjM/mqdefault.jpg",
+          "youtube_id": "eAvtdnUrmjM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MENSTRUACIÓN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=bjwM5Qh1UJM",
+          "video_embed": "https://www.youtube.com/embed/bjwM5Qh1UJM",
+          "thumbnail_url": "https://img.youtube.com/vi/bjwM5Qh1UJM/mqdefault.jpg",
+          "youtube_id": "bjwM5Qh1UJM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MUCHO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=aVhLLKcJuTI",
+          "video_embed": "https://www.youtube.com/embed/aVhLLKcJuTI",
+          "thumbnail_url": "https://img.youtube.com/vi/aVhLLKcJuTI/mqdefault.jpg",
+          "youtube_id": "aVhLLKcJuTI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "NADA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=I8-tWtJ1fg4",
+          "video_embed": "https://www.youtube.com/embed/I8-tWtJ1fg4",
+          "thumbnail_url": "https://img.youtube.com/vi/I8-tWtJ1fg4/mqdefault.jpg",
+          "youtube_id": "I8-tWtJ1fg4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "OFTALMÓLOGO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=yIvnVEeXr9c",
+          "video_embed": "https://www.youtube.com/embed/yIvnVEeXr9c",
+          "thumbnail_url": "https://img.youtube.com/vi/yIvnVEeXr9c/mqdefault.jpg",
+          "youtube_id": "yIvnVEeXr9c",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ORINA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=xNwNOeErHoY",
+          "video_embed": "https://www.youtube.com/embed/xNwNOeErHoY",
+          "thumbnail_url": "https://img.youtube.com/vi/xNwNOeErHoY/mqdefault.jpg",
+          "youtube_id": "xNwNOeErHoY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "OXÍMETRO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=VXuRyfAHpaw",
+          "video_embed": "https://www.youtube.com/embed/VXuRyfAHpaw",
+          "thumbnail_url": "https://img.youtube.com/vi/VXuRyfAHpaw/mqdefault.jpg",
+          "youtube_id": "VXuRyfAHpaw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PACIENTE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=V8XZjyFHUG4",
+          "video_embed": "https://www.youtube.com/embed/V8XZjyFHUG4",
+          "thumbnail_url": "https://img.youtube.com/vi/V8XZjyFHUG4/mqdefault.jpg",
+          "youtube_id": "V8XZjyFHUG4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PANDEMIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=pAuxqNJqYks",
+          "video_embed": "https://www.youtube.com/embed/pAuxqNJqYks",
+          "thumbnail_url": "https://img.youtube.com/vi/pAuxqNJqYks/mqdefault.jpg",
+          "youtube_id": "pAuxqNJqYks",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PEDIATRA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=LKfkrdQyCLU",
+          "video_embed": "https://www.youtube.com/embed/LKfkrdQyCLU",
+          "thumbnail_url": "https://img.youtube.com/vi/LKfkrdQyCLU/mqdefault.jpg",
+          "youtube_id": "LKfkrdQyCLU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "POCO (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=-jQz3JjCC_s",
+          "video_embed": "https://www.youtube.com/embed/-jQz3JjCC_s",
+          "thumbnail_url": "https://img.youtube.com/vi/-jQz3JjCC_s/mqdefault.jpg",
+          "youtube_id": "-jQz3JjCC_s",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "POCO (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=kLHFuNYu5-U",
+          "video_embed": "https://www.youtube.com/embed/kLHFuNYu5-U",
+          "thumbnail_url": "https://img.youtube.com/vi/kLHFuNYu5-U/mqdefault.jpg",
+          "youtube_id": "kLHFuNYu5-U",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PRESIÓN ARTERIAL",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=n3OGZnjMp_8",
+          "video_embed": "https://www.youtube.com/embed/n3OGZnjMp_8",
+          "thumbnail_url": "https://img.youtube.com/vi/n3OGZnjMp_8/mqdefault.jpg",
+          "youtube_id": "n3OGZnjMp_8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "QUIRÓFANO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=wGjXUeVuAcQ",
+          "video_embed": "https://www.youtube.com/embed/wGjXUeVuAcQ",
+          "thumbnail_url": "https://img.youtube.com/vi/wGjXUeVuAcQ/mqdefault.jpg",
+          "youtube_id": "wGjXUeVuAcQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "RADIOGRAFÍA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=gBpKPhX5240",
+          "video_embed": "https://www.youtube.com/embed/gBpKPhX5240",
+          "thumbnail_url": "https://img.youtube.com/vi/gBpKPhX5240/mqdefault.jpg",
+          "youtube_id": "gBpKPhX5240",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "RECETA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=z_oU2Qj3l7g",
+          "video_embed": "https://www.youtube.com/embed/z_oU2Qj3l7g",
+          "thumbnail_url": "https://img.youtube.com/vi/z_oU2Qj3l7g/mqdefault.jpg",
+          "youtube_id": "z_oU2Qj3l7g",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "REHABILITACIÓN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=hCb-XLpeEbc",
+          "video_embed": "https://www.youtube.com/embed/hCb-XLpeEbc",
+          "thumbnail_url": "https://img.youtube.com/vi/hCb-XLpeEbc/mqdefault.jpg",
+          "youtube_id": "hCb-XLpeEbc",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "RELACIONES SEXUALES",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=XJnt6QlXjkM",
+          "video_embed": "https://www.youtube.com/embed/XJnt6QlXjkM",
+          "thumbnail_url": "https://img.youtube.com/vi/XJnt6QlXjkM/mqdefault.jpg",
+          "youtube_id": "XJnt6QlXjkM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "RESONANCIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=VBo4_ToCiVY",
+          "video_embed": "https://www.youtube.com/embed/VBo4_ToCiVY",
+          "thumbnail_url": "https://img.youtube.com/vi/VBo4_ToCiVY/mqdefault.jpg",
+          "youtube_id": "VBo4_ToCiVY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "SANGRE (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=j-ZVPZYY8dc",
+          "video_embed": "https://www.youtube.com/embed/j-ZVPZYY8dc",
+          "thumbnail_url": "https://img.youtube.com/vi/j-ZVPZYY8dc/mqdefault.jpg",
+          "youtube_id": "j-ZVPZYY8dc",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "SANGRE (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=UNXPj08XrRg",
+          "video_embed": "https://www.youtube.com/embed/UNXPj08XrRg",
+          "thumbnail_url": "https://img.youtube.com/vi/UNXPj08XrRg/mqdefault.jpg",
+          "youtube_id": "UNXPj08XrRg",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "SÍNTOMAS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=wlBs2mdwwio",
+          "video_embed": "https://www.youtube.com/embed/wlBs2mdwwio",
+          "thumbnail_url": "https://img.youtube.com/vi/wlBs2mdwwio/mqdefault.jpg",
+          "youtube_id": "wlBs2mdwwio",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TERAPIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=18EHeN5e-s4",
+          "video_embed": "https://www.youtube.com/embed/18EHeN5e-s4",
+          "thumbnail_url": "https://img.youtube.com/vi/18EHeN5e-s4/mqdefault.jpg",
+          "youtube_id": "18EHeN5e-s4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TERMÓMETRO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=5v0LMKD4Ep8",
+          "video_embed": "https://www.youtube.com/embed/5v0LMKD4Ep8",
+          "thumbnail_url": "https://img.youtube.com/vi/5v0LMKD4Ep8/mqdefault.jpg",
+          "youtube_id": "5v0LMKD4Ep8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TOALLA FEMENINA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=RkjMdT2Mij4",
+          "video_embed": "https://www.youtube.com/embed/RkjMdT2Mij4",
+          "thumbnail_url": "https://img.youtube.com/vi/RkjMdT2Mij4/mqdefault.jpg",
+          "youtube_id": "RkjMdT2Mij4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TOS (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=8gJpNlN_0uU",
+          "video_embed": "https://www.youtube.com/embed/8gJpNlN_0uU",
+          "thumbnail_url": "https://img.youtube.com/vi/8gJpNlN_0uU/mqdefault.jpg",
+          "youtube_id": "8gJpNlN_0uU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TOS (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=H7KwVeZrP4k",
+          "video_embed": "https://www.youtube.com/embed/H7KwVeZrP4k",
+          "thumbnail_url": "https://img.youtube.com/vi/H7KwVeZrP4k/mqdefault.jpg",
+          "youtube_id": "H7KwVeZrP4k",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "URGENCIAS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=sgui8Nj2_VI",
+          "video_embed": "https://www.youtube.com/embed/sgui8Nj2_VI",
+          "thumbnail_url": "https://img.youtube.com/vi/sgui8Nj2_VI/mqdefault.jpg",
+          "youtube_id": "sgui8Nj2_VI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "VACUNA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=uEJKInJMmEc",
+          "video_embed": "https://www.youtube.com/embed/uEJKInJMmEc",
+          "thumbnail_url": "https://img.youtube.com/vi/uEJKInJMmEc/mqdefault.jpg",
+          "youtube_id": "uEJKInJMmEc",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "VENDA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=zI2XqrGZZ1c",
+          "video_embed": "https://www.youtube.com/embed/zI2XqrGZZ1c",
+          "thumbnail_url": "https://img.youtube.com/vi/zI2XqrGZZ1c/mqdefault.jpg",
+          "youtube_id": "zI2XqrGZZ1c",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "VIRUS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=KrqJ9J1Bti4",
+          "video_embed": "https://www.youtube.com/embed/KrqJ9J1Bti4",
+          "thumbnail_url": "https://img.youtube.com/vi/KrqJ9J1Bti4/mqdefault.jpg",
+          "youtube_id": "KrqJ9J1Bti4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "VÓMITO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Hy5_QZdCH-I",
+          "video_embed": "https://www.youtube.com/embed/Hy5_QZdCH-I",
+          "thumbnail_url": "https://img.youtube.com/vi/Hy5_QZdCH-I/mqdefault.jpg",
+          "youtube_id": "Hy5_QZdCH-I",
+          "fuente": "glosario_cdmx"
+        }
+      ]
+    },
+    {
+      "id": "trabajo",
+      "nombre": "Trabajo",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/trabajo/",
+      "leccion_academia": "L2.3",
+      "total_senas": 0,
+      "senas": []
+    },
+    {
+      "id": "educacion",
+      "nombre": "Educación",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/educacion/",
+      "leccion_academia": "L2.3",
+      "total_senas": 65,
+      "senas": [
+        {
+          "palabra": "A",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=UIdCFNf_Udc",
+          "video_embed": "https://www.youtube.com/embed/UIdCFNf_Udc",
+          "thumbnail_url": "https://img.youtube.com/vi/UIdCFNf_Udc/mqdefault.jpg",
+          "youtube_id": "UIdCFNf_Udc",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "B",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Ub3BVznewp8",
+          "video_embed": "https://www.youtube.com/embed/Ub3BVznewp8",
+          "thumbnail_url": "https://img.youtube.com/vi/Ub3BVznewp8/mqdefault.jpg",
+          "youtube_id": "Ub3BVznewp8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BACHILLERATO/PREPARATORIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=l8JK-WWjlEY",
+          "video_embed": "https://www.youtube.com/embed/l8JK-WWjlEY",
+          "thumbnail_url": "https://img.youtube.com/vi/l8JK-WWjlEY/mqdefault.jpg",
+          "youtube_id": "l8JK-WWjlEY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BIBLIOTECA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=TBBh5m4uPfA",
+          "video_embed": "https://www.youtube.com/embed/TBBh5m4uPfA",
+          "thumbnail_url": "https://img.youtube.com/vi/TBBh5m4uPfA/mqdefault.jpg",
+          "youtube_id": "TBBh5m4uPfA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BORRADOR",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=7rcqjaFGZG0",
+          "video_embed": "https://www.youtube.com/embed/7rcqjaFGZG0",
+          "thumbnail_url": "https://img.youtube.com/vi/7rcqjaFGZG0/mqdefault.jpg",
+          "youtube_id": "7rcqjaFGZG0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "C",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=wxmyvk8yjsQ",
+          "video_embed": "https://www.youtube.com/embed/wxmyvk8yjsQ",
+          "thumbnail_url": "https://img.youtube.com/vi/wxmyvk8yjsQ/mqdefault.jpg",
+          "youtube_id": "wxmyvk8yjsQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CAFETERÍA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=rAGqNgkzcOo",
+          "video_embed": "https://www.youtube.com/embed/rAGqNgkzcOo",
+          "thumbnail_url": "https://img.youtube.com/vi/rAGqNgkzcOo/mqdefault.jpg",
+          "youtube_id": "rAGqNgkzcOo",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CLASE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=x67IJU69Fog",
+          "video_embed": "https://www.youtube.com/embed/x67IJU69Fog",
+          "thumbnail_url": "https://img.youtube.com/vi/x67IJU69Fog/mqdefault.jpg",
+          "youtube_id": "x67IJU69Fog",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CONFERENCIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=yz9qXXgrh7E",
+          "video_embed": "https://www.youtube.com/embed/yz9qXXgrh7E",
+          "thumbnail_url": "https://img.youtube.com/vi/yz9qXXgrh7E/mqdefault.jpg",
+          "youtube_id": "yz9qXXgrh7E",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CUADERNO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=RQGUB96tU7k",
+          "video_embed": "https://www.youtube.com/embed/RQGUB96tU7k",
+          "thumbnail_url": "https://img.youtube.com/vi/RQGUB96tU7k/mqdefault.jpg",
+          "youtube_id": "RQGUB96tU7k",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "D",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=w9d8xuTit9k",
+          "video_embed": "https://www.youtube.com/embed/w9d8xuTit9k",
+          "thumbnail_url": "https://img.youtube.com/vi/w9d8xuTit9k/mqdefault.jpg",
+          "youtube_id": "w9d8xuTit9k",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DACTILOLOGÍA (ALFABETO)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=fY81OuLYqQg",
+          "video_embed": "https://www.youtube.com/embed/fY81OuLYqQg",
+          "thumbnail_url": "https://img.youtube.com/vi/fY81OuLYqQg/mqdefault.jpg",
+          "youtube_id": "fY81OuLYqQg",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DIPLOMA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Vg0qrezQLTw",
+          "video_embed": "https://www.youtube.com/embed/Vg0qrezQLTw",
+          "thumbnail_url": "https://img.youtube.com/vi/Vg0qrezQLTw/mqdefault.jpg",
+          "youtube_id": "Vg0qrezQLTw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "E",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=oa3LChbP9p0",
+          "video_embed": "https://www.youtube.com/embed/oa3LChbP9p0",
+          "thumbnail_url": "https://img.youtube.com/vi/oa3LChbP9p0/mqdefault.jpg",
+          "youtube_id": "oa3LChbP9p0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ESCUELA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ThlMtGCgkQE",
+          "video_embed": "https://www.youtube.com/embed/ThlMtGCgkQE",
+          "thumbnail_url": "https://img.youtube.com/vi/ThlMtGCgkQE/mqdefault.jpg",
+          "youtube_id": "ThlMtGCgkQE",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ESPAÑOL",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=jcq0dhNJCKY",
+          "video_embed": "https://www.youtube.com/embed/jcq0dhNJCKY",
+          "thumbnail_url": "https://img.youtube.com/vi/jcq0dhNJCKY/mqdefault.jpg",
+          "youtube_id": "jcq0dhNJCKY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ESTANCIA INFANTIL",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=t5lVNC5HouM",
+          "video_embed": "https://www.youtube.com/embed/t5lVNC5HouM",
+          "thumbnail_url": "https://img.youtube.com/vi/t5lVNC5HouM/mqdefault.jpg",
+          "youtube_id": "t5lVNC5HouM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ESTUDIANTE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=6NCKO_GOlYg",
+          "video_embed": "https://www.youtube.com/embed/6NCKO_GOlYg",
+          "thumbnail_url": "https://img.youtube.com/vi/6NCKO_GOlYg/mqdefault.jpg",
+          "youtube_id": "6NCKO_GOlYg",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "EXAMEN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=TIU5xepVWbQ",
+          "video_embed": "https://www.youtube.com/embed/TIU5xepVWbQ",
+          "thumbnail_url": "https://img.youtube.com/vi/TIU5xepVWbQ/mqdefault.jpg",
+          "youtube_id": "TIU5xepVWbQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "F",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ennzzWUul94",
+          "video_embed": "https://www.youtube.com/embed/ennzzWUul94",
+          "thumbnail_url": "https://img.youtube.com/vi/ennzzWUul94/mqdefault.jpg",
+          "youtube_id": "ennzzWUul94",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "FÍSICA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=G6wIadOjUTU",
+          "video_embed": "https://www.youtube.com/embed/G6wIadOjUTU",
+          "thumbnail_url": "https://img.youtube.com/vi/G6wIadOjUTU/mqdefault.jpg",
+          "youtube_id": "G6wIadOjUTU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "G",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=e7fblEf7pwY",
+          "video_embed": "https://www.youtube.com/embed/e7fblEf7pwY",
+          "thumbnail_url": "https://img.youtube.com/vi/e7fblEf7pwY/mqdefault.jpg",
+          "youtube_id": "e7fblEf7pwY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "GIMNASIO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=LOZprbk_dL0",
+          "video_embed": "https://www.youtube.com/embed/LOZprbk_dL0",
+          "thumbnail_url": "https://img.youtube.com/vi/LOZprbk_dL0/mqdefault.jpg",
+          "youtube_id": "LOZprbk_dL0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "GRADUACIÓN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=hADmALZl24E",
+          "video_embed": "https://www.youtube.com/embed/hADmALZl24E",
+          "thumbnail_url": "https://img.youtube.com/vi/hADmALZl24E/mqdefault.jpg",
+          "youtube_id": "hADmALZl24E",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "H",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=aFXfy0PJLH8",
+          "video_embed": "https://www.youtube.com/embed/aFXfy0PJLH8",
+          "thumbnail_url": "https://img.youtube.com/vi/aFXfy0PJLH8/mqdefault.jpg",
+          "youtube_id": "aFXfy0PJLH8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "HISTORIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=glg0kQ-N-hM",
+          "video_embed": "https://www.youtube.com/embed/glg0kQ-N-hM",
+          "thumbnail_url": "https://img.youtube.com/vi/glg0kQ-N-hM/mqdefault.jpg",
+          "youtube_id": "glg0kQ-N-hM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "I",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Gjdzqz5DyK4",
+          "video_embed": "https://www.youtube.com/embed/Gjdzqz5DyK4",
+          "thumbnail_url": "https://img.youtube.com/vi/Gjdzqz5DyK4/mqdefault.jpg",
+          "youtube_id": "Gjdzqz5DyK4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "INGLÉS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=c5Dr_HrNS5E",
+          "video_embed": "https://www.youtube.com/embed/c5Dr_HrNS5E",
+          "thumbnail_url": "https://img.youtube.com/vi/c5Dr_HrNS5E/mqdefault.jpg",
+          "youtube_id": "c5Dr_HrNS5E",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "INVESTIGACIÓN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=eFNXb-wEX1k",
+          "video_embed": "https://www.youtube.com/embed/eFNXb-wEX1k",
+          "thumbnail_url": "https://img.youtube.com/vi/eFNXb-wEX1k/mqdefault.jpg",
+          "youtube_id": "eFNXb-wEX1k",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "J",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=jFVrrJxdAIM",
+          "video_embed": "https://www.youtube.com/embed/jFVrrJxdAIM",
+          "thumbnail_url": "https://img.youtube.com/vi/jFVrrJxdAIM/mqdefault.jpg",
+          "youtube_id": "jFVrrJxdAIM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "K",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=gWS2LYvrd5k",
+          "video_embed": "https://www.youtube.com/embed/gWS2LYvrd5k",
+          "thumbnail_url": "https://img.youtube.com/vi/gWS2LYvrd5k/mqdefault.jpg",
+          "youtube_id": "gWS2LYvrd5k",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "KÍNDER",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=TQCM1ICVnxA",
+          "video_embed": "https://www.youtube.com/embed/TQCM1ICVnxA",
+          "thumbnail_url": "https://img.youtube.com/vi/TQCM1ICVnxA/mqdefault.jpg",
+          "youtube_id": "TQCM1ICVnxA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "L",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ViQ_CDYqhi8",
+          "video_embed": "https://www.youtube.com/embed/ViQ_CDYqhi8",
+          "thumbnail_url": "https://img.youtube.com/vi/ViQ_CDYqhi8/mqdefault.jpg",
+          "youtube_id": "ViQ_CDYqhi8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "LÁPIZ",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=xKN098ZICNo",
+          "video_embed": "https://www.youtube.com/embed/xKN098ZICNo",
+          "thumbnail_url": "https://img.youtube.com/vi/xKN098ZICNo/mqdefault.jpg",
+          "youtube_id": "xKN098ZICNo",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "LIBRO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=kDPfbaK7w2M",
+          "video_embed": "https://www.youtube.com/embed/kDPfbaK7w2M",
+          "thumbnail_url": "https://img.youtube.com/vi/kDPfbaK7w2M/mqdefault.jpg",
+          "youtube_id": "kDPfbaK7w2M",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "LICENCIATURA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=N247zxcT-KQ",
+          "video_embed": "https://www.youtube.com/embed/N247zxcT-KQ",
+          "thumbnail_url": "https://img.youtube.com/vi/N247zxcT-KQ/mqdefault.jpg",
+          "youtube_id": "N247zxcT-KQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "M",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=4vDZUmacuDI",
+          "video_embed": "https://www.youtube.com/embed/4vDZUmacuDI",
+          "thumbnail_url": "https://img.youtube.com/vi/4vDZUmacuDI/mqdefault.jpg",
+          "youtube_id": "4vDZUmacuDI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MATEMÁTICAS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=6j9ezgqYuhw",
+          "video_embed": "https://www.youtube.com/embed/6j9ezgqYuhw",
+          "thumbnail_url": "https://img.youtube.com/vi/6j9ezgqYuhw/mqdefault.jpg",
+          "youtube_id": "6j9ezgqYuhw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MATERIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=R844hevTEkA",
+          "video_embed": "https://www.youtube.com/embed/R844hevTEkA",
+          "thumbnail_url": "https://img.youtube.com/vi/R844hevTEkA/mqdefault.jpg",
+          "youtube_id": "R844hevTEkA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "Ñ",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=K3nddBE4iO8",
+          "video_embed": "https://www.youtube.com/embed/K3nddBE4iO8",
+          "thumbnail_url": "https://img.youtube.com/vi/K3nddBE4iO8/mqdefault.jpg",
+          "youtube_id": "K3nddBE4iO8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "N",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=G-mrv-vays0",
+          "video_embed": "https://www.youtube.com/embed/G-mrv-vays0",
+          "thumbnail_url": "https://img.youtube.com/vi/G-mrv-vays0/mqdefault.jpg",
+          "youtube_id": "G-mrv-vays0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "O",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ogZRZyc5ols",
+          "video_embed": "https://www.youtube.com/embed/ogZRZyc5ols",
+          "thumbnail_url": "https://img.youtube.com/vi/ogZRZyc5ols/mqdefault.jpg",
+          "youtube_id": "ogZRZyc5ols",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "P",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=PyOS69lWJZ0",
+          "video_embed": "https://www.youtube.com/embed/PyOS69lWJZ0",
+          "thumbnail_url": "https://img.youtube.com/vi/PyOS69lWJZ0/mqdefault.jpg",
+          "youtube_id": "PyOS69lWJZ0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PATIO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=CVH7ArDj32c",
+          "video_embed": "https://www.youtube.com/embed/CVH7ArDj32c",
+          "thumbnail_url": "https://img.youtube.com/vi/CVH7ArDj32c/mqdefault.jpg",
+          "youtube_id": "CVH7ArDj32c",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PIZARRÓN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=bWT49edxDUs",
+          "video_embed": "https://www.youtube.com/embed/bWT49edxDUs",
+          "thumbnail_url": "https://img.youtube.com/vi/bWT49edxDUs/mqdefault.jpg",
+          "youtube_id": "bWT49edxDUs",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PLUMA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=QgGzAFxUato",
+          "video_embed": "https://www.youtube.com/embed/QgGzAFxUato",
+          "thumbnail_url": "https://img.youtube.com/vi/QgGzAFxUato/mqdefault.jpg",
+          "youtube_id": "QgGzAFxUato",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PRIMARIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ktS7xZYi8Ek",
+          "video_embed": "https://www.youtube.com/embed/ktS7xZYi8Ek",
+          "thumbnail_url": "https://img.youtube.com/vi/ktS7xZYi8Ek/mqdefault.jpg",
+          "youtube_id": "ktS7xZYi8Ek",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PROYECTOR",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=fY-C5HBRoFw",
+          "video_embed": "https://www.youtube.com/embed/fY-C5HBRoFw",
+          "thumbnail_url": "https://img.youtube.com/vi/fY-C5HBRoFw/mqdefault.jpg",
+          "youtube_id": "fY-C5HBRoFw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "Q",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Wq75muS-EmY",
+          "video_embed": "https://www.youtube.com/embed/Wq75muS-EmY",
+          "thumbnail_url": "https://img.youtube.com/vi/Wq75muS-EmY/mqdefault.jpg",
+          "youtube_id": "Wq75muS-EmY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "QUÍMICA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=SmfF1pZmFpE",
+          "video_embed": "https://www.youtube.com/embed/SmfF1pZmFpE",
+          "thumbnail_url": "https://img.youtube.com/vi/SmfF1pZmFpE/mqdefault.jpg",
+          "youtube_id": "SmfF1pZmFpE",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "R",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=D1omF_CAP7Q",
+          "video_embed": "https://www.youtube.com/embed/D1omF_CAP7Q",
+          "thumbnail_url": "https://img.youtube.com/vi/D1omF_CAP7Q/mqdefault.jpg",
+          "youtube_id": "D1omF_CAP7Q",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "RECREO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ZU5bfqo5rbM",
+          "video_embed": "https://www.youtube.com/embed/ZU5bfqo5rbM",
+          "thumbnail_url": "https://img.youtube.com/vi/ZU5bfqo5rbM/mqdefault.jpg",
+          "youtube_id": "ZU5bfqo5rbM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "S",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=oPX2obMcpBM",
+          "video_embed": "https://www.youtube.com/embed/oPX2obMcpBM",
+          "thumbnail_url": "https://img.youtube.com/vi/oPX2obMcpBM/mqdefault.jpg",
+          "youtube_id": "oPX2obMcpBM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "SALÓN DE CLASES",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=YQ1lxdzLzJ0",
+          "video_embed": "https://www.youtube.com/embed/YQ1lxdzLzJ0",
+          "thumbnail_url": "https://img.youtube.com/vi/YQ1lxdzLzJ0/mqdefault.jpg",
+          "youtube_id": "YQ1lxdzLzJ0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "SECUNDARIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=G7q0ZuSWyas",
+          "video_embed": "https://www.youtube.com/embed/G7q0ZuSWyas",
+          "thumbnail_url": "https://img.youtube.com/vi/G7q0ZuSWyas/mqdefault.jpg",
+          "youtube_id": "G7q0ZuSWyas",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "SEMESTRE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=pvagP25pMH4",
+          "video_embed": "https://www.youtube.com/embed/pvagP25pMH4",
+          "thumbnail_url": "https://img.youtube.com/vi/pvagP25pMH4/mqdefault.jpg",
+          "youtube_id": "pvagP25pMH4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "T",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=rSA67P2RzXw",
+          "video_embed": "https://www.youtube.com/embed/rSA67P2RzXw",
+          "thumbnail_url": "https://img.youtube.com/vi/rSA67P2RzXw/mqdefault.jpg",
+          "youtube_id": "rSA67P2RzXw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TAREA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=NGTu4DS3v7Q",
+          "video_embed": "https://www.youtube.com/embed/NGTu4DS3v7Q",
+          "thumbnail_url": "https://img.youtube.com/vi/NGTu4DS3v7Q/mqdefault.jpg",
+          "youtube_id": "NGTu4DS3v7Q",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "U",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=4MGeUY_LccU",
+          "video_embed": "https://www.youtube.com/embed/4MGeUY_LccU",
+          "thumbnail_url": "https://img.youtube.com/vi/4MGeUY_LccU/mqdefault.jpg",
+          "youtube_id": "4MGeUY_LccU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "UNIVERSIDAD",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ORxxJNM9x2E",
+          "video_embed": "https://www.youtube.com/embed/ORxxJNM9x2E",
+          "thumbnail_url": "https://img.youtube.com/vi/ORxxJNM9x2E/mqdefault.jpg",
+          "youtube_id": "ORxxJNM9x2E",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "V",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=iTox4wHu58c",
+          "video_embed": "https://www.youtube.com/embed/iTox4wHu58c",
+          "thumbnail_url": "https://img.youtube.com/vi/iTox4wHu58c/mqdefault.jpg",
+          "youtube_id": "iTox4wHu58c",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "W",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ypWGuRNFQRM",
+          "video_embed": "https://www.youtube.com/embed/ypWGuRNFQRM",
+          "thumbnail_url": "https://img.youtube.com/vi/ypWGuRNFQRM/mqdefault.jpg",
+          "youtube_id": "ypWGuRNFQRM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "X",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=yNWC9DjTMTU",
+          "video_embed": "https://www.youtube.com/embed/yNWC9DjTMTU",
+          "thumbnail_url": "https://img.youtube.com/vi/yNWC9DjTMTU/mqdefault.jpg",
+          "youtube_id": "yNWC9DjTMTU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "Y",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=6EfodoGAJAE",
+          "video_embed": "https://www.youtube.com/embed/6EfodoGAJAE",
+          "thumbnail_url": "https://img.youtube.com/vi/6EfodoGAJAE/mqdefault.jpg",
+          "youtube_id": "6EfodoGAJAE",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "Z",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ipefyBV4iuk",
+          "video_embed": "https://www.youtube.com/embed/ipefyBV4iuk",
+          "thumbnail_url": "https://img.youtube.com/vi/ipefyBV4iuk/mqdefault.jpg",
+          "youtube_id": "ipefyBV4iuk",
+          "fuente": "glosario_cdmx"
+        }
+      ]
+    },
+    {
+      "id": "derechos",
+      "nombre": "Derechos",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/derechos/",
+      "leccion_academia": "L3.1",
+      "total_senas": 0,
+      "senas": []
+    },
+    {
+      "id": "gobierno",
+      "nombre": "Gobierno",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/gobierno/",
+      "leccion_academia": "L3.2",
+      "total_senas": 0,
+      "senas": []
+    },
+    {
+      "id": "transporte",
+      "nombre": "Transporte",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/transporte/",
+      "leccion_academia": "L3.3",
+      "total_senas": 0,
+      "senas": []
+    },
+    {
+      "id": "vivienda",
+      "nombre": "Vivienda",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/vivienda/",
+      "leccion_academia": "L3.4",
+      "total_senas": 0,
+      "senas": []
+    },
+    {
+      "id": "medio-ambiente",
+      "nombre": "Medio Ambiente",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/medio-ambiente/",
+      "leccion_academia": "L3.5",
+      "total_senas": 0,
+      "senas": []
+    },
+    {
+      "id": "tecnologia",
+      "nombre": "Tecnología",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/tecnologia/",
+      "leccion_academia": "L3.6",
+      "total_senas": 62,
+      "senas": [
+        {
+          "palabra": "ANTIVIRUS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=v7rKDhcNKnI",
+          "video_embed": "https://www.youtube.com/embed/v7rKDhcNKnI",
+          "thumbnail_url": "https://img.youtube.com/vi/v7rKDhcNKnI/mqdefault.jpg",
+          "youtube_id": "v7rKDhcNKnI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "APLICACIÓN",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=q4pxigOgD9Q",
+          "video_embed": "https://www.youtube.com/embed/q4pxigOgD9Q",
+          "thumbnail_url": "https://img.youtube.com/vi/q4pxigOgD9Q/mqdefault.jpg",
+          "youtube_id": "q4pxigOgD9Q",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "AURICULARES",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=iGbFzGjj-R0",
+          "video_embed": "https://www.youtube.com/embed/iGbFzGjj-R0",
+          "thumbnail_url": "https://img.youtube.com/vi/iGbFzGjj-R0/mqdefault.jpg",
+          "youtube_id": "iGbFzGjj-R0",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BLOG",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=J7zqMlwFP9k",
+          "video_embed": "https://www.youtube.com/embed/J7zqMlwFP9k",
+          "thumbnail_url": "https://img.youtube.com/vi/J7zqMlwFP9k/mqdefault.jpg",
+          "youtube_id": "J7zqMlwFP9k",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BLUETOOTH",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=oXYD-YHs0eo",
+          "video_embed": "https://www.youtube.com/embed/oXYD-YHs0eo",
+          "thumbnail_url": "https://img.youtube.com/vi/oXYD-YHs0eo/mqdefault.jpg",
+          "youtube_id": "oXYD-YHs0eo",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "BOT",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=e1Mo2TlB4bI",
+          "video_embed": "https://www.youtube.com/embed/e1Mo2TlB4bI",
+          "thumbnail_url": "https://img.youtube.com/vi/e1Mo2TlB4bI/mqdefault.jpg",
+          "youtube_id": "e1Mo2TlB4bI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CÁMARA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=dDQI6sKIyq4",
+          "video_embed": "https://www.youtube.com/embed/dDQI6sKIyq4",
+          "thumbnail_url": "https://img.youtube.com/vi/dDQI6sKIyq4/mqdefault.jpg",
+          "youtube_id": "dDQI6sKIyq4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CIBERACOSO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=4SFvSlICVN8",
+          "video_embed": "https://www.youtube.com/embed/4SFvSlICVN8",
+          "thumbnail_url": "https://img.youtube.com/vi/4SFvSlICVN8/mqdefault.jpg",
+          "youtube_id": "4SFvSlICVN8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CIBERSEGURIDAD",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=LPoOsaAcF4E",
+          "video_embed": "https://www.youtube.com/embed/LPoOsaAcF4E",
+          "thumbnail_url": "https://img.youtube.com/vi/LPoOsaAcF4E/mqdefault.jpg",
+          "youtube_id": "LPoOsaAcF4E",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "COMPUTADORA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=JU118g0dFoM",
+          "video_embed": "https://www.youtube.com/embed/JU118g0dFoM",
+          "thumbnail_url": "https://img.youtube.com/vi/JU118g0dFoM/mqdefault.jpg",
+          "youtube_id": "JU118g0dFoM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CONTRASEÑA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=c5RTvc-I-BQ",
+          "video_embed": "https://www.youtube.com/embed/c5RTvc-I-BQ",
+          "thumbnail_url": "https://img.youtube.com/vi/c5RTvc-I-BQ/mqdefault.jpg",
+          "youtube_id": "c5RTvc-I-BQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "CORREO ELECTRÓNICO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ExNsboeGeE8",
+          "video_embed": "https://www.youtube.com/embed/ExNsboeGeE8",
+          "thumbnail_url": "https://img.youtube.com/vi/ExNsboeGeE8/mqdefault.jpg",
+          "youtube_id": "ExNsboeGeE8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DATOS PERSONALES",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=_yG0O4tiF7o",
+          "video_embed": "https://www.youtube.com/embed/_yG0O4tiF7o",
+          "thumbnail_url": "https://img.youtube.com/vi/_yG0O4tiF7o/mqdefault.jpg",
+          "youtube_id": "_yG0O4tiF7o",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DATOS PÚBLICOS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=HGp4XTmuYUw",
+          "video_embed": "https://www.youtube.com/embed/HGp4XTmuYUw",
+          "thumbnail_url": "https://img.youtube.com/vi/HGp4XTmuYUw/mqdefault.jpg",
+          "youtube_id": "HGp4XTmuYUw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DIRECCIÓN URL",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=KyvaaFOrGTA",
+          "video_embed": "https://www.youtube.com/embed/KyvaaFOrGTA",
+          "thumbnail_url": "https://img.youtube.com/vi/KyvaaFOrGTA/mqdefault.jpg",
+          "youtube_id": "KyvaaFOrGTA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "DISCO DURO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=nsFMg5GvOZo",
+          "video_embed": "https://www.youtube.com/embed/nsFMg5GvOZo",
+          "thumbnail_url": "https://img.youtube.com/vi/nsFMg5GvOZo/mqdefault.jpg",
+          "youtube_id": "nsFMg5GvOZo",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ENLACE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=qHU2VU5I56U",
+          "video_embed": "https://www.youtube.com/embed/qHU2VU5I56U",
+          "thumbnail_url": "https://img.youtube.com/vi/qHU2VU5I56U/mqdefault.jpg",
+          "youtube_id": "qHU2VU5I56U",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ESCÁNER",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=2IkzU_GlvQE",
+          "video_embed": "https://www.youtube.com/embed/2IkzU_GlvQE",
+          "thumbnail_url": "https://img.youtube.com/vi/2IkzU_GlvQE/mqdefault.jpg",
+          "youtube_id": "2IkzU_GlvQE",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "EXCEL",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=B5ZyQSGfQAo",
+          "video_embed": "https://www.youtube.com/embed/B5ZyQSGfQAo",
+          "thumbnail_url": "https://img.youtube.com/vi/B5ZyQSGfQAo/mqdefault.jpg",
+          "youtube_id": "B5ZyQSGfQAo",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "FACEBOOK",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=n003w8DR--E",
+          "video_embed": "https://www.youtube.com/embed/n003w8DR--E",
+          "thumbnail_url": "https://img.youtube.com/vi/n003w8DR--E/mqdefault.jpg",
+          "youtube_id": "n003w8DR--E",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "GOOGLE (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=R59IQVstACo",
+          "video_embed": "https://www.youtube.com/embed/R59IQVstACo",
+          "thumbnail_url": "https://img.youtube.com/vi/R59IQVstACo/mqdefault.jpg",
+          "youtube_id": "R59IQVstACo",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "GOOGLE (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=c0-uMJLt2cQ",
+          "video_embed": "https://www.youtube.com/embed/c0-uMJLt2cQ",
+          "thumbnail_url": "https://img.youtube.com/vi/c0-uMJLt2cQ/mqdefault.jpg",
+          "youtube_id": "c0-uMJLt2cQ",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "GOOGLE DRIVE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=CglpaMG1Z3I",
+          "video_embed": "https://www.youtube.com/embed/CglpaMG1Z3I",
+          "thumbnail_url": "https://img.youtube.com/vi/CglpaMG1Z3I/mqdefault.jpg",
+          "youtube_id": "CglpaMG1Z3I",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "HACKEAR",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=FBKb0DeIPPs",
+          "video_embed": "https://www.youtube.com/embed/FBKb0DeIPPs",
+          "thumbnail_url": "https://img.youtube.com/vi/FBKb0DeIPPs/mqdefault.jpg",
+          "youtube_id": "FBKb0DeIPPs",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "IMPRESORA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=yu_fIZXfRzM",
+          "video_embed": "https://www.youtube.com/embed/yu_fIZXfRzM",
+          "thumbnail_url": "https://img.youtube.com/vi/yu_fIZXfRzM/mqdefault.jpg",
+          "youtube_id": "yu_fIZXfRzM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "INBOX",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=soImdQ1tWMM",
+          "video_embed": "https://www.youtube.com/embed/soImdQ1tWMM",
+          "thumbnail_url": "https://img.youtube.com/vi/soImdQ1tWMM/mqdefault.jpg",
+          "youtube_id": "soImdQ1tWMM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "INSTAGRAM",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=dhrCouERBe4",
+          "video_embed": "https://www.youtube.com/embed/dhrCouERBe4",
+          "thumbnail_url": "https://img.youtube.com/vi/dhrCouERBe4/mqdefault.jpg",
+          "youtube_id": "dhrCouERBe4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "INTELIGENCIA ARTIFICIAL",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=SmbfK-sXCbM",
+          "video_embed": "https://www.youtube.com/embed/SmbfK-sXCbM",
+          "thumbnail_url": "https://img.youtube.com/vi/SmbfK-sXCbM/mqdefault.jpg",
+          "youtube_id": "SmbfK-sXCbM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "INTERNET",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=RBruIk0ZYac",
+          "video_embed": "https://www.youtube.com/embed/RBruIk0ZYac",
+          "thumbnail_url": "https://img.youtube.com/vi/RBruIk0ZYac/mqdefault.jpg",
+          "youtube_id": "RBruIk0ZYac",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MACOS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=3VuormS3sjM",
+          "video_embed": "https://www.youtube.com/embed/3VuormS3sjM",
+          "thumbnail_url": "https://img.youtube.com/vi/3VuormS3sjM/mqdefault.jpg",
+          "youtube_id": "3VuormS3sjM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ME GUSTA (LIKE)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=NnLrtIl_VT8",
+          "video_embed": "https://www.youtube.com/embed/NnLrtIl_VT8",
+          "thumbnail_url": "https://img.youtube.com/vi/NnLrtIl_VT8/mqdefault.jpg",
+          "youtube_id": "NnLrtIl_VT8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MEMORIA USB",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=0b35cjYLmgk",
+          "video_embed": "https://www.youtube.com/embed/0b35cjYLmgk",
+          "thumbnail_url": "https://img.youtube.com/vi/0b35cjYLmgk/mqdefault.jpg",
+          "youtube_id": "0b35cjYLmgk",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MESSENGER (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=cMAiPngtpQA",
+          "video_embed": "https://www.youtube.com/embed/cMAiPngtpQA",
+          "thumbnail_url": "https://img.youtube.com/vi/cMAiPngtpQA/mqdefault.jpg",
+          "youtube_id": "cMAiPngtpQA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MESSENGER (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=D2RLP6blLig",
+          "video_embed": "https://www.youtube.com/embed/D2RLP6blLig",
+          "thumbnail_url": "https://img.youtube.com/vi/D2RLP6blLig/mqdefault.jpg",
+          "youtube_id": "D2RLP6blLig",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "MICRÓFONO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=w44NZjq6a8U",
+          "video_embed": "https://www.youtube.com/embed/w44NZjq6a8U",
+          "thumbnail_url": "https://img.youtube.com/vi/w44NZjq6a8U/mqdefault.jpg",
+          "youtube_id": "w44NZjq6a8U",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "NOTICIAS FALSAS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=R44zRp57vaE",
+          "video_embed": "https://www.youtube.com/embed/R44zRp57vaE",
+          "thumbnail_url": "https://img.youtube.com/vi/R44zRp57vaE/mqdefault.jpg",
+          "youtube_id": "R44zRp57vaE",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "NUBE CLOUD COMPUTING",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Bg9aGCXiQcg",
+          "video_embed": "https://www.youtube.com/embed/Bg9aGCXiQcg",
+          "thumbnail_url": "https://img.youtube.com/vi/Bg9aGCXiQcg/mqdefault.jpg",
+          "youtube_id": "Bg9aGCXiQcg",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PÁGINA WEB",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=7y6eh1OT-2g",
+          "video_embed": "https://www.youtube.com/embed/7y6eh1OT-2g",
+          "thumbnail_url": "https://img.youtube.com/vi/7y6eh1OT-2g/mqdefault.jpg",
+          "youtube_id": "7y6eh1OT-2g",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PERFIL",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=Zgn7rRiOwMA",
+          "video_embed": "https://www.youtube.com/embed/Zgn7rRiOwMA",
+          "thumbnail_url": "https://img.youtube.com/vi/Zgn7rRiOwMA/mqdefault.jpg",
+          "youtube_id": "Zgn7rRiOwMA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "POWER POINT",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=cjOptZJJXRs",
+          "video_embed": "https://www.youtube.com/embed/cjOptZJJXRs",
+          "thumbnail_url": "https://img.youtube.com/vi/cjOptZJJXRs/mqdefault.jpg",
+          "youtube_id": "cjOptZJJXRs",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "PROGRAMA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=-HHB3CmjoMw",
+          "video_embed": "https://www.youtube.com/embed/-HHB3CmjoMw",
+          "thumbnail_url": "https://img.youtube.com/vi/-HHB3CmjoMw/mqdefault.jpg",
+          "youtube_id": "-HHB3CmjoMw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "REALIDAD VIRTUAL (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=AI1odShZ800",
+          "video_embed": "https://www.youtube.com/embed/AI1odShZ800",
+          "thumbnail_url": "https://img.youtube.com/vi/AI1odShZ800/mqdefault.jpg",
+          "youtube_id": "AI1odShZ800",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "REALIDAD VIRTUAL (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=83ndvUf433c",
+          "video_embed": "https://www.youtube.com/embed/83ndvUf433c",
+          "thumbnail_url": "https://img.youtube.com/vi/83ndvUf433c/mqdefault.jpg",
+          "youtube_id": "83ndvUf433c",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "RED SOCIAL",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ykbl8ej-9dk",
+          "video_embed": "https://www.youtube.com/embed/ykbl8ej-9dk",
+          "thumbnail_url": "https://img.youtube.com/vi/ykbl8ej-9dk/mqdefault.jpg",
+          "youtube_id": "ykbl8ej-9dk",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "SISTEMA OPERATIVO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=JZosPDEb9wA",
+          "video_embed": "https://www.youtube.com/embed/JZosPDEb9wA",
+          "thumbnail_url": "https://img.youtube.com/vi/JZosPDEb9wA/mqdefault.jpg",
+          "youtube_id": "JZosPDEb9wA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TABLETA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=85QlGiGId4c",
+          "video_embed": "https://www.youtube.com/embed/85QlGiGId4c",
+          "thumbnail_url": "https://img.youtube.com/vi/85QlGiGId4c/mqdefault.jpg",
+          "youtube_id": "85QlGiGId4c",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TARJETA DE MEMORIA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=IBKGcEV4_iE",
+          "video_embed": "https://www.youtube.com/embed/IBKGcEV4_iE",
+          "thumbnail_url": "https://img.youtube.com/vi/IBKGcEV4_iE/mqdefault.jpg",
+          "youtube_id": "IBKGcEV4_iE",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TELÉFONO",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=pjhwzAjmIBw",
+          "video_embed": "https://www.youtube.com/embed/pjhwzAjmIBw",
+          "thumbnail_url": "https://img.youtube.com/vi/pjhwzAjmIBw/mqdefault.jpg",
+          "youtube_id": "pjhwzAjmIBw",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TIC'S (1)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=9AnzXetIeEA",
+          "video_embed": "https://www.youtube.com/embed/9AnzXetIeEA",
+          "thumbnail_url": "https://img.youtube.com/vi/9AnzXetIeEA/mqdefault.jpg",
+          "youtube_id": "9AnzXetIeEA",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TIC'S (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=ymAckPOZHIc",
+          "video_embed": "https://www.youtube.com/embed/ymAckPOZHIc",
+          "thumbnail_url": "https://img.youtube.com/vi/ymAckPOZHIc/mqdefault.jpg",
+          "youtube_id": "ymAckPOZHIc",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "TIK-TOK",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=pGWPIHVqM2c",
+          "video_embed": "https://www.youtube.com/embed/pGWPIHVqM2c",
+          "thumbnail_url": "https://img.youtube.com/vi/pGWPIHVqM2c/mqdefault.jpg",
+          "youtube_id": "pGWPIHVqM2c",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "VIDEOLLAMADA",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=k-510iezYS8",
+          "video_embed": "https://www.youtube.com/embed/k-510iezYS8",
+          "thumbnail_url": "https://img.youtube.com/vi/k-510iezYS8/mqdefault.jpg",
+          "youtube_id": "k-510iezYS8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "VIDEOLLAMADA (2)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=2rIyV-VUsSk",
+          "video_embed": "https://www.youtube.com/embed/2rIyV-VUsSk",
+          "thumbnail_url": "https://img.youtube.com/vi/2rIyV-VUsSk/mqdefault.jpg",
+          "youtube_id": "2rIyV-VUsSk",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "VIRUS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=gUVGBrLSPhM",
+          "video_embed": "https://www.youtube.com/embed/gUVGBrLSPhM",
+          "thumbnail_url": "https://img.youtube.com/vi/gUVGBrLSPhM/mqdefault.jpg",
+          "youtube_id": "gUVGBrLSPhM",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "WEBINAR",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=FdtSnRGk2Y8",
+          "video_embed": "https://www.youtube.com/embed/FdtSnRGk2Y8",
+          "thumbnail_url": "https://img.youtube.com/vi/FdtSnRGk2Y8/mqdefault.jpg",
+          "youtube_id": "FdtSnRGk2Y8",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "WHASTAPP",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=KQnSTA4u-SI",
+          "video_embed": "https://www.youtube.com/embed/KQnSTA4u-SI",
+          "thumbnail_url": "https://img.youtube.com/vi/KQnSTA4u-SI/mqdefault.jpg",
+          "youtube_id": "KQnSTA4u-SI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "WI - FI",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=YCQjhhQrjNY",
+          "video_embed": "https://www.youtube.com/embed/YCQjhhQrjNY",
+          "thumbnail_url": "https://img.youtube.com/vi/YCQjhhQrjNY/mqdefault.jpg",
+          "youtube_id": "YCQjhhQrjNY",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "WINDOWS",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=JOcQc6DfXZ4",
+          "video_embed": "https://www.youtube.com/embed/JOcQc6DfXZ4",
+          "thumbnail_url": "https://img.youtube.com/vi/JOcQc6DfXZ4/mqdefault.jpg",
+          "youtube_id": "JOcQc6DfXZ4",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "WORD",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=W8M7opgtT4Q",
+          "video_embed": "https://www.youtube.com/embed/W8M7opgtT4Q",
+          "thumbnail_url": "https://img.youtube.com/vi/W8M7opgtT4Q/mqdefault.jpg",
+          "youtube_id": "W8M7opgtT4Q",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "X (TWITTER)",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=x4ydV1uKGsU",
+          "video_embed": "https://www.youtube.com/embed/x4ydV1uKGsU",
+          "thumbnail_url": "https://img.youtube.com/vi/x4ydV1uKGsU/mqdefault.jpg",
+          "youtube_id": "x4ydV1uKGsU",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "YOUTUBE",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=5WrBYJsckuI",
+          "video_embed": "https://www.youtube.com/embed/5WrBYJsckuI",
+          "thumbnail_url": "https://img.youtube.com/vi/5WrBYJsckuI/mqdefault.jpg",
+          "youtube_id": "5WrBYJsckuI",
+          "fuente": "glosario_cdmx"
+        },
+        {
+          "palabra": "ZOOM",
+          "descripcion": "",
+          "video_url": "https://www.youtube.com/watch?v=-9-FuWGXg58",
+          "video_embed": "https://www.youtube.com/embed/-9-FuWGXg58",
+          "thumbnail_url": "https://img.youtube.com/vi/-9-FuWGXg58/mqdefault.jpg",
+          "youtube_id": "-9-FuWGXg58",
+          "fuente": "glosario_cdmx"
+        }
+      ]
+    },
+    {
+      "id": "cultura",
+      "nombre": "Cultura",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/cultura/",
+      "leccion_academia": "L3.7",
+      "total_senas": 0,
+      "senas": []
+    },
+    {
+      "id": "deporte",
+      "nombre": "Deporte",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/deporte/",
+      "leccion_academia": "L3.8",
+      "total_senas": 0,
+      "senas": []
+    },
+    {
+      "id": "emociones",
+      "nombre": "Emociones",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/emociones/",
+      "leccion_academia": "L2.1",
+      "total_senas": 0,
+      "senas": []
+    },
+    {
+      "id": "tiempo",
+      "nombre": "Tiempo",
+      "url": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/tiempo/",
+      "leccion_academia": "L3.9",
+      "total_senas": 0,
+      "senas": []
+    }
+  ]
+}

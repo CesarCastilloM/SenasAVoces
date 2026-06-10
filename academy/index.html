@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta name="theme-color" content="#1B4F9B">
+ <link rel="icon" type="image/png" href="favicon.ico">
+ <title>Señas a Voces Academy — Aprende LSM Gratis</title>
+ <meta name="description" content="Aprende Lengua de Señas Mexicana (LSM) gratis con cámara web. Para personas sordas, familias y todos. Sin registro obligatorio.">
+ <meta name="author" content="Señas a Voces — Enactus México 2026">
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Señas a Voces Academy — Aprende LSM Gratis">
+ <meta property="og:description" content="La comunicación es un derecho, no un privilegio.">
+ <meta property="og:locale" content="es_MX">
+ <meta name="twitter:card" content="summary_large_image">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="styles.css?v=20260528b">
+</head>
+<body>
+ <a href="#main" class="skip-link">Saltar al contenido principal</a>
+
+ <header class="site-header" role="banner">
+ <div class="container">
+ <a href="#hero" class="brand" aria-label="Señas a Voces Academy">
+ <img src="logo.png" alt="" class="brand-mark" aria-hidden="true"
+   onerror="this.style.display='none';this.nextElementSibling.classList.add('no-logo')">
+ <span class="brand-text">Señas a Voces<small>ACADEMY</small></span>
+ </a>
+ <nav aria-label="Principal">
+ <ul class="nav-main" id="navMain">
+ <li><a href="#como">Cómo funciona</a></li>
+ <li><a href="#lecciones">Lecciones</a></li>
+ <li><a href="#practica">Cámara</a></li>
+ <li><a href="#impacto">Impacto</a></li>
+ <li><a href="#nosotros">Nosotros</a></li>
+ <li><a href="#roadmap">Roadmap</a></li>
+ </ul>
+ </nav>
+ <div class="header-tools">
+ <select class="lang-select" id="langSelect" aria-label="Idioma">
+ <option value="es">Español</option><option value="en">English</option><option value="lsm">LSM</option>
+ </select>
+ <button class="icon-btn" id="contrastBtn" aria-label="Alto contraste" title="Alto contraste">A</button>
+ <button class="icon-btn" id="themeBtn" aria-label="Modo claro/oscuro" title="Tema">T</button>
+ <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Menú" aria-expanded="false" aria-controls="navMain">M</button>
+ </div>
+ </div>
+ </header>
+
+ <main id="main">
+
+ <!-- HERO -->
+ <section class="hero" id="hero" aria-labelledby="hero-title">
+ <div class="container hero-grid">
+ <div>
+ <span class="hero-eyebrow"><span class="pulse-dot"></span> Proyecto Enactus México 2026 - Hermosillo, Sonora</span>
+ <h1 id="hero-title">Aprende Lengua de Señas.<br>Gratis. Para siempre.</h1>
+ <p class="hero-sub">La Lengua de Señas Mexicana (LSM) es el idioma natural de las personas sordas en México. Aquí la aprendes con tu cámara, sin pagar nada y sin barreras.</p>
+ <div class="hero-actions">
+ <a href="#lecciones" class="btn btn-primary">Comenzar a aprender ahora →</a>
+ <a href="#para-sordos" class="btn btn-secondary">Soy sordo/a — ¿cómo me ayuda?</a>
+ </div>
+ <p class="hero-foot">Sin registro · En cualquier celular · Código abierto · Disponible en LSM</p>
+ </div>
+ <aside class="hero-card" aria-labelledby="imp-t">
+ <div class="hero-card-head"><span class="pulse-dot"></span><strong id="imp-t">Impacto en vivo</strong></div>
+ <div class="impact-grid">
+ <div class="impact-stat"><span class="num" id="stat-users">12,847</span><span class="label">Estudiantes</span></div>
+ <div class="impact-stat"><span class="num" id="stat-lessons">89,234</span><span class="label">Lecciones</span></div>
+ <div class="impact-stat"><span class="num" id="stat-countries">31</span><span class="label">Países</span></div>
+ </div>
+ <p class="hero-card-foot">Actualizado en tiempo real - Datos anónimos</p>
+ </aside>
+ </div>
+ </section>
+
+ <!-- CRISIS -->
+ <section class="crisis" id="para-sordos" aria-labelledby="crisis-t">
+ <div class="container">
+ <div class="section-title">
+ <span class="section-eyebrow">La crisis que resolvemos</span>
+ <h2 id="crisis-t">México tiene una deuda con su comunidad sorda</h2>
+ <p>Datos reales del INEGI, SNDIF y CONAPRED.</p>
+ </div>
+ <div class="crisis-grid">
+ <article class="crisis-card"><span class="num">40</span><span class="label">Intérpretes LSM certificados en México</span><span class="source">Sin crecimiento desde 2009 - INFODF</span></article>
+ <article class="crisis-card"><span class="num">2.4M</span><span class="label">Personas con discapacidad auditiva</span><span class="source">INEGI 2024</span></article>
+ <article class="crisis-card"><span class="num">24%</span><span class="label">De personas sordas son analfabetas</span><span class="source">CONAPRED</span></article>
+ <article class="crisis-card"><span class="num">75%</span><span class="label">De jóvenes sordos sin educación</span><span class="source">IMER Noticias</span></article>
+ <article class="crisis-card"><span class="num">28</span><span class="label">Estados sin programa LSM</span><span class="source">Análisis SNDIF</span></article>
+ <article class="crisis-card"><span class="num">7.8M</span><span class="label">Hogares con discapacidad</span><span class="source">INEGI</span></article>
+ <article class="crisis-card"><span class="num">5,383</span><span class="label">Personas sordas en Hermosillo</span><span class="source">SNDIF Sonora</span></article>
+ <article class="crisis-card"><span class="num">1/60K</span><span class="label">Intérpretes por persona sorda</span><span class="source">Cálculo propio</span></article>
+ </div>
+ </div>
+ </section>
+
+ <!-- CÓMO FUNCIONA -->
+ <section id="como" aria-labelledby="how-t">
+ <div class="container">
+ <div class="section-title">
+ <span class="section-eyebrow">Cómo funciona</span>
+ <h2 id="how-t">Aprender LSM en 3 pasos</h2>
+ <p>No instales nada. Funciona en celular, tablet o computadora.</p>
+ </div>
+ <div class="how-grid">
+ <article class="step-card"><div class="step-num">1</div><div class="step-icon"></div><h3>Abre la cámara</h3><p>Permite el acceso a tu cámara. ¿Sin cámara? Usa modo quiz.</p></article>
+ <article class="step-card"><div class="step-num">2</div><div class="step-icon"></div><h3>Sigue las lecciones</h3><p>Mira el video, imita la seña, recibe retroalimentación inmediata.</p></article>
+ <article class="step-card"><div class="step-num">3</div><div class="step-icon"></div><h3>Gana certificados</h3><p>Certificado digital verificable con código QR al terminar cada nivel.</p></article>
+ </div>
+ </div>
+ </section>
+
+ <!-- LECCIONES -->
+ <section id="lecciones" class="alt-bg" aria-labelledby="less-t">
+ <div class="container">
+ <div class="section-title">
+ <span class="section-eyebrow">Currículo completo</span>
+ <h2 id="less-t">4 niveles. Cero costo. Cero excusas.</h2>
+ <p>Del alfabeto LSM hasta certificación CONOCER-SEP en línea.</p>
+ </div>
+ <div class="levels-grid" id="levelsGrid"></div>
+ <p class="lessons-note">¿Sin cámara? <a href="#practica">Usa modo quiz</a>. ¿Necesitas ayuda? <a href="#contacto">Escríbenos</a>.</p>
+ </div>
+ </section>
+
+ <!-- CÁMARA -->
+ <section id="practica" aria-labelledby="prac-t">
+ <div class="container">
+ <div class="section-title">
+ <span class="section-eyebrow">Práctica con cámara</span>
+ <h2 id="prac-t">El LSM Teacher en tu navegador</h2>
+ <p>El mismo motor de los guantes Señas a Voces, sin hardware.</p>
+ </div>
+ <div class="camera-wrap">
+ <div class="camera-stage" id="cameraStage" role="region" aria-label="Vista de cámara">
+ <div class="camera-status" id="camStatus"><span class="dot"></span><span id="camStatusText">Cámara apagada</span></div>
+ <video id="camVideo" autoplay playsinline muted></video>
+ <canvas id="camCanvas"></canvas>
+ <canvas id="camOverlayCanvas" aria-hidden="true"></canvas>
+ <div class="camera-overlay" id="camOverlay">
+ <div class="camera-placeholder">
+ <div style="font-size:3rem;"></div>
+ <h3>Cámara lista</h3>
+ <p>Presiona "Activar cámara".<br>Tu video <strong>nunca</strong> sale de tu dispositivo.</p>
+ </div>
+ </div>
+ <div class="camera-detect" id="camDetect">—</div>
+ </div>
+ <div class="camera-info">
+ <div class="target-sign"><span class="glyph" id="targetGlyph">A</span><span class="label" id="targetLabel">Haz esta seña frente a la cámara</span></div>
+ <div class="accuracy-bar">
+ <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="accBar"><span></span></div>
+ <div class="accuracy-val" id="accVal">0%</div>
+ </div>
+ <div class="cam-btns">
+ <button class="btn btn-primary" id="camStartBtn"> Activar cámara</button>
+ <button class="btn btn-ghost" id="camNextBtn" aria-label="Siguiente seña">Siguiente →</button>
+ </div>
+ <ul class="camera-tips">
+ <li>Asegúrate de tener buena luz.</li>
+ <li>Mantén tu mano dentro del cuadro.</li>
+ <li>La expresión facial es parte del LSM.</li>
+ <li>¿No funciona? <button class="btn btn-secondary small" id="quizMode">Modo quiz</button></li>
+ </ul>
+ </div>
+ </div>
+ <p class="privacy-mini"> Privacidad total: el reconocimiento corre en tu navegador.</p>
+ </div>
+ </section>
+
+ <!-- DASHBOARD -->
+ <section id="impacto" aria-labelledby="dash-t">
+ <div class="container">
+ <div class="dashboard">
+ <span class="section-eyebrow light">Transparencia total</span>
+ <h2 id="dash-t">Nuestro impacto en tiempo real</h2>
+ <div class="dash-stats">
+ <div class="dash-stat"><span class="v" id="dash-users">12,847</span><span class="l">Estudiantes activos</span></div>
+ <div class="dash-stat"><span class="v" id="dash-lessons">89,234</span><span class="l">Lecciones completadas</span></div>
+ <div class="dash-stat"><span class="v" id="dash-countries">31</span><span class="l">Países alcanzados</span></div>
+ <div class="dash-stat"><span class="v" id="dash-hours">4,612</span><span class="l">Horas de práctica</span></div>
+ </div>
+ <div class="dash-row">
+ <div class="dash-card">
+ <h4> Señas más practicadas esta semana</h4>
+ <ul class="top-signs" id="topSigns">
+ <li> HOLA <span class="cnt">8,432</span></li>
+ <li> GRACIAS <span class="cnt">7,891</span></li>
+ <li> AYUDA <span class="cnt">6,210</span></li>
+ <li> POR FAVOR <span class="cnt">5,884</span></li>
+ <li> AGUA <span class="cnt">4,902</span></li>
+ <li> FAMILIA <span class="cnt">4,571</span></li>
+ </ul>
+ </div>
+ <div class="dash-card">
+ <h4> Feed en vivo</h4>
+ <ul class="live-feed" id="liveFeed"></ul>
+ </div>
+ </div>
+ <div class="dash-card map-card">
+ <h4> Actividad por estado de México</h4>
+ <p class="dash-hint">Pasa el cursor sobre cada estado para ver estudiantes activos.</p>
+ <svg class="mexico-map" viewBox="0 0 800 380" role="img" aria-label="Mapa de México">
+ <title>Actividad por estado</title>
+ <g id="mexicoStates"></g>
+ </svg>
+ <div class="legend">
+ <span><i class="lg lg1"></i> Bajo</span><span><i class="lg lg2"></i> Medio</span><span><i class="lg lg3"></i> Alto</span>
+ </div>
+ </div>
+ <div class="dash-export"><button class="btn btn-primary" id="exportBtn"> Exportar datos para Enactus (CSV)</button></div>
+ </div>
+ </div>
+ </section>
+
+ <!-- PROGRESO -->
+ <section id="progreso" class="alt-bg" aria-labelledby="prog-t">
+ <div class="container">
+ <div class="section-title">
+ <span class="section-eyebrow">Tu progreso</span>
+ <h2 id="prog-t">Aprende a tu ritmo</h2>
+ <p>Tu progreso se guarda en tu dispositivo. Con cuenta lo sincronizas.</p>
+ </div>
+ <div class="profile-card">
+ <div class="team-avatar" id="profileAvatar"></div>
+ <h3 id="profileName">Estudiante anónimo</h3>
+ <p id="profileStreak"> Racha: <strong>0 días</strong> - Tiempo: <strong>0 min</strong></p>
+ <h4>Árbol de habilidades</h4>
+ <div class="skill-tree" id="skillTree" role="list" aria-label="Habilidades"></div>
+ <h4>Insignias</h4>
+ <div class="badges-row" id="badgesRow">
+ <span class="badge" data-badge="first_sign"> Primera seña</span>
+ <span class="badge" data-badge="first_lesson"> Primera lección</span>
+ <span class="badge" data-badge="alphabet"> Alfabeto completo</span>
+ <span class="badge" data-badge="week"> 7 días seguidos</span>
+ <span class="badge" data-badge="level1"> Nivel 1</span>
+ <span class="badge" data-badge="level2"> Nivel 2</span>
+ <span class="badge" data-badge="level3"> Nivel 3</span>
+ <span class="badge" data-badge="cert"> Certificado</span>
+ </div>
+ </div>
+ </div>
+ </section>
+
+ <!-- REGISTRO -->
+ <section id="registro" aria-labelledby="reg-t">
+ <div class="container">
+ <div class="section-title">
+ <span class="section-eyebrow">Opcional</span>
+ <h2 id="reg-t">Crea tu perfil gratuito</h2>
+ <p>Niveles 1 y 2 sin perfil. Crea uno solo para sincronizar entre dispositivos.</p>
+ </div>
+ <form class="signup-form" id="signupForm" novalidate>
+ <div class="privacy-note"> <strong>Tus datos son privados.</strong> Nunca los vendemos. Borra tu cuenta en 1 clic.</div>
+ <div class="field"><label for="reg-name">Tu nombre (puede ser apodo)</label><input type="text" id="reg-name" required placeholder="Ej: Ana"></div>
+ <div class="field"><label for="reg-email">Correo (opcional)</label><input type="email" id="reg-email" placeholder="tu@correo.com"></div>
+ <div class="field">
+ <span class="field-lbl">¿Eres sordo/a?</span>
+ <div class="radio-group" role="radiogroup">
+ <label><input type="radio" name="deaf" value="yes"><span>Sí</span></label>
+ <label><input type="radio" name="deaf" value="no"><span>No</span></label>
+ <label><input type="radio" name="deaf" value="prefer"><span>Prefiero no decir</span></label>
+ </div>
+ </div>
+ <div class="field"><label for="reg-reason">¿Para qué aprendes LSM?</label>
+ <select id="reg-reason">
+ <option value="self">Soy sordo/a</option>
+ <option value="family">Tengo familiar sordo/a</option>
+ <option value="work">Trabajo con personas con discapacidad</option>
+ <option value="curious">Curiosidad</option>
+ <option value="teacher">Soy docente</option>
+ <option value="other">Otro</option>
+ </select>
+ </div>
+ <div class="field"><label for="reg-age">Rango de edad</label>
+ <select id="reg-age">
+ <option value="kid">Menor de 12</option>
+ <option value="teen">12 a 17</option>
+ <option value="young">18 a 30</option>
+ <option value="adult">31 a 60</option>
+ <option value="senior">Mayor de 60</option>
+ </select>
+ </div>
+ <div class="field"><label for="reg-country">País</label>
+ <select id="reg-country">
+ <option value="MX">México</option><option value="US">EEUU</option><option value="ES">España</option>
+ <option value="AR">Argentina</option><option value="CO">Colombia</option><option value="CL">Chile</option><option value="other">Otro</option>
+ </select>
+ </div>
+ <div class="field"><label for="reg-state">Estado (si México)</label><select id="reg-state"><option value="">Selecciona…</option></select></div>
+ <button type="submit" class="btn btn-primary full">Crear mi perfil gratuito</button>
+ <p class="form-foot">Al crear aceptas la <a href="#privacy">política de privacidad</a>.</p>
+ </form>
+ </div>
+ </section>
+
+ <!-- PILARES -->
+ <section id="nosotros" class="alt-bg" aria-labelledby="ab-t">
+ <div class="container">
+ <div class="section-title">
+ <span class="section-eyebrow">Quiénes somos</span>
+ <h2 id="ab-t">Tres pilares. Un objetivo: comunicación universal.</h2>
+ <p>Señas a Voces no es solo un guante. Es una infraestructura de inclusión.</p>
+ </div>
+ <div class="pillars-grid">
+ <article class="pillar-card">
+ <div class="pillar-icon pi-1"></div>
+ <span class="status live">EN VIVO</span>
+ <h3>Guantes traductores</h3>
+ <p>Raspberry Pi + ESP32 + sensores de flexión. 70+ señas en tiempo real, sin internet.</p>
+ <p class="pillar-foot"><strong>Piloto:</strong> DIF Sonora - 5 sistemas - $17,000 MXN/sistema</p>
+ </article>
+ <article class="pillar-card">
+ <div class="pillar-icon pi-2"></div>
+ <span class="status live">EN VIVO</span>
+ <h3>LSM Teacher Web</h3>
+ <p>MediaPipe Hands + ML propio. Aprende el alfabeto y vocabulario en tu navegador.</p>
+ <p class="pillar-foot"><strong>Esta plataforma</strong> - 100% gratis - Sin instalación</p>
+ </article>
+ <article class="pillar-card">
+ <div class="pillar-icon pi-3"></div>
+ <span class="status soon">EN DESARROLLO</span>
+ <h3>Visión computacional</h3>
+ <p>Reconocimiento de señas sin hardware ni cámara. Solo con tu celular.</p>
+ <p class="pillar-foot"><strong>2027</strong> - App móvil offline</p>
+ </article>
+ </div>
+
+ <div class="section-title" style="margin-top:64px;">
+ <h2>Aliados estratégicos</h2>
+ </div>
+ <div class="allies">
+ <span class="ally-chip"> DIF Sonora</span>
+ <span class="ally-chip">ES SNDIF</span>
+ <span class="ally-chip"> Comunidad Sorda de Hermosillo</span>
+ <span class="ally-chip"> Enactus México</span>
+ <span class="ally-chip"> Universidades aliadas</span>
+ </div>
+
+ <div class="section-title" style="margin-top:64px;">
+ <h2>Equipo Enactus</h2>
+ </div>
+ <div class="team-grid" id="teamGrid"></div>
+
+ <div class="section-title" style="margin-top:64px;">
+ <h2>Línea de tiempo</h2>
+ </div>
+ <div class="timeline" id="timeline"></div>
+ </div>
+ </section>
+
+ <!-- ROADMAP -->
+ <section id="roadmap" aria-labelledby="rm-t">
+ <div class="container">
+ <div class="section-title">
+ <span class="section-eyebrow">Próximos productos</span>
+ <h2 id="rm-t">Roadmap público</h2>
+ <p>Hoy LSM. Mañana toda la comunidación inclusiva.</p>
+ </div>
+ <div class="roadmap-grid" id="roadmapGrid"></div>
+ </div>
+ </section>
+
+ </main>
+
+ <!-- FOOTER -->
+ <footer>
+ <div class="container">
+ <div class="footer-grid">
+ <div>
+ <a href="#hero" class="brand light">
+ <span class="brand-mark"></span>
+ <span class="brand-text">Señas a Voces<small>ACADEMY</small></span>
+ </a>
+ <p class="footer-quote">"La comunicación es un derecho, no un privilegio."</p>
+ <p class="footer-license">Licencia Creative Commons BY-NC-SA 4.0 - Código abierto</p>
+ </div>
+ <div>
+ <h4>Aprende</h4>
+ <ul>
+ <li><a href="#lecciones">Lecciones</a></li>
+ <li><a href="#practica">Práctica con cámara</a></li>
+ <li><a href="#progreso">Mi progreso</a></li>
+ <li><a href="#registro">Crear perfil</a></li>
+ </ul>
+ </div>
+ <div>
+ <h4>Proyecto</h4>
+ <ul>
+ <li><a href="#nosotros">Sobre nosotros</a></li>
+ <li><a href="#impacto">Impacto</a></li>
+ <li><a href="#roadmap">Roadmap</a></li>
+ <li><a href="https://github.com/" target="_blank" rel="noopener">GitHub</a></li>
+ </ul>
+ </div>
+ <div>
+ <h4>Contacto</h4>
+ <ul id="contacto">
+ <li><a href="mailto:hola@senasavoces.mx">hola@senasavoces.mx</a></li>
+ <li><a href="#">Reportar error</a></li>
+ <li><a href="#privacy">Política de privacidad</a></li>
+ <li><a href="#donar" class="cta-donate"> Apoya el proyecto</a></li>
+ </ul>
+ </div>
+ </div>
+ <div class="footer-bottom">
+ <span>© 2026 Señas a Voces - Proyecto Enactus México - Hermosillo, Sonora</span>
+ <span>Hecho con para la comunidad sorda</span>
+ </div>
+ </div>
+ </footer>
+
+ <!-- Modal de lección -->
+ <div class="lesson-modal" id="lessonModal" role="dialog" aria-modal="true" aria-labelledby="lessonTitle">
+ <div class="lesson-panel">
+ <div class="lesson-panel-head">
+ <h3 id="lessonTitle">Lección</h3>
+ <button class="icon-btn" id="closeLesson" aria-label="Cerrar lección"></button>
+ </div>
+ <div class="lesson-progress-bar"><span id="lessonProg"></span></div>
+ <p id="lessonInstruction" class="lesson-instr">Mira la seña y elige la respuesta correcta.</p>
+ <div class="lesson-stage" id="lessonStage">
+ <div class="stage-glyph" id="lessonGlyph">A</div>
+ <p class="stage-desc" id="lessonDesc">Puño cerrado con el pulgar visible al costado.</p>
+ </div>
+ <div class="lesson-split" id="lessonSplit" style="display:none">
+ <!-- Video del Glosario CDMX -->
+ <div class="lesson-split-pane">
+ <div class="ref-video-head">
+ <span class="ref-video-label"> Modelo (Glosario CDMX)</span>
+ </div>
+ <div class="ref-video-container">
+ <iframe id="refVideo" class="ref-video-yt" src="" frameborder="0"
+ allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+ allowfullscreen loading="lazy"></iframe>
+ </div>
+ <p class="ref-video-credit">Fuente: <a href="https://lsm.indiscapacidad.cdmx.gob.mx/" target="_blank" rel="noopener">INDISCAPACIDAD CDMX</a></p>
+ </div>
+ <!-- Cámara del estudiante -->
+ <div class="lesson-split-pane">
+ <div class="ref-video-head">
+ <span class="ref-video-label"> Tu práctica en vivo</span>
+ <button class="btn btn-ghost btn-sm" id="togglePracticeCam" style="padding:2px 8px;font-size:.8rem"> Cámara</button>
+ </div>
+ <div class="ref-video-container" style="position:relative">
+ <video id="practiceCam" class="practice-cam" autoplay playsinline muted></video>
+ <canvas id="practiceCanvas" class="practice-overlay"></canvas>
+ <!-- Score en vivo encima del video -->
+ <div id="practiceLiveScore" style="position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.65);color:#fff;font-weight:900;font-size:1.3rem;padding:4px 16px;border-radius:999px;pointer-events:none;display:none"></div>
+ </div>
+ </div>
+ </div>
+ <div class="ref-video-wrap" id="refVideoWrap" style="display:none"></div>
+ <div id="refVideoBtn" style="display:none"></div>
+ <div class="quiz-options" id="quizOptions"></div>
+ <div class="lesson-actions">
+ <button class="btn btn-ghost" id="skipBtn">Saltar</button>
+ <button class="btn btn-primary" id="nextStepBtn">Siguiente →</button>
+ </div>
+ </div>
+ </div>
+
+ <div class="toast" id="toast" role="status" aria-live="polite"></div>
+ <div class="map-tooltip" id="mapTip" role="tooltip"></div>
+
+ <script src="lessons_glosario.js?v=20260528b" defer></script>
+ <script src="app.js?v=20260528b" defer></script>
+</body>
+</html>

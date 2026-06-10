@@ -1,0 +1,40 @@
+# ── Entorno virtual ──────────────────────────────────────────
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# ── Datos pesados (no subir al repo) ─────────────────────────
+data/training_videos/
+data/templates/
+data/gifs/
+data/recordings/
+data/*.mp4
+data/*.avi
+
+# ── Modelos entrenados (binarios grandes) ─────────────────────
+models/*.keras
+models/*.h5
+models/*.tflite
+models/*.onnx
+
+# ── Modelos de MediaPipe (se descargan aparte) ────────────────
+mediapipe_models/
+
+# ── Archivos temporales / logs ────────────────────────────────
+*.log
+*.tmp
+__pycache__/
+.DS_Store
+Thumbs.db
+test1.mp4
+
+# ── IDEs ──────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+
+# ── Jupyter ───────────────────────────────────────────────────
+.ipynb_checkpoints/
