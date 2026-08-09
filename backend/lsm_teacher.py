@@ -50,7 +50,7 @@ ACCENT_COL  = (0, 180, 240)     # azul-cian (movimiento)
 
 # Deteccion
 MATCH_THRESHOLD      = 0.88   # estaticas: ~4.5/5 dedos OK (user-friendly)
-MATCH_THRESHOLD_MOV  = 0.72   # con movimiento: ~3.5/5 dedos OK
+MATCH_THRESHOLD_MOV  = 0.80   # con movimiento: pose + movimiento requeridos
 HOLD_SECONDS         = 1.0    # tiempo manteniendo la sena para avanzar
 
 
@@ -83,16 +83,16 @@ LSM_ALPHABET = [
     ('O', 'CCCCC',  'Todos los dedos juntos al pulgar formando un CIRCULO "O".', False),
     ('P', '?EECC',  'Indice hacia ARRIBA y medio hacia ENFRENTE (como la lamina); '
                     'pulgar ENTRE ellos. Mano bien ARRIBA / orientacion alta.', False),
-    ('Q', 'EECCC',  'Como "G" pero bajando la mano (pulgar e indice hacia abajo).', True),
+    ('Q', 'CCCCC',  'Pulgar e indice en PINZA (pico); INCLINA la mano hacia ABAJO con ese gesto CON MOVIMIENTO.', True),
     ('R', 'CEECC',  'Indice y medio CRUZADOS (uno sobre el otro); resto cerrado.', False),
     ('S', 'CCCCC',  'Puno compacto; el pulgar va sobre los dedos, NO al costado.', False),
     ('T', 'CCCCC',  'Puno con el pulgar asomando ENTRE el indice y el medio.',  False),
     ('U', 'CEECC',  'Indice y medio JUNTOS, apuntando hacia arriba.',           False),
     ('V', 'CEECC',  'Indice y medio SEPARADOS (V de victoria).',                False),
     ('W', 'CEEEC',  'Mano HACIA ARRIBA: indice, medio y anular extendidos hacia el cielo (W de tres dedos).', False),
-    ('X', 'CECCC',  'Indice doblado como un GANCHO; resto cerrado.',            False),
+    ('X', 'CECCC',  'Indice doblado como un GANCHO; resto cerrado. Hazla CON MOVIMIENTO (gancho hacia abajo).', True),
     ('Y', 'ECCCE',  'Solo pulgar y menique extendidos ("call me").',            False),
-    ('Z', 'EECCC',  'Indice EXTENDIDO dibujando una "Z" en el aire (como apuntar y trazar).', True),
+    ('Z', 'CECCC',  'Apunta con el INDICE y dibuja una "Z" en el aire CON MOVIMIENTO (resto de dedos cerrados).', True),
 ]
 
 # ── Numeros LSM evaluados por el modelo ML entrenado ──────────────────
@@ -100,7 +100,7 @@ LSM_ALPHABET = [
 NUMBER_HINTS = {
     '1':  'Indice extendido hacia arriba; resto del puno cerrado. MANTEN LA MANO QUIETA.',
     '2':  'Indice y medio extendidos en V. Mano quieta.',
-    '3':  'Pulgar, indice y medio extendidos. Mano quieta.',
+    '3':  'Indice, medio y anular extendidos (como la W), palma hacia ti. Mano quieta.',
     '4':  'Cuatro dedos extendidos, pulgar cerrado. Mano quieta.',
     '5':  'Mano abierta, los cinco dedos extendidos. Mano quieta.',
     '6':  'Menique toca el pulgar; resto extendido. Mano quieta.',
@@ -186,7 +186,7 @@ def _ml_dynamic_probs(seq):
 GEO_NUMBER_TEMPLATES = {
     '1': 'CECCC',   # solo indice
     '2': 'CEECC',   # indice + medio
-    '3': 'EEECC',   # pulgar + indice + medio
+    '3': 'CEEEC',   # indice + medio + anular (forma de W), palma hacia el signante
     '4': 'CEEEE',   # cuatro dedos, pulgar recogido
     '5': 'EEEEE',   # mano abierta
 }
@@ -259,7 +259,7 @@ _BEND = {
 _THUMB_BEND = (2, 3, 4)   # MCP → IP ← TIP
 
 EXT_THR  = 155   # >= este angulo = extendido
-FIST_THR =  110  # <= este angulo = puno compacto (todos los no-pulgares)
+FIST_THR =  100  # <= este angulo = puno compacto (E/S/T/M/N); la O queda en ~120-140
 
 
 def finger_states(lms):
@@ -518,10 +518,16 @@ def _extra_G(s):
     return -0.18 if s['hand_up'] else +0.06
 
 def _extra_Q(s):
-    # Q = como G pero la mano apunta hacia abajo.
-    if s['uv_close'] and s['middle']:
-        return -0.25
-    return +0.10 if s['hand_down'] else -0.12
+    # Q = pinza pulgar-indice (pico) que se INCLINA hacia abajo CON MOVIMIENTO.
+    # El movimiento (inclinar hacia abajo) se valida en el bucle principal.
+    # Diferencia clave vs O: O es un circulo neutral y estatico.
+    # Diferencia clave vs G: G tiene indice extendido recto; Q es pinza.
+    if s['middle'] or s['ring'] or s['pinky']:
+        return -0.25              # otros dedos extendidos -> no es Q
+    d = 0.0
+    d += +0.24 if s['thumb_touch_index'] else -0.30   # debe haber pinza (pico)
+    d += +0.08 if s['hand_down'] else 0.0             # bono si ya apunta abajo
+    return d
 
 def _extra_C(s):
     # C = mano en "C": todos los dedos semi-doblados (angulo 110-155°).
@@ -539,23 +545,26 @@ def _extra_B(s):
     return +0.10 if s['palm_flat'] else -0.02
 
 def _extra_O(s):
-    # O = circulo formado por pulgar + todos los dedos; pellizco visible.
+     # O = anillo/tubo ABIERTO: dedos curvados pero NO apretados contra la palma.
+    # DIFERENCIA CLAVE vs E: la O tiene los dedos en anillo SUELTO (fist_tight=False).
+    # La E tiene los dedos APLASTADOS contra la palma (fist_tight=True).
+    # Un puno compacto (fist_tight) es E/S/T/M/N, jamas O.
+    if s.get('fist_tight', False):
+        return -0.55             # puno apretado -> definitivamente E/S, no O
     score = 0.0
-    # Distancia pulgar-indice como gradiente (no binario)
-    if s['thumb_touch_index']:
-        score += 0.25  # pellizco perfecto
-    else:
-        # Credito parcial si el pulgar esta curvado/cerca
-        if s.get('thumb_between', False) or s.get('thumb_touch_middle', False):
-            score += 0.10
-        else:
-            score -= 0.20  # pulgar completamente afuera
-    # Dedos deben estar cerrados (curvados)
-    if s['index']:   score -= 0.18  # indice recto -> no es O
+    # Dedos curvados pero sin estar extendidos
+    if s['index']:   score -= 0.15
     if s['middle']:  score -= 0.10
     if s['ring']:    score -= 0.08
     if s['pinky']:   score -= 0.08
-    if s.get('thumb_out', False): score -= 0.30  # pulgar lateral -> no O
+    if s.get('thumb_out', False): score -= 0.30
+    # Bono si el pulgar forma el anillo
+    if s['thumb_touch_index']:
+        score += 0.35
+    elif s.get('thumb_touch_middle', False):
+        score += 0.10
+    else:
+        score -= 0.15            # sin contacto pulgar-dedo, menos probable O
     return score
 
 def _extra_F(s):
@@ -581,11 +590,12 @@ def _extra_H(s):
     return d
 
 def _extra_U(s):
-    # U = indice + medio JUNTOS apuntando HACIA ARRIBA.
-    # Si va hacia abajo, eso es N en LSM.
-    if s['uv_spread']:       return -0.18
+    # U = indice + medio JUNTOS y RECTOS apuntando HACIA ARRIBA.
+    # Si van separados -> V. Si van cruzados -> R. Si va hacia abajo -> N.
+    if s['uv_spread']:       return -0.20      # separados -> V, no U
+    if s['uv_touching']:     return -0.18      # cruzados/encimados -> R, no U
     if s['hand_down']:       return -0.20      # N invertida, no U
-    d  = +0.10 if s['uv_close'] and not s['uv_touching'] else -0.08
+    d  = +0.16 if s['uv_close'] else -0.10     # pegados y rectos -> U
     d += +0.06 if s['hand_up'] else -0.02
     return d
 
@@ -612,24 +622,27 @@ def _extra_W(s):
 def _extra_X(s):
     # X = indice doblado como gancho (CECCC). Si el indice esta extendido -> es Z/G.
     if s['index']:   return -0.50   # indice recto -> definitivamente no es X
+    # Si TODOS los dedos estan cerrados en puno compacto -> es E/S/T, no X.
+    # X tiene el indice en gancho mientras los otros dedos estan mas planos.
+    if s.get('fist_tight', False):  return -0.45
     score = +0.22  # mas peso positivo cuando indice bien doblado
     if not s['middle']:  score += 0.06
     if not s['ring']:    score += 0.06
     if not s['pinky']:   score += 0.06
     if not s['thumb']:   score += 0.04
-    # Si el puno esta MUY apretado, el indice esta cerrado (no gancho)
-    if s.get('fist_tight', False):  score -= 0.15
     return score
 
 def _extra_Z(s):
-    # Z = indice EXTENDIDO apuntando, trazando la Z con movimiento.
-    # Pulgar cerrado (no lateral). Solo el indice sale.
-    # Comparte EECCC con G, L, Q -> discriminar por pulgar y orientacion.
-    if not s['index']:      return -0.35  # indice cerrado -> X, no Z
-    if s['middle']:         return -0.20  # medio extendido -> G/H/etc.
-    if s['thumb_out']:      return -0.28  # pulgar lateral -> G o L
-    if s['hand_down']:      return -0.20  # mano abajo -> Q
-    return +0.14
+    # Z = SOLO el indice extendido (apuntando) dibujando una "Z" en el aire
+    # CON MOVIMIENTO. El movimiento se valida en el bucle principal (is_mov).
+    # Se distingue de la X (indice en gancho) porque el indice va RECTO, y de
+    # la L porque el pulgar va recogido (no al costado).
+    if not s['index']:           return -0.40  # indice debe estar extendido
+    if s['middle']:              return -0.22  # medio extendido -> U/H/etc.
+    if s['ring'] or s['pinky']:  return -0.18  # solo el indice sale
+    d = +0.20
+    if s['thumb_out']:           d -= 0.10     # pulgar recogido (no es L)
+    return d
 
 # ── K y P  (indice + medio + pulgar extendidos, anular + menique cerrados)
 def _extra_K(s):
@@ -792,16 +805,25 @@ def _extra_enye(s):
     return base - 0.10
 
 def _extra_E(s):
-    # E: puno con yemas tocando la palma; pulgar al frente, NO asomando
-    # bajo los dedos ni claramente arriba.
-    d = _base_fist_ok(s)
+    # E: yemas dobladas hacia la palma; el PULGAR va CENTRADO al frente de
+    # la palma (cruzado sobre los dedos doblados), NO al costado.
+    # Diferencia clave vs O: la E es un puno COMPACTO, no un circulo abierto.
+    # Diferencia clave vs S: el pulgar va centrado al frente, NO lateral.
+    # Diferencia clave vs T: el pulgar NO asoma arriba entre indice y medio.
+    # Diferencia clave vs M/N: el pulgar NO asoma por debajo de los dedos.
+    # DIFERENCIA CLAVE vs O: la E REQUIERE puno compacto (fist_tight).
+    # fist_tight es el unico discriminador fiable entre E y O.
     if not s['fist_tight']:
-        return d - 0.30
+        return -0.50              # sin puno apretado -> NO es E (seria O o abierta)
+    d = 0.0
+    d += -0.28 if s['thumb_out'] else +0.04   # pulgar recogido (no lateral)
     if s['thumb_below_mcps']:
-        return d - 0.20    # eso es M/N
-    if s['thumb_over_top']:
-        return d - 0.18    # eso es T
-    return d + 0.08        # neutral: E o S
+        d -= 0.25                 # pulgar abajo -> M/N
+    elif s['thumb_over_top']:
+        d -= 0.22                 # pulgar arriba -> T
+    else:
+        d += 0.20                 # E: puno compacto, pulgar al frente
+    return d
 
 # ── Numeros estaticos por reglas geometricas (1-5) ───────────────────
 # Mapean limpiamente a estados de dedos, igual que las letras. Los
@@ -827,12 +849,12 @@ def _extra_n2(s):
     return d
 
 def _extra_n3(s):
-    # 3 = pulgar + indice + medio extendidos; anular y menique cerrados.
-    if not (s['index'] and s['middle']):  return -0.45
-    d = +0.16
-    if not s['thumb']:   d -= 0.10   # el 3 incluye el pulgar
-    if s['ring']:        d -= 0.18
-    if s['pinky']:       d -= 0.18
+    # 3 = indice + medio + anular extendidos (forma de W), palma hacia el
+    # signante; menique y pulgar recogidos.
+    if not (s['index'] and s['middle'] and s['ring']):  return -0.45
+    d = +0.18
+    if s['pinky']:                 d -= 0.18   # menique debe ir cerrado
+    if s.get('thumb_out', False):  d -= 0.10   # pulgar recogido
     return d
 
 def _extra_n4(s):
@@ -958,6 +980,11 @@ def coaching_hint(target, states):
     # ── Pellizcos ────────────────────────────────────────────────────
     if target in {'O', 'F'} and not states['thumb_touch_index']:
         return "UNE PULGAR E INDICE"
+    if target == 'Q':
+        if not states['thumb_touch_index']:
+            return "FORMA UNA PINZA: UNE PULGAR E INDICE (PICO)"
+        if not states['hand_down']:
+            return "APUNTA LA PINZA HACIA ABAJO"
     if target == 'D' and not states['thumb_touch_middle']:
         return "PULGAR A LA YEMA DEL MEDIO"
 
@@ -991,9 +1018,11 @@ def coaching_hint(target, states):
 
     # ── Z / X ────────────────────────────────────────────────────────
     if target == 'Z' and not states['index']:
-        return "EXTIENDE EL INDICE (Z se traza con el indice apuntando)"
-    if target == 'Z' and states['thumb_out']:
-        return "CIERRA EL PULGAR (solo el indice apunta)"
+        return "EXTIENDE EL INDICE PARA DIBUJAR LA Z"
+    if target == 'Z' and (states['middle'] or states['ring'] or states['pinky']):
+        return "SOLO EL INDICE: CIERRA LOS DEMAS DEDOS"
+    if target == 'Z':
+        return "DIBUJA UNA Z EN EL AIRE CON EL INDICE"
     if target == 'X' and states['index']:
         return "DOBLA EL INDICE EN GANCHO"
 
@@ -1470,15 +1499,18 @@ def run():
             # Las senas con movimiento requieren DE VERDAD que la mano se
             # mueva (Ñ, J, Z, X, K, Q). Si el usuario tiene la pose correcta
             # pero la mano quieta, no avanzamos.
+            thr = MATCH_THRESHOLD_MOV if is_mov else MATCH_THRESHOLD
             if is_mov:
                 if has_motion:
                     my_score += 0.05
                 else:
-                    my_score -= 0.08
+                    # TOPE DURO: sin movimiento real, una sena dinamica NUNCA
+                    # puede alcanzar el umbral. Asi la Z quieta (= L) o la X
+                    # quieta no se aceptan jamas.
+                    my_score = min(my_score, thr - 0.15)
             elif has_motion:
                 # Las senas ESTATICAS deben hacerse con la mano quieta.
                 my_score -= 0.10
-            thr = MATCH_THRESHOLD_MOV if is_mov else MATCH_THRESHOLD
 
             if letter.isdigit():
                 # Numero estatico por reglas: el "detectado" es el propio

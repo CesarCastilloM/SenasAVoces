@@ -72,14 +72,16 @@ FINGER_IDX = {
 }
 
 
-def build_finger(mcp: np.ndarray, segs, curl: float):
-    """Devuelve [PIP, DIP, TIP] doblando el dedo segun curl (0=recto,1=puno)."""
+def build_finger(mcp: np.ndarray, segs, curl: float, spread: float = 0.0):
+    """Devuelve [PIP, DIP, TIP] doblando el dedo segun curl (0=recto,1=puno).
+    `spread` desplaza lateralmente la punta del dedo extendido (para separar
+    dedos como en V, o cruzarlos como en R)."""
     prox, mid, dist = segs
 
-    # Pose extendida: recto hacia arriba (-y)
-    ext_pip = mcp + np.array([0.0, -prox])
-    ext_dip = ext_pip + np.array([0.0, -mid])
-    ext_tip = ext_dip + np.array([0.0, -dist])
+    # Pose extendida: recto hacia arriba (-y) con separacion lateral opcional
+    ext_pip = mcp + np.array([spread * 0.35, -prox])
+    ext_dip = ext_pip + np.array([spread * 0.65, -mid])
+    ext_tip = ext_dip + np.array([spread, -dist])
 
     # Pose cerrada (puno): la punta se enrolla hacia la palma
     fist_pip = mcp + np.array([0.0, -prox * 0.55])
@@ -92,24 +94,69 @@ def build_finger(mcp: np.ndarray, segs, curl: float):
     return [pip, dip, tip]
 
 
-def build_thumb(curl: float, across: float = 0.0):
+def build_thumb(curl: float, mode: str = 'normal'):
     """Devuelve [MCP, IP, TIP] del pulgar. curl=0 extendido al costado,
-    curl=1 recogido. `across` cruza el pulgar sobre la palma (B, etc.)."""
+    curl=1 recogido. `mode` ajusta la posicion para letras especiales:
+      'normal'  : recogido al costado de la palma
+      'cross'   : cruzado sobre la palma (B)
+      'over'    : sobre el frente de los dedos cerrados (S)
+      'between' : asoma entre indice y medio, apuntando arriba (T)
+      'under'   : bajo las yemas dobladas, tocandolas (E)
+    """
     cmc = THUMB_CMC
     # Extendido: sale hacia arriba-izquierda
     ext_mcp = cmc + np.array([-0.06, -0.05])
     ext_ip  = ext_mcp + np.array([-0.05, -0.05])
     ext_tip = ext_ip + np.array([-0.04, -0.04])
 
-    # Recogido / cruzado sobre la palma (hacia la derecha)
-    cl_mcp = cmc + np.array([0.03, -0.05])
-    cl_ip  = cl_mcp + np.array([0.07, -0.02])
-    cl_tip = cl_ip + np.array([0.07, 0.01])
+    if mode == 'over':
+        # S: pulgar cruza POR DELANTE de los dedos cerrados (hacia la derecha)
+        cl_mcp = cmc + np.array([0.02, -0.11])
+        cl_ip  = cl_mcp + np.array([0.10, -0.02])
+        cl_tip = cl_ip + np.array([0.10, 0.01])
+    elif mode == 'between':
+        # T: la yema del pulgar asoma ENTRE indice y medio, apuntando arriba
+        cl_mcp = cmc + np.array([0.03, -0.08])
+        cl_ip  = cl_mcp + np.array([0.06, -0.11])
+        cl_tip = cl_ip + np.array([0.02, -0.10])
+    elif mode == 'under':
+        # E: pulgar recogido BAJO las yemas dobladas, tocandolas
+        cl_mcp = cmc + np.array([0.02, -0.07])
+        cl_ip  = cl_mcp + np.array([0.07, -0.07])
+        cl_tip = cl_ip + np.array([0.06, -0.06])
+    else:
+        # normal / cross: recogido o cruzado sobre la palma (hacia la derecha)
+        cl_mcp = cmc + np.array([0.03, -0.05])
+        cl_ip  = cl_mcp + np.array([0.07, -0.02])
+        cl_tip = cl_ip + np.array([0.07, 0.01])
 
     mcp = ext_mcp * (1 - curl) + cl_mcp * curl
     ip  = ext_ip * (1 - curl) + cl_ip * curl
     tip = ext_tip * (1 - curl) + cl_tip * curl
     return [mcp, ip, tip]
+
+
+# ── Ajustes especiales por letra ───────────────────────────────────────
+# Separacion lateral de la punta de cada dedo extendido (signo +/-)
+FINGER_SPREAD = {
+    'U': {'index': -0.01, 'middle': 0.02},   # indice y medio JUNTOS
+    'V': {'index': -0.09, 'middle': 0.09},   # indice y medio SEPARADOS
+    'R': {'index':  0.06, 'middle': -0.05},  # indice y medio CRUZADOS
+    'W': {'index': -0.10, 'middle': 0.0, 'ring': 0.10},  # tres dedos abiertos
+    'K': {'index': -0.06, 'middle': 0.07},   # V con pulgar entre los dedos
+    'P': {'index': -0.04, 'middle': 0.07},
+}
+
+# Modo del pulgar para letras especiales
+THUMB_MODE = {
+    'B': 'cross', 'S': 'over', 'T': 'between', 'E': 'under',
+}
+
+# Curl personalizado de los 4 dedos largos (sobreescribe la plantilla)
+FINGER_CURL_OVERRIDE = {
+    # E: dedos a medio doblar (yemas visibles tocando el pulgar), NO puno total
+    'E': 0.66,
+}
 
 
 def build_hand(template: str, letter: str = '') -> np.ndarray:
@@ -132,17 +179,29 @@ def build_hand(template: str, letter: str = '') -> np.ndarray:
             finger_curls[f] = c
         t_curl = 0.35
 
-    # Pulgar cruzado para B (pulgar sobre la palma)
-    thumb = build_thumb(t_curl, across=1.0 if letter == 'B' else 0.0)
+    # Curl uniforme personalizado (E: medio doblado para distinguir de S/T)
+    if letter in FINGER_CURL_OVERRIDE:
+        for f in finger_curls:
+            finger_curls[f] = FINGER_CURL_OVERRIDE[letter]
+
+    # X: indice doblado como GANCHO (medio curl), resto cerrado
+    if letter == 'X':
+        finger_curls['index'] = 0.5
+
+    # Pulgar segun modo especial de la letra
+    mode = THUMB_MODE.get(letter, 'normal')
+    thumb = build_thumb(t_curl, mode=mode)
     lm[1, :2] = THUMB_CMC
     lm[2, :2] = thumb[0]
     lm[3, :2] = thumb[1]
     lm[4, :2] = thumb[2]
 
+    spreads = FINGER_SPREAD.get(letter, {})
     for fname, (i_mcp, i_pip, i_dip, i_tip) in FINGER_IDX.items():
         mcp = MCP[fname]
         lm[i_mcp, :2] = mcp
-        joints = build_finger(mcp, SEG[fname], finger_curls[fname])
+        joints = build_finger(mcp, SEG[fname], finger_curls[fname],
+                              spread=spreads.get(fname, 0.0))
         lm[i_pip, :2] = joints[0]
         lm[i_dip, :2] = joints[1]
         lm[i_tip, :2] = joints[2]
@@ -181,7 +240,21 @@ def main():
                         help='Solo estas letras (ej: L M N)')
     parser.add_argument('--fps', type=int, default=12)
     parser.add_argument('--size', type=int, default=256)
+    parser.add_argument('--allow-synthetic', action='store_true',
+                        help='Permitir generar las animaciones sinteticas '
+                             '(DESACTIVADO por defecto: el teacher usa la '
+                             'lamina oficial y, en el futuro, GIFs de video '
+                             'oficiales de LSM).')
     args = parser.parse_args()
+
+    if not args.allow_synthetic:
+        print("Las animaciones sinteticas estan DESACTIVADAS.")
+        print("El teacher muestra la lamina oficial del alfabeto.")
+        print("Para sustituirlas, coloca GIFs oficiales como data/gifs/A.gif, "
+              "B.gif, ... en mayusculas.")
+        print("Si de verdad quieres regenerar las sinteticas, usa "
+              "--allow-synthetic.")
+        return 0
 
     GIFS_DIR.mkdir(parents=True, exist_ok=True)
 
