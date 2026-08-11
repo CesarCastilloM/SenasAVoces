@@ -1,0 +1,28 @@
+{
+  "name": "senas-a-voces",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.35",
+    "@vitejs/plugin-react": "^5.0.0",
+    "autoprefixer": "^10.4.20",
+    "mpegts.js": "^1.8.0",
+    "onnxruntime-web": "^1.27.0",
+    "postcss": "^8.4.49",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^3.4.17",
+    "vite": "^7.0.0"
+  },
+  "devDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "canvas": "^3.2.3",
+    "ffmpeg-static": "^5.3.0"
+  }
+}
