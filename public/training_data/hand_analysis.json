@@ -1,0 +1,2151 @@
+{
+  "criteria": {
+    "motion_ratio": 0.25,
+    "min_abs_motion": 0.06,
+    "min_left_coverage": 0.4
+  },
+  "signs": [
+    {
+      "sign": "1",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 1.1171,
+      "left_motion": 0.1611,
+      "left_coverage": 0.958,
+      "left_participates": false
+    },
+    {
+      "sign": "10",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.9331,
+      "left_motion": 0.3399,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "100",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.0,
+      "left_motion": 0.4822,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "11",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 1.1998,
+      "left_motion": 0.5991,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "12",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.2022,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "13",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.2066,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "14",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.1825,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "15",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.1464,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "16",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.4158,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "17",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.353,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "18",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.358,
+      "left_motion": 0.3143,
+      "left_coverage": 0.125,
+      "left_participates": false
+    },
+    {
+      "sign": "19",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.5989,
+      "left_motion": 0.3434,
+      "left_coverage": 0.375,
+      "left_participates": false
+    },
+    {
+      "sign": "2",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.3316,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "20",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.4155,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "200",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.4325,
+      "left_motion": 0.54,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "21",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.3315,
+      "left_motion": 0.0357,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "22",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.3328,
+      "left_motion": 0.0246,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "23",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.354,
+      "left_motion": 0.0309,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "24",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.3371,
+      "left_motion": 0.0202,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "25",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.3454,
+      "left_motion": 0.0296,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "26",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.5314,
+      "left_motion": 0.0299,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "27",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.3367,
+      "left_motion": 0.027,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "28",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.2865,
+      "left_motion": 0.0298,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "29",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.3704,
+      "left_motion": 0.0296,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "3",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.4568,
+      "left_motion": 1.3266,
+      "left_coverage": 0.083,
+      "left_participates": false
+    },
+    {
+      "sign": "30",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.285,
+      "left_motion": 0.0422,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "300",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.4654,
+      "left_motion": 0.0,
+      "left_coverage": 0.083,
+      "left_participates": false
+    },
+    {
+      "sign": "4",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.3297,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "400",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.4239,
+      "left_motion": 1.0344,
+      "left_coverage": 0.083,
+      "left_participates": false
+    },
+    {
+      "sign": "5",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.2972,
+      "left_motion": 0.0121,
+      "left_coverage": 0.333,
+      "left_participates": false
+    },
+    {
+      "sign": "50",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.3096,
+      "left_motion": 2.1513,
+      "left_coverage": 0.125,
+      "left_participates": false
+    },
+    {
+      "sign": "500",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.4579,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "6",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.2198,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "60",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.0,
+      "left_motion": 0.2955,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "7",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.2764,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "70",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.9495,
+      "left_motion": 0.2663,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "8",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.2551,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "80",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.0,
+      "left_motion": 0.2227,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "9",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.1606,
+      "left_motion": 0.333,
+      "left_coverage": 0.208,
+      "left_participates": false
+    },
+    {
+      "sign": "90",
+      "category": "numeros",
+      "frames": 24,
+      "right_motion": 0.0,
+      "left_motion": 0.1409,
+      "left_coverage": 0.917,
+      "left_participates": true
+    },
+    {
+      "sign": "ABRIL",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4749,
+      "left_motion": 0.0278,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "ABRIR_LIBRO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4138,
+      "left_motion": 0.5548,
+      "left_coverage": 0.792,
+      "left_participates": true
+    },
+    {
+      "sign": "ABRIR_PUERTA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4195,
+      "left_motion": 0.455,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "ADIOS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.1232,
+      "left_motion": 0.0257,
+      "left_coverage": 0.292,
+      "left_participates": false
+    },
+    {
+      "sign": "ADJETIVO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4126,
+      "left_motion": 0.4664,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "AGOSTO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4039,
+      "left_motion": 0.0178,
+      "left_coverage": 0.917,
+      "left_participates": false
+    },
+    {
+      "sign": "AGUA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3765,
+      "left_motion": 0.0564,
+      "left_coverage": 0.458,
+      "left_participates": false
+    },
+    {
+      "sign": "AHORA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.6195,
+      "left_motion": 0.8916,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "AHORITA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5822,
+      "left_motion": 0.2985,
+      "left_coverage": 0.708,
+      "left_participates": true
+    },
+    {
+      "sign": "ALBERCAA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.306,
+      "left_motion": 0.3817,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "ALGUNOS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2509,
+      "left_motion": 0.4886,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "ALTO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4561,
+      "left_motion": 0.2593,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "AMIGO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5623,
+      "left_motion": 0.5045,
+      "left_coverage": 0.875,
+      "left_participates": true
+    },
+    {
+      "sign": "ARROZ",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4336,
+      "left_motion": 0.306,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "ASUSTADO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2285,
+      "left_motion": 0.2026,
+      "left_coverage": 0.917,
+      "left_participates": true
+    },
+    {
+      "sign": "AYER",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4917,
+      "left_motion": 0.0611,
+      "left_coverage": 0.708,
+      "left_participates": false
+    },
+    {
+      "sign": "AYUDAR",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.7793,
+      "left_motion": 0.7158,
+      "left_coverage": 0.792,
+      "left_participates": true
+    },
+    {
+      "sign": "BAILAR",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3818,
+      "left_motion": 0.6425,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "BAJO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.8355,
+      "left_motion": 0.0538,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "BAR",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2555,
+      "left_motion": 0.1405,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "BEBER",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5714,
+      "left_motion": 0.6224,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "BIEN",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.144,
+      "left_motion": 0.0346,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "BIENVENIDO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5716,
+      "left_motion": 0.3527,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "BOCA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3542,
+      "left_motion": 0.1351,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "BOMBERO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.7793,
+      "left_motion": 0.0525,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "BONITO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4471,
+      "left_motion": 0.0229,
+      "left_coverage": 0.5,
+      "left_participates": false
+    },
+    {
+      "sign": "BUENAS_NOCHES",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4456,
+      "left_motion": 0.0811,
+      "left_coverage": 0.958,
+      "left_participates": false
+    },
+    {
+      "sign": "BUENOS_DIAS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3659,
+      "left_motion": 0.1403,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "CAFE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3732,
+      "left_motion": 0.2312,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "CANTAR",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.6151,
+      "left_motion": 0.533,
+      "left_coverage": 0.917,
+      "left_participates": true
+    },
+    {
+      "sign": "CARPINTERIA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3608,
+      "left_motion": 0.2506,
+      "left_coverage": 0.833,
+      "left_participates": true
+    },
+    {
+      "sign": "CASA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.528,
+      "left_motion": 0.5171,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "CERDO_O_COCHINO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3505,
+      "left_motion": 0.491,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "CINE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 1.4501,
+      "left_motion": 0.2571,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "CLARO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3845,
+      "left_motion": 0.4311,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "COCINAR",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.437,
+      "left_motion": 0.6198,
+      "left_coverage": 0.75,
+      "left_participates": true
+    },
+    {
+      "sign": "COMER",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.531,
+      "left_motion": 0.0551,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "COMO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3142,
+      "left_motion": 0.7456,
+      "left_coverage": 0.625,
+      "left_participates": true
+    },
+    {
+      "sign": "COMO_ESTAS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3813,
+      "left_motion": 0.458,
+      "left_coverage": 0.917,
+      "left_participates": true
+    },
+    {
+      "sign": "COMPLETO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2867,
+      "left_motion": 0.4885,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "COMPRAR",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5123,
+      "left_motion": 0.9069,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "CORRER",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3697,
+      "left_motion": 0.5239,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "CUAL",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3213,
+      "left_motion": 0.3132,
+      "left_coverage": 0.917,
+      "left_participates": true
+    },
+    {
+      "sign": "CUANDO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4334,
+      "left_motion": 0.0535,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "CUANTO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3484,
+      "left_motion": 0.3711,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "CUERPO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3182,
+      "left_motion": 0.5215,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "CUIDAR",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3517,
+      "left_motion": 0.298,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "DEBIL",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2972,
+      "left_motion": 0.2554,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "DESIERTO_ABC",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2026,
+      "left_motion": 0.0,
+      "left_coverage": 0.083,
+      "left_participates": false
+    },
+    {
+      "sign": "DIA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4965,
+      "left_motion": 0.3703,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "DIABLO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.0444,
+      "left_motion": 0.4404,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "DICIEMBRE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4059,
+      "left_motion": 0.0329,
+      "left_coverage": 0.792,
+      "left_participates": false
+    },
+    {
+      "sign": "DINOSAURIO_ABC",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.556,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "DOMINGO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.6493,
+      "left_motion": 0.0375,
+      "left_coverage": 0.792,
+      "left_participates": false
+    },
+    {
+      "sign": "DONDE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2171,
+      "left_motion": 1.4673,
+      "left_coverage": 0.875,
+      "left_participates": true
+    },
+    {
+      "sign": "DORMIR",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4483,
+      "left_motion": 0.0404,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "DURAZNO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5459,
+      "left_motion": 0.4127,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "EL",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3143,
+      "left_motion": 0.3682,
+      "left_coverage": 0.667,
+      "left_participates": true
+    },
+    {
+      "sign": "ELLOS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.575,
+      "left_motion": 0.0466,
+      "left_coverage": 0.667,
+      "left_participates": false
+    },
+    {
+      "sign": "ENCANTADO_DE_CONOCERTE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4734,
+      "left_motion": 0.0468,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "ENERO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4134,
+      "left_motion": 0.0311,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "ENFERMERA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.9182,
+      "left_motion": 1.511,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "ENOJADO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.453,
+      "left_motion": 0.0451,
+      "left_coverage": 0.875,
+      "left_participates": false
+    },
+    {
+      "sign": "EQUIPO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3488,
+      "left_motion": 0.3795,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "FEBRERO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4171,
+      "left_motion": 0.0225,
+      "left_coverage": 0.792,
+      "left_participates": false
+    },
+    {
+      "sign": "FELIZ",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3897,
+      "left_motion": 0.0753,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "FEO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4359,
+      "left_motion": 0.0369,
+      "left_coverage": 0.625,
+      "left_participates": false
+    },
+    {
+      "sign": "FILA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.1529,
+      "left_motion": 0.2147,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "FLACO_O_DELGADO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3814,
+      "left_motion": 0.4447,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "FRESA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4335,
+      "left_motion": 0.0484,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "FRUTA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5197,
+      "left_motion": 0.5621,
+      "left_coverage": 0.917,
+      "left_participates": true
+    },
+    {
+      "sign": "FUEGO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 1.4082,
+      "left_motion": 0.8608,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "FUERTE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5786,
+      "left_motion": 0.5588,
+      "left_coverage": 0.875,
+      "left_participates": true
+    },
+    {
+      "sign": "FUTURO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5054,
+      "left_motion": 0.027,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "GRAMATICA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.0266,
+      "left_motion": 0.1202,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "GRANDE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5179,
+      "left_motion": 0.4763,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "GRUPO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3877,
+      "left_motion": 0.357,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "GUAPO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.0379,
+      "left_motion": 0.1749,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "HOY",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5315,
+      "left_motion": 0.1116,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "IMPRESORA_ABC",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.689,
+      "left_motion": 0.0625,
+      "left_coverage": 0.917,
+      "left_participates": false
+    },
+    {
+      "sign": "IR",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4804,
+      "left_motion": 0.3481,
+      "left_coverage": 0.917,
+      "left_participates": true
+    },
+    {
+      "sign": "JUEVES",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.8548,
+      "left_motion": 0.0465,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "JUGAR",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.6048,
+      "left_motion": 0.8218,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "JULIO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3519,
+      "left_motion": 0.0315,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "JUNIO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4667,
+      "left_motion": 0.035,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "LAMPARA_ABC",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.9265,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "LECHUGA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5893,
+      "left_motion": 0.5853,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "LEER",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4632,
+      "left_motion": 0.6089,
+      "left_coverage": 0.833,
+      "left_participates": true
+    },
+    {
+      "sign": "LENTO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5605,
+      "left_motion": 0.5335,
+      "left_coverage": 0.833,
+      "left_participates": true
+    },
+    {
+      "sign": "LISTA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.0847,
+      "left_motion": 0.2746,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "LOGRO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3206,
+      "left_motion": 0.6436,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "LUNES",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.7293,
+      "left_motion": 0.0588,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "MAL",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.0433,
+      "left_motion": 0.2688,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "MANANA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3482,
+      "left_motion": 0.0306,
+      "left_coverage": 0.875,
+      "left_participates": false
+    },
+    {
+      "sign": "MANGO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5543,
+      "left_motion": 0.136,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "MANOS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 2.1967,
+      "left_motion": 0.493,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "MANZANA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5264,
+      "left_motion": 0.1253,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "MARTES",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5236,
+      "left_motion": 0.0573,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "MARZO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5013,
+      "left_motion": 0.0258,
+      "left_coverage": 0.667,
+      "left_participates": false
+    },
+    {
+      "sign": "MAS_O_MENOS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2613,
+      "left_motion": 0.0196,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "MAYO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2922,
+      "left_motion": 0.0148,
+      "left_coverage": 0.708,
+      "left_participates": false
+    },
+    {
+      "sign": "MERCADO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.9737,
+      "left_motion": 1.322,
+      "left_coverage": 0.792,
+      "left_participates": true
+    },
+    {
+      "sign": "MIERCOLES",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4444,
+      "left_motion": 0.0237,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "MIO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2712,
+      "left_motion": 0.031,
+      "left_coverage": 0.792,
+      "left_participates": false
+    },
+    {
+      "sign": "MUCHO_GUSTO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3949,
+      "left_motion": 0.3205,
+      "left_coverage": 0.917,
+      "left_participates": true
+    },
+    {
+      "sign": "MUJER",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.0779,
+      "left_motion": 0.5924,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "NADAR",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 4.3181,
+      "left_motion": 0.9604,
+      "left_coverage": 0.875,
+      "left_participates": false
+    },
+    {
+      "sign": "NARANJA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4408,
+      "left_motion": 0.0423,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "NERVIOSO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3481,
+      "left_motion": 0.3344,
+      "left_coverage": 0.75,
+      "left_participates": true
+    },
+    {
+      "sign": "NOCHE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.1013,
+      "left_motion": 0.7325,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "NOS_VEMOS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2632,
+      "left_motion": 0.3416,
+      "left_coverage": 0.833,
+      "left_participates": true
+    },
+    {
+      "sign": "NOSOTROS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3796,
+      "left_motion": 0.0904,
+      "left_coverage": 0.958,
+      "left_participates": false
+    },
+    {
+      "sign": "NOVIEMBRE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4662,
+      "left_motion": 0.0397,
+      "left_coverage": 0.708,
+      "left_participates": false
+    },
+    {
+      "sign": "NUESTRO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.334,
+      "left_motion": 0.0299,
+      "left_coverage": 0.625,
+      "left_participates": false
+    },
+    {
+      "sign": "OCTUBRE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4252,
+      "left_motion": 0.0171,
+      "left_coverage": 0.833,
+      "left_participates": false
+    },
+    {
+      "sign": "OJOS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5529,
+      "left_motion": 0.0639,
+      "left_coverage": 0.958,
+      "left_participates": false
+    },
+    {
+      "sign": "OSCURO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.7554,
+      "left_motion": 0.0711,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "PAN",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3806,
+      "left_motion": 0.4567,
+      "left_coverage": 0.875,
+      "left_participates": true
+    },
+    {
+      "sign": "PARQUE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2343,
+      "left_motion": 0.4125,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "PEQUENO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.343,
+      "left_motion": 0.1532,
+      "left_coverage": 0.708,
+      "left_participates": true
+    },
+    {
+      "sign": "PERRO_ABC",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.0,
+      "left_motion": 0.696,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "PEZ_ABC",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5385,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "PIE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3468,
+      "left_motion": 0.2832,
+      "left_coverage": 0.875,
+      "left_participates": true
+    },
+    {
+      "sign": "PIERNA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3374,
+      "left_motion": 0.0431,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "PISTA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.0587,
+      "left_motion": 0.5132,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "PLATANO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.6329,
+      "left_motion": 0.181,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "PLAYA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4677,
+      "left_motion": 0.7056,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "PLOMERO_ABC",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3328,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "PLURAL",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4672,
+      "left_motion": 0.3142,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "POLICIA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.0369,
+      "left_motion": 0.2785,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "POLLO_ANIMAL",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5355,
+      "left_motion": 0.1034,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "POR_QUE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3996,
+      "left_motion": 0.1132,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "PREGUNTA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 1.0384,
+      "left_motion": 0.1276,
+      "left_coverage": 0.792,
+      "left_participates": false
+    },
+    {
+      "sign": "QUE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5579,
+      "left_motion": 0.0737,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "QUIEN",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2926,
+      "left_motion": 0.3415,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "RAPIDO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.401,
+      "left_motion": 0.0832,
+      "left_coverage": 0.75,
+      "left_participates": false
+    },
+    {
+      "sign": "SABADO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4325,
+      "left_motion": 0.0358,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "SALUDOS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.57,
+      "left_motion": 0.3899,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "SANDIA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.494,
+      "left_motion": 0.51,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "SEMANA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.598,
+      "left_motion": 0.2099,
+      "left_coverage": 0.5,
+      "left_participates": true
+    },
+    {
+      "sign": "SEPTIEMBRE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4591,
+      "left_motion": 0.0384,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "SOLIDARIDAD_ABC",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3603,
+      "left_motion": 0.0581,
+      "left_coverage": 0.917,
+      "left_participates": false
+    },
+    {
+      "sign": "SUYO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4721,
+      "left_motion": 0.2574,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "TIEMPO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3044,
+      "left_motion": 0.051,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "TODOS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.5244,
+      "left_motion": 0.7142,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "TOMATE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4401,
+      "left_motion": 0.0613,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "TRABAJAR",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 1.1411,
+      "left_motion": 1.0589,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "TRISTE",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3575,
+      "left_motion": 0.0843,
+      "left_coverage": 0.958,
+      "left_participates": false
+    },
+    {
+      "sign": "TU",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3504,
+      "left_motion": 0.0682,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "TUYO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4197,
+      "left_motion": 0.0511,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "USTEDES",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3323,
+      "left_motion": 0.0319,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "VENDER",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.6424,
+      "left_motion": 0.7026,
+      "left_coverage": 0.875,
+      "left_participates": true
+    },
+    {
+      "sign": "VENTANA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.906,
+      "left_motion": 0.5522,
+      "left_coverage": 0.958,
+      "left_participates": true
+    },
+    {
+      "sign": "VER",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.3254,
+      "left_motion": 0.061,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "VERBO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.2288,
+      "left_motion": 0.0329,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "VERDURAS",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4655,
+      "left_motion": 0.4141,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "VIERNES",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.6734,
+      "left_motion": 0.0519,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "YO",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.4139,
+      "left_motion": 0.0573,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "ZANAHORIA",
+      "category": "palabras",
+      "frames": 24,
+      "right_motion": 0.6058,
+      "left_motion": 0.0611,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "ABUELA",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.4207,
+      "left_motion": 0.1653,
+      "left_coverage": 0.708,
+      "left_participates": true
+    },
+    {
+      "sign": "ABUELO",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.3728,
+      "left_motion": 0.2705,
+      "left_coverage": 0.458,
+      "left_participates": true
+    },
+    {
+      "sign": "BEBE",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.4979,
+      "left_motion": 0.4242,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "CUNADA",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.5535,
+      "left_motion": 0.4144,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "CUNADO",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.3715,
+      "left_motion": 0.4259,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "FAMILIA",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.3548,
+      "left_motion": 0.3309,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "HERMANA",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.3997,
+      "left_motion": 0.4024,
+      "left_coverage": 0.792,
+      "left_participates": true
+    },
+    {
+      "sign": "HERMANO",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.4063,
+      "left_motion": 0.588,
+      "left_coverage": 0.917,
+      "left_participates": true
+    },
+    {
+      "sign": "MAMA",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.0922,
+      "left_motion": 0.2368,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "NIETA",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.6626,
+      "left_motion": 0.6718,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "PAPA",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.3629,
+      "left_motion": 0.1071,
+      "left_coverage": 0.708,
+      "left_participates": true
+    },
+    {
+      "sign": "PRIMA",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.4338,
+      "left_motion": 0.4222,
+      "left_coverage": 0.875,
+      "left_participates": true
+    },
+    {
+      "sign": "PRIMO",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.3655,
+      "left_motion": 0.4213,
+      "left_coverage": 0.708,
+      "left_participates": true
+    },
+    {
+      "sign": "SOBRINA",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.477,
+      "left_motion": 0.4099,
+      "left_coverage": 0.75,
+      "left_participates": true
+    },
+    {
+      "sign": "SOBRINO",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.2827,
+      "left_motion": 0.2868,
+      "left_coverage": 0.875,
+      "left_participates": true
+    },
+    {
+      "sign": "SUEGRA",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.6053,
+      "left_motion": 0.5326,
+      "left_coverage": 0.917,
+      "left_participates": true
+    },
+    {
+      "sign": "SUEGRO",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.3571,
+      "left_motion": 0.533,
+      "left_coverage": 0.667,
+      "left_participates": true
+    },
+    {
+      "sign": "TIO",
+      "category": "familia",
+      "frames": 24,
+      "right_motion": 0.6919,
+      "left_motion": 1.415,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "AMARILLO",
+      "category": "colores",
+      "frames": 24,
+      "right_motion": 0.8528,
+      "left_motion": 0.3315,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "AZUL",
+      "category": "colores",
+      "frames": 24,
+      "right_motion": 0.4899,
+      "left_motion": 0.469,
+      "left_coverage": 0.875,
+      "left_participates": true
+    },
+    {
+      "sign": "BLANCO",
+      "category": "colores",
+      "frames": 24,
+      "right_motion": 0.4921,
+      "left_motion": 0.4031,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "COLOR",
+      "category": "colores",
+      "frames": 24,
+      "right_motion": 0.6686,
+      "left_motion": 0.4015,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "GRIS",
+      "category": "colores",
+      "frames": 24,
+      "right_motion": 0.5094,
+      "left_motion": 0.3709,
+      "left_coverage": 0.792,
+      "left_participates": true
+    },
+    {
+      "sign": "MORADO",
+      "category": "colores",
+      "frames": 24,
+      "right_motion": 0.4109,
+      "left_motion": 0.4192,
+      "left_coverage": 1.0,
+      "left_participates": true
+    },
+    {
+      "sign": "NEGRO",
+      "category": "colores",
+      "frames": 24,
+      "right_motion": 0.5076,
+      "left_motion": 0.5743,
+      "left_coverage": 0.583,
+      "left_participates": true
+    },
+    {
+      "sign": "ROJO",
+      "category": "colores",
+      "frames": 24,
+      "right_motion": 0.3807,
+      "left_motion": 0.0671,
+      "left_coverage": 0.875,
+      "left_participates": false
+    },
+    {
+      "sign": "ROSA",
+      "category": "colores",
+      "frames": 24,
+      "right_motion": 1.4301,
+      "left_motion": 0.3315,
+      "left_coverage": 1.0,
+      "left_participates": false
+    },
+    {
+      "sign": "VERDE",
+      "category": "colores",
+      "frames": 24,
+      "right_motion": 0.3746,
+      "left_motion": 0.3653,
+      "left_coverage": 0.75,
+      "left_participates": true
+    },
+    {
+      "sign": "A",
+      "category": "abecedario",
+      "frames": 20,
+      "right_motion": 0.0182,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "B",
+      "category": "abecedario",
+      "frames": 20,
+      "right_motion": 0.0156,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "C",
+      "category": "abecedario",
+      "frames": 20,
+      "right_motion": 0.0175,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "D",
+      "category": "abecedario",
+      "frames": 20,
+      "right_motion": 0.015,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "E",
+      "category": "abecedario",
+      "frames": 20,
+      "right_motion": 0.0209,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "F",
+      "category": "abecedario",
+      "frames": 20,
+      "right_motion": 0.0162,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "G",
+      "category": "abecedario",
+      "frames": 20,
+      "right_motion": 0.0212,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "H",
+      "category": "abecedario",
+      "frames": 20,
+      "right_motion": 0.0283,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "I",
+      "category": "abecedario",
+      "frames": 20,
+      "right_motion": 0.0191,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "J",
+      "category": "abecedario",
+      "frames": 30,
+      "right_motion": 0.0442,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    },
+    {
+      "sign": "K",
+      "category": "abecedario",
+      "frames": 45,
+      "right_motion": 0.0354,
+      "left_motion": 0.0,
+      "left_coverage": 0.0,
+      "left_participates": false
+    }
+  ]
+}

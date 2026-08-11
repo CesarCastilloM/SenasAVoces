@@ -31,6 +31,13 @@ __pycache__/
 Thumbs.db
 test1.mp4
 
+# ── Build artifacts ───────────────────────────────────────────
+node_modules/
+dist/
+.vite/
+flutter_app/build/
+flutter_app/.dart_tool/
+
 # ── IDEs ──────────────────────────────────────────────────────
 .vscode/
 .idea/
@@ -40,3 +47,4 @@ test1.mp4
 .ipynb_checkpoints/
 
 *.mp4
+no_se_usan/
