@@ -6,6 +6,11 @@ __pycache__/
 *.py[cod]
 *.pyo
 
+# ── Variables de entorno (secretos) ───────────────────────────
+.env
+.env.local
+.env.*.local
+
 # ── Datos pesados (no subir al repo) ─────────────────────────
 data/training_videos/
 data/templates/
