@@ -222,31 +222,25 @@ export default function RetrainPage({ isDark, navigate }) {
     setLogs(l => [...l, `=== COMPLETADO: ${saved} guardados, ${failed} fallidos de ${allSigns.length} total ===`]);
   }, [manifest, extractLandmarks]);
 
-  const panel = isDark ? "bg-[#101E24] border-[#1E3038]" : "bg-white border-[#D9E4E7]";
-  const textMain = isDark ? "text-[#E6F1F3]" : "text-[#12303A]";
-  const textSoft = isDark ? "text-[#8AA8B0]" : "text-[#5B7883]";
+  const panel = isDark ? "bg-brand-card border-brand-line" : "bg-white border-brand-mist";
+  const textMain = isDark ? "text-white" : "text-brand-ink";
+  const textSoft = isDark ? "text-brand-soft" : "text-brand-muted";
 
   const pct = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0;
 
   return (
-    <div className={cx("min-h-screen", isDark ? "bg-[#08151A]" : "bg-[#F4F8F9]")}>
-      <header className={cx("flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3", panel)}>
+    <div className={cx("min-h-screen", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
+      <div className={cx("flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3", panel)}>
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate("/dashboard")}
-            className={cx("rounded-lg px-3 py-1.5 text-xs font-bold", isDark ? "bg-[#1A2C33] text-[#8AA8B0]" : "bg-[#EDF3F4] text-[#5B7883]")}
-          >
-            ← Volver
-          </button>
           <h1 className={cx("text-sm font-bold", textMain)}>Re-entrenamiento masivo</h1>
         </div>
         <button
           onClick={() => navigate("/model-test")}
-          className="rounded-lg bg-[#2AABB8] px-3 py-1.5 text-xs font-bold text-white"
+          className="rounded-lg bg-brand-cyan px-3 py-1.5 text-xs font-bold text-white"
         >
           Probar modelo →
         </button>
-      </header>
+      </div>
 
       <div className="p-4">
         {/* Video y canvas ocultos para procesamiento */}
@@ -264,7 +258,7 @@ export default function RetrainPage({ isDark, navigate }) {
           </p>
 
           {!mpReady && (
-            <div className="mb-4 rounded-lg bg-[#7A2B2B]/20 border border-[#7A2B2B]/40 px-4 py-2 text-xs text-[#D96B6B]">
+            <div className="mb-4 rounded-lg bg-red-900/20 border border-[#7A2B2B]/40 px-4 py-2 text-xs text-red-400">
               Esperando a que MediaPipe se inicialice...
             </div>
           )}
@@ -281,7 +275,7 @@ export default function RetrainPage({ isDark, navigate }) {
               </div>
               <div className="h-3 w-full overflow-hidden rounded-full bg-[#1E3038]">
                 <div
-                  className="h-full bg-[#2AABB8] transition-all"
+                  className="h-full bg-brand-cyan transition-all"
                   style={{ width: `${pct}%` }}
                 />
               </div>
@@ -289,7 +283,7 @@ export default function RetrainPage({ isDark, navigate }) {
           )}
 
           {done && (
-            <div className="mb-4 rounded-lg bg-[#1A6B4A]/20 border border-[#1A6B4A]/40 px-4 py-2 text-xs text-[#D4F5E4]">
+            <div className="mb-4 rounded-lg bg-green-700/20 border border-[#1A6B4A]/40 px-4 py-2 text-xs text-green-200">
               ✓ Re-entrenamiento completado. Ve a "Probar modelo" para verificar.
             </div>
           )}
@@ -298,14 +292,14 @@ export default function RetrainPage({ isDark, navigate }) {
             <button
               onClick={retrainAll}
               disabled={!manifest || !mpReady || running}
-              className="rounded-lg bg-[#2AABB8] px-6 py-2.5 text-sm font-bold text-white disabled:opacity-40"
+              className="rounded-lg bg-brand-cyan px-6 py-2.5 text-sm font-bold text-white disabled:opacity-40"
             >
               {running ? "Procesando..." : "Iniciar re-entrenamiento"}
             </button>
             {running && (
               <button
                 onClick={() => { cancelRef.current = true; }}
-                className="rounded-lg bg-[#7A2B2B] px-6 py-2.5 text-sm font-bold text-white"
+                className="rounded-lg bg-red-900 px-6 py-2.5 text-sm font-bold text-white"
               >
                 Cancelar
               </button>
@@ -322,8 +316,8 @@ export default function RetrainPage({ isDark, navigate }) {
                 <div key={i} className={cx(
                   line.startsWith("✓") ? "text-[#4ADE80]" :
                   line.startsWith("✗") || line.startsWith("⚠") ? "text-[#FBBF24]" :
-                  line.startsWith("===") ? "text-[#2AABB8] font-bold" :
-                  isDark ? "text-[#8AA8B0]" : "text-[#5B7883]"
+                  line.startsWith("===") ? "text-brand-cyan font-bold" :
+                  isDark ? "text-brand-soft" : "text-brand-muted"
                 )}>
                   {line}
                 </div>

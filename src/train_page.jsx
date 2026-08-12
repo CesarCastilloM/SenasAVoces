@@ -179,32 +179,26 @@ export default function TrainPage({ isDark, navigate, useCameraMediaPipe, reload
 
   const { videoRef, canvasRef, camReady, camError } = useCameraMediaPipe({ onResults: handleResults });
 
-  const panel = isDark ? "bg-[#101E24] border-[#1E3038]" : "bg-white border-[#D9E4E7]";
-  const textMain = isDark ? "text-[#E6F1F3]" : "text-[#12303A]";
-  const textSoft = isDark ? "text-[#8AA8B0]" : "text-[#5B7883]";
+  const panel = isDark ? "bg-brand-card border-brand-line" : "bg-white border-brand-mist";
+  const textMain = isDark ? "text-white" : "text-brand-ink";
+  const textSoft = isDark ? "text-brand-soft" : "text-brand-muted";
   const inputClass = isDark
-    ? "bg-[#08151A] border-[#1E3038] text-[#E6F1F3] placeholder-[#5B7883]"
-    : "bg-[#F4F8F9] border-[#D9E4E7] text-[#12303A] placeholder-[#8AA8B0]";
+    ? "bg-brand-deep border-brand-line text-white placeholder-brand-muted"
+    : "bg-brand-cream border-brand-mist text-brand-ink placeholder-brand-soft";
 
   return (
-    <div className={cx("min-h-screen", isDark ? "bg-[#08151A]" : "bg-[#F4F8F9]")}>
-      <header className={cx("flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3", panel)}>
+    <div className={cx("min-h-screen", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
+      <div className={cx("flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3", panel)}>
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate("/dashboard")}
-            className={cx("rounded-lg px-3 py-1.5 text-xs font-bold", isDark ? "bg-[#1A2C33] text-[#8AA8B0]" : "bg-[#EDF3F4] text-[#5B7883]")}
-          >
-            ← Volver
-          </button>
           <h1 className={cx("text-sm font-bold", textMain)}>Entrenamiento · Grabar ejemplos DTW</h1>
         </div>
         <button
           onClick={() => navigate("/model-test")}
-          className="rounded-lg bg-[#2AABB8] px-3 py-1.5 text-xs font-bold text-white"
+          className="rounded-lg bg-brand-cyan px-3 py-1.5 text-xs font-bold text-white"
         >
           Probar modelo →
         </button>
-      </header>
+      </div>
 
       <div className="grid gap-4 p-4 lg:grid-cols-[1fr_380px]">
         {/* ── Cámara ── */}
@@ -214,28 +208,28 @@ export default function TrainPage({ isDark, navigate, useCameraMediaPipe, reload
 
           {!camReady && !camError && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#2AABB8] border-t-transparent" />
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-cyan border-t-transparent" />
               <p className="text-sm font-semibold text-white">Iniciando cámara…</p>
             </div>
           )}
 
           {camError && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-8 text-center">
-              <p className="text-sm font-semibold text-[#D96B6B]">{camError}</p>
+              <p className="text-sm font-semibold text-red-400">{camError}</p>
             </div>
           )}
 
           {/* Estado de grabación */}
           <div className="absolute left-4 top-4 z-10 flex flex-col gap-2">
             {recording && (
-              <div className="flex items-center gap-2 rounded-xl bg-[#7A2B2B]/90 px-4 py-2 backdrop-blur-sm">
+              <div className="flex items-center gap-2 rounded-xl bg-red-900/90 px-4 py-2 backdrop-blur-sm">
                 <span className="h-3 w-3 animate-pulse rounded-full bg-red-400" />
                 <span className="text-sm font-bold text-white">REC · {frameCount} frames</span>
               </div>
             )}
             <div className={cx(
               "rounded-xl px-3 py-1.5 text-xs font-semibold backdrop-blur-sm",
-              handDetected ? "bg-[#1A6B4A]/90 text-[#D4F5E4]" : "bg-black/60 text-[#8AA8B0]"
+              handDetected ? "bg-green-700/90 text-green-200" : "bg-black/60 text-brand-soft"
             )}>
               {handDetected ? "Mano detectada" : "Sin mano"}
             </div>
@@ -246,7 +240,7 @@ export default function TrainPage({ isDark, navigate, useCameraMediaPipe, reload
             <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2">
               <div className="h-2 w-48 overflow-hidden rounded-full bg-black/50">
                 <div
-                  className="h-full bg-[#2AABB8] transition-all"
+                  className="h-full bg-brand-cyan transition-all"
                   style={{ width: `${(frameCount / MAX_FRAMES) * 100}%` }}
                 />
               </div>
@@ -322,7 +316,7 @@ export default function TrainPage({ isDark, navigate, useCameraMediaPipe, reload
             )}
 
             {selectedSign && (
-              <div className="mt-2 text-xs font-semibold text-[#2AABB8]">
+              <div className="mt-2 text-xs font-semibold text-brand-cyan">
                 {exampleCount[`${category}/${selectedSign}`] || 0} ejemplos actuales
               </div>
             )}
@@ -334,21 +328,21 @@ export default function TrainPage({ isDark, navigate, useCameraMediaPipe, reload
               <button
                 onClick={startRecording}
                 disabled={!camReady || (!selectedSign && !signName.trim())}
-                className="flex-1 rounded-xl bg-[#7A2B2B] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#6A2222] disabled:opacity-40"
+                className="flex-1 rounded-xl bg-red-900 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#6A2222] disabled:opacity-40"
               >
                 ● Grabar
               </button>
             ) : (
               <button
                 onClick={() => { stopRecording(); }}
-                className="flex-1 rounded-xl bg-[#1A2C33] px-4 py-2.5 text-sm font-bold text-white"
+                className="flex-1 rounded-xl bg-brand-card px-4 py-2.5 text-sm font-bold text-white"
               >
                 ■ Detener
               </button>
             )}
             <button
               onClick={() => { framesRef.current = []; setFrameCount(0); setSavedMsg(null); }}
-              className={cx("rounded-xl px-4 py-2.5 text-sm font-bold", isDark ? "bg-[#1A2C33] text-[#8AA8B0]" : "bg-[#EDF3F4] text-[#5B7883]")}
+              className={cx("rounded-xl px-4 py-2.5 text-sm font-bold", isDark ? "bg-brand-card text-brand-soft" : "bg-brand-cream text-brand-muted")}
             >
               Limpiar
             </button>
@@ -370,7 +364,7 @@ export default function TrainPage({ isDark, navigate, useCameraMediaPipe, reload
             <button
               onClick={saveRecording}
               disabled={saving}
-              className="rounded-xl bg-[#2AABB8] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#238E99] disabled:opacity-40"
+              className="rounded-xl bg-brand-cyan px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#238E99] disabled:opacity-40"
             >
               {saving ? "Guardando…" : `Guardar ${frameCount} frames`}
             </button>
@@ -380,7 +374,7 @@ export default function TrainPage({ isDark, navigate, useCameraMediaPipe, reload
           {savedMsg && (
             <div className={cx(
               "rounded-xl px-4 py-3 text-sm font-semibold",
-              savedMsg.type === "success" ? "bg-[#1A6B4A]/20 text-[#2E9E6B]" : "bg-[#3A1B1B] text-[#D96B6B]"
+              savedMsg.type === "success" ? "bg-green-700/20 text-green-400" : "bg-[#3A1B1B] text-red-400"
             )}>
               {savedMsg.text}
             </div>
