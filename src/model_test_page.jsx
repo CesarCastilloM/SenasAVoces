@@ -279,23 +279,17 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
   const accuracy = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0;
   const top3Acc = stats.total > 0 ? Math.round((stats.top3 / stats.total) * 100) : 0;
 
-  const panel = isDark ? "bg-[#101E24] border-[#1E3038]" : "bg-white border-[#D9E4E7]";
-  const textMain = isDark ? "text-[#E6F1F3]" : "text-[#12303A]";
-  const textSoft = isDark ? "text-[#8AA8B0]" : "text-[#5B7883]";
+  const panel = isDark ? "bg-brand-card border-brand-line" : "bg-white border-brand-mist";
+  const textMain = isDark ? "text-white" : "text-brand-ink";
+  const textSoft = isDark ? "text-brand-soft" : "text-brand-muted";
 
   return (
-    <div className={cx("min-h-screen", isDark ? "bg-[#08151A]" : "bg-[#F4F8F9]")}>
+    <div className={cx("min-h-screen", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
       {/* ── Barra superior ── */}
-      <header className={cx("flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3", panel)}>
+      <div className={cx("flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3", panel)}>
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate("/dashboard")}
-            className={cx("rounded-lg px-3 py-1.5 text-xs font-bold", isDark ? "bg-[#1A2C33] text-[#8AA8B0]" : "bg-[#EDF3F4] text-[#5B7883]")}
-          >
-            ← Volver
-          </button>
           <h1 className={cx("text-sm font-bold", textMain)}>Banco de pruebas · Modelo DTW</h1>
-          <span className={cx("rounded-full px-2 py-0.5 text-[10px] font-bold", isDark ? "bg-[#14323B] text-[#2AABB8]" : "bg-[#E0F2F4] text-[#127C88]")}>
+          <span className={cx("rounded-full px-2 py-0.5 text-[10px] font-bold", isDark ? "bg-brand-card text-brand-cyan" : "bg-brand-mist text-brand-teal")}>
             {pool.length} señas
           </span>
         </div>
@@ -303,7 +297,7 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
         <div className="flex items-center gap-4">
           <div className="text-right">
             <div className={cx("text-[10px] font-semibold uppercase tracking-wide", textSoft)}>Top-1</div>
-            <div className={cx("text-lg font-bold leading-none", accuracy >= 70 ? "text-[#2E9E6B]" : accuracy >= 40 ? "text-[#D98E36]" : "text-[#D96B6B]")}>
+            <div className={cx("text-lg font-bold leading-none", accuracy >= 70 ? "text-green-400" : accuracy >= 40 ? "text-brand-orange" : "text-red-400")}>
               {accuracy}%
             </div>
           </div>
@@ -316,7 +310,7 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
             <div className={cx("text-lg font-bold leading-none", textMain)}>{stats.total}</div>
           </div>
         </div>
-      </header>
+      </div>
 
       {/* ── Filtros de categoria ── */}
       <div className={cx("flex flex-wrap items-center gap-2 border-b px-6 py-2", panel)}>
@@ -331,8 +325,8 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
               className={cx(
                 "rounded-full px-3 py-1 text-[11px] font-bold transition-colors",
                 on
-                  ? "bg-[#2AABB8] text-white"
-                  : isDark ? "bg-[#1A2C33] text-[#5B7883]" : "bg-[#EDF3F4] text-[#8AA8B0]"
+                  ? "bg-brand-cyan text-white"
+                  : isDark ? "bg-brand-card text-brand-muted" : "bg-brand-cream text-brand-soft"
               )}
             >
               {CATEGORY_LABELS[cat] || cat} ({signs.length})
@@ -355,29 +349,29 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
 
           {loadingMsg && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-black/70">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#2AABB8] border-t-transparent" />
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-cyan border-t-transparent" />
               <p className="text-sm font-semibold text-white">{loadingMsg}</p>
             </div>
           )}
 
           {!camReady && !camError && !loadingMsg && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#2AABB8] border-t-transparent" />
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-cyan border-t-transparent" />
               <p className="text-sm font-semibold text-white">Iniciando cámara…</p>
             </div>
           )}
 
           {camError && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-8 text-center">
-              <p className="text-sm font-semibold text-[#D96B6B]">{camError}</p>
-              <p className="text-xs text-[#8AA8B0]">Permite el acceso a la cámara y recarga.</p>
+              <p className="text-sm font-semibold text-red-400">{camError}</p>
+              <p className="text-xs text-brand-soft">Permite el acceso a la cámara y recarga.</p>
             </div>
           )}
 
           {/* Seña objetivo */}
           {target && (
             <div className="absolute left-4 top-4 z-10 rounded-xl bg-black/70 px-4 py-2 backdrop-blur-sm">
-              <div className="text-[10px] font-semibold uppercase tracking-wide text-[#8AA8B0]">
+              <div className="text-[10px] font-semibold uppercase tracking-wide text-brand-soft">
                 Haz esta seña
               </div>
               <div className="flex items-center gap-2">
@@ -386,14 +380,14 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
                   <span className={cx(
                     "rounded px-1.5 py-0.5 text-[10px] font-bold",
                     targetMeta.oneHanded
-                      ? "bg-[#2AABB8]/30 text-[#2AABB8]"
+                      ? "bg-brand-cyan/30 text-brand-cyan"
                       : "bg-[#F0A500]/30 text-[#F0A500]"
                   )}>
                     {targetMeta.oneHanded ? "🖐 1 mano" : "🙌 2 manos"}
                   </span>
                 )}
               </div>
-              <div className="text-[10px] font-semibold text-[#2AABB8]">
+              <div className="text-[10px] font-semibold text-brand-cyan">
                 {CATEGORY_LABELS[target.category] || target.category}
               </div>
             </div>
@@ -404,13 +398,13 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
             <span className={cx(
               "rounded-full px-3 py-1 text-[11px] font-bold backdrop-blur-sm",
               handDetected
-                ? "bg-[#1A6B4A]/90 text-[#D4F5E4]"
-                : "bg-black/60 text-[#8AA8B0]"
+                ? "bg-green-700/90 text-green-200"
+                : "bg-black/60 text-brand-soft"
             )}>
               {handDetected ? `Buffer · ${bufferSize} frames` : "Sin mano"}
             </span>
             {!handDetected && (
-              <span className="rounded-full bg-black/60 px-3 py-1 text-[11px] font-semibold text-[#8AA8B0]">
+              <span className="rounded-full bg-black/60 px-3 py-1 text-[11px] font-semibold text-brand-soft">
                 Sube la mano y haz la seña
               </span>
             )}
@@ -419,7 +413,7 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
           {/* Video de referencia en la esquina */}
           {target && (
             <div className="absolute bottom-4 right-4 z-10 w-44 overflow-hidden rounded-xl border-2 border-white/25 bg-black shadow-2xl">
-              <div className="bg-black/80 px-2 py-1 text-[10px] font-bold text-[#2AABB8]">
+              <div className="bg-black/80 px-2 py-1 text-[10px] font-bold text-brand-cyan">
                 Referencia · {target.name}
               </div>
               <video
@@ -439,7 +433,7 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
           {lastResult && (
             <div className={cx(
               "absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-2xl px-6 py-4 text-center backdrop-blur-md",
-              lastResult.correct ? "bg-[#1A6B4A]/90" : "bg-[#7A2B2B]/90"
+              lastResult.correct ? "bg-green-700/90" : "bg-red-900/90"
             )}>
               <div className="text-3xl font-bold text-white">
                 {lastResult.correct ? "✓ Correcto" : "✗ Confundido"}
@@ -472,19 +466,19 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
           <div className="flex gap-2">
             <button
               onClick={prevTarget}
-              className={cx("rounded-xl px-4 py-2.5 text-sm font-bold", isDark ? "bg-[#1A2C33] text-[#8AA8B0]" : "bg-[#EDF3F4] text-[#5B7883]")}
+              className={cx("rounded-xl px-4 py-2.5 text-sm font-bold", isDark ? "bg-brand-card text-brand-soft" : "bg-brand-cream text-brand-muted")}
             >
               ← Anterior
             </button>
             <button
               onClick={nextTarget}
-              className="flex-1 rounded-xl bg-[#2AABB8] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#238E99]"
+              className="flex-1 rounded-xl bg-brand-cyan px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#238E99]"
             >
               Siguiente seña →
             </button>
             <button
               onClick={() => { dynamicDetector.clearBuffer(); setRanking([]); setLastResult(null); activeFramesRef.current = 0; evaluatingRef.current = false; }}
-              className={cx("rounded-xl px-4 py-2.5 text-sm font-bold", isDark ? "bg-[#1A2C33] text-[#8AA8B0]" : "bg-[#EDF3F4] text-[#5B7883]")}
+              className={cx("rounded-xl px-4 py-2.5 text-sm font-bold", isDark ? "bg-brand-card text-brand-soft" : "bg-brand-cream text-brand-muted")}
             >
               Reiniciar
             </button>
@@ -509,13 +503,13 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
                       className={cx(
                         "flex items-center justify-between rounded-lg px-2.5 py-1.5",
                         isTarget
-                          ? "bg-[#2AABB8]/20 ring-1 ring-[#2AABB8]"
-                          : isDark ? "bg-[#16272E]" : "bg-[#F4F8F9]"
+                          ? "bg-brand-cyan/20 ring-1 ring-brand-cyan"
+                          : isDark ? "bg-[#16272E]" : "bg-brand-cream"
                       )}
                     >
                       <div className="flex items-center gap-2">
                         <span className={cx("w-4 text-[10px] font-bold", textSoft)}>{i + 1}</span>
-                        <span className={cx("text-xs font-bold", isTarget ? "text-[#2AABB8]" : textMain)}>
+                        <span className={cx("text-xs font-bold", isTarget ? "text-brand-cyan" : textMain)}>
                           {r.name}
                         </span>
                       </div>
@@ -540,7 +534,7 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
               <div className="flex flex-col gap-1">
                 {history.map((h, i) => (
                   <div key={i} className="flex items-center justify-between text-[11px]">
-                    <span className={cx("font-semibold", h.correct ? "text-[#2E9E6B]" : "text-[#D96B6B]")}>
+                    <span className={cx("font-semibold", h.correct ? "text-green-400" : "text-red-400")}>
                       {h.correct ? "✓" : "✗"} {h.target}
                     </span>
                     {!h.correct && (

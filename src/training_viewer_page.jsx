@@ -100,14 +100,14 @@ function FeatureBar({ label, value, max = 1 }) {
   const color = value < 0 ? "#D96B6B" : "#2AABB8";
   return (
     <div className="flex items-center gap-2 text-[10px]">
-      <span className="w-20 shrink-0 text-right font-mono text-[#8AA8B0]">{label}</span>
+      <span className="w-20 shrink-0 text-right font-mono text-brand-soft">{label}</span>
       <div className="relative h-3 flex-1 rounded-sm bg-[#1E3038]">
         <div
           className="absolute h-full rounded-sm transition-all"
           style={{ width: `${pct}%`, backgroundColor: color }}
         />
       </div>
-      <span className="w-12 shrink-0 font-mono text-[#E6F1F3]">{value.toFixed(3)}</span>
+      <span className="w-12 shrink-0 font-mono text-white">{value.toFixed(3)}</span>
     </div>
   );
 }
@@ -425,31 +425,25 @@ export default function TrainingViewerPage({ isDark, navigate }) {
   }
 
   return (
-    <div className={cx("min-h-screen", isDark ? "bg-[#08151A]" : "bg-[#F4F8F9]")}>
-      <header className={cx(
+    <div className={cx("min-h-screen", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
+      <div className={cx(
         "flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3",
-        isDark ? "bg-[#101E24] border-[#1E3038]" : "bg-white border-[#D9E4E7]"
+        isDark ? "bg-brand-card border-brand-line" : "bg-white border-brand-mist"
       )}>
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate("/model-test")}
-            className="rounded-lg bg-[#2AABB8] px-3 py-1.5 text-xs font-bold text-white"
-          >
-            ← Probar modelo
-          </button>
-          <h1 className={cx("text-lg font-bold", isDark ? "text-[#E6F1F3]" : "text-[#12303A]")}>
+          <h1 className={cx("text-lg font-bold", isDark ? "text-white" : "text-brand-ink")}>
             Visualizador de Entrenamiento
           </h1>
         </div>
-      </header>
+      </div>
 
       <div className="grid gap-4 p-4 lg:grid-cols-[280px_1fr_300px]">
         {/* ── Selector de seña ── */}
         <div className={cx(
           "rounded-xl border p-3",
-          isDark ? "bg-[#101E24] border-[#1E3038]" : "bg-white border-[#D9E4E7]"
+          isDark ? "bg-brand-card border-brand-line" : "bg-white border-brand-mist"
         )}>
-          <h2 className={cx("mb-2 text-xs font-bold uppercase", isDark ? "text-[#8AA8B0]" : "text-[#5B7883]")}>
+          <h2 className={cx("mb-2 text-xs font-bold uppercase", isDark ? "text-brand-soft" : "text-brand-muted")}>
             Categoría
           </h2>
           <div className="mb-3 flex flex-wrap gap-1">
@@ -460,8 +454,8 @@ export default function TrainingViewerPage({ isDark, navigate }) {
                 className={cx(
                   "rounded-md px-2 py-1 text-[10px] font-bold",
                   selectedCat === cat
-                    ? "bg-[#2AABB8] text-white"
-                    : isDark ? "bg-[#1E3038] text-[#8AA8B0]" : "bg-[#E8F0F2] text-[#5B7883]"
+                    ? "bg-brand-cyan text-white"
+                    : isDark ? "bg-[#1E3038] text-brand-soft" : "bg-[#E8F0F2] text-brand-muted"
                 )}
               >
                 {CATEGORY_LABELS[cat] || cat}
@@ -469,10 +463,10 @@ export default function TrainingViewerPage({ isDark, navigate }) {
             ))}
           </div>
 
-          <h2 className={cx("mb-2 text-xs font-bold uppercase", isDark ? "text-[#8AA8B0]" : "text-[#5B7883]")}>
+          <h2 className={cx("mb-2 text-xs font-bold uppercase", isDark ? "text-brand-soft" : "text-brand-muted")}>
             Señas ({signs.length})
           </h2>
-          <div className="max-h-48 overflow-y-auto rounded-md border border-[#1E3038]">
+          <div className="max-h-48 overflow-y-auto rounded-md border border-brand-line">
             {signs.map(s => (
               <button
                 key={s}
@@ -480,8 +474,8 @@ export default function TrainingViewerPage({ isDark, navigate }) {
                 className={cx(
                   "block w-full px-3 py-1.5 text-left text-xs font-semibold",
                   selectedSign === s
-                    ? "bg-[#2AABB8]/20 text-[#2AABB8]"
-                    : isDark ? "text-[#E6F1F3] hover:bg-[#1E3038]" : "text-[#12303A] hover:bg-[#F4F8F9]"
+                    ? "bg-brand-cyan/20 text-brand-cyan"
+                    : isDark ? "text-white hover:bg-[#1E3038]" : "text-brand-ink hover:bg-brand-cream"
                 )}
               >
                 {s}
@@ -491,7 +485,7 @@ export default function TrainingViewerPage({ isDark, navigate }) {
 
           {selectedSign && (
             <>
-              <h2 className={cx("mb-2 mt-3 text-xs font-bold uppercase", isDark ? "text-[#8AA8B0]" : "text-[#5B7883]")}>
+              <h2 className={cx("mb-2 mt-3 text-xs font-bold uppercase", isDark ? "text-brand-soft" : "text-brand-muted")}>
                 Ejemplo
               </h2>
               <div className="flex flex-wrap gap-1">
@@ -502,8 +496,8 @@ export default function TrainingViewerPage({ isDark, navigate }) {
                     className={cx(
                       "h-7 w-7 rounded-md text-[10px] font-bold",
                       selectedExample === n
-                        ? "bg-[#D98E36] text-white"
-                        : isDark ? "bg-[#1E3038] text-[#8AA8B0]" : "bg-[#E8F0F2] text-[#5B7883]"
+                        ? "bg-brand-orange text-white"
+                        : isDark ? "bg-[#1E3038] text-brand-soft" : "bg-[#E8F0F2] text-brand-muted"
                     )}
                   >
                     {n}
@@ -517,17 +511,17 @@ export default function TrainingViewerPage({ isDark, navigate }) {
         {/* ── Canvas + controles ── */}
         <div className={cx(
           "rounded-xl border p-4",
-          isDark ? "bg-[#101E24] border-[#1E3038]" : "bg-white border-[#D9E4E7]"
+          isDark ? "bg-brand-card border-brand-line" : "bg-white border-brand-mist"
         )}>
           {selectedSign && (
             <div className="mb-3 flex items-center gap-3">
-              <h2 className={cx("text-xl font-bold", isDark ? "text-[#E6F1F3]" : "text-[#12303A]")}>
+              <h2 className={cx("text-xl font-bold", isDark ? "text-white" : "text-brand-ink")}>
                 {selectedSign}
               </h2>
-              <span className="rounded-md bg-[#1E3038] px-2 py-0.5 text-[10px] font-bold text-[#8AA8B0]">
+              <span className="rounded-md bg-[#1E3038] px-2 py-0.5 text-[10px] font-bold text-brand-soft">
                 Ejemplo #{selectedExample}
               </span>
-              <span className="rounded-md bg-[#1E3038] px-2 py-0.5 text-[10px] font-bold text-[#8AA8B0]">
+              <span className="rounded-md bg-[#1E3038] px-2 py-0.5 text-[10px] font-bold text-brand-soft">
                 {frames.length} frames
               </span>
             </div>
@@ -552,19 +546,19 @@ export default function TrainingViewerPage({ isDark, navigate }) {
             <canvas ref={canvasRef} width={1280} height={960} className="absolute inset-0 h-full w-full object-contain pointer-events-none" />
             {frames.length === 0 && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <p className="text-sm text-[#8AA8B0]">Cargando…</p>
+                <p className="text-sm text-brand-soft">Cargando…</p>
               </div>
             )}
             {frameData && (
-              <div className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-1 text-[10px] font-mono text-[#E6F1F3]">
+              <div className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-1 text-[10px] font-mono text-white">
                 Frame {currentFrame + 1}/{frames.length} · t={frameData.f.videoTime?.toFixed(2) || "?"}s
                 {videoReady ? " · video OK" : " · sin video"}
               </div>
             )}
             {/* Leyenda de colores */}
-            <div className="absolute top-2 right-2 rounded bg-black/70 px-2 py-1 text-[9px] font-mono text-[#E6F1F3] space-y-0.5">
-              <div className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-[#2AABB8]" /> Mano izquierda</div>
-              <div className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-[#D98E36]" /> Mano derecha</div>
+            <div className="absolute top-2 right-2 rounded bg-black/70 px-2 py-1 text-[9px] font-mono text-white space-y-0.5">
+              <div className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-brand-cyan" /> Mano izquierda</div>
+              <div className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-brand-orange" /> Mano derecha</div>
             </div>
           </div>
 
@@ -573,14 +567,14 @@ export default function TrainingViewerPage({ isDark, navigate }) {
             <button
               onClick={() => setPlaying(p => !p)}
               disabled={frames.length === 0}
-              className="rounded-lg bg-[#2AABB8] px-4 py-2 text-xs font-bold text-white disabled:opacity-40"
+              className="rounded-lg bg-brand-cyan px-4 py-2 text-xs font-bold text-white disabled:opacity-40"
             >
               {playing ? "⏸ Pausar" : "▶ Reproducir"}
             </button>
             <button
               onClick={() => { setPlaying(false); setCurrentFrame(0); }}
               disabled={frames.length === 0}
-              className="rounded-lg bg-[#1E3038] px-3 py-2 text-xs font-bold text-[#8AA8B0] disabled:opacity-40"
+              className="rounded-lg bg-[#1E3038] px-3 py-2 text-xs font-bold text-brand-soft disabled:opacity-40"
             >
               ⏮
             </button>
@@ -600,7 +594,7 @@ export default function TrainingViewerPage({ isDark, navigate }) {
               }}
               className="flex-1 accent-[#2AABB8]"
             />
-            <label className="flex items-center gap-1 text-[10px] text-[#8AA8B0]">
+            <label className="flex items-center gap-1 text-[10px] text-brand-soft">
               FPS
               <input
                 type="number"
@@ -608,7 +602,7 @@ export default function TrainingViewerPage({ isDark, navigate }) {
                 max={30}
                 value={fps}
                 onChange={e => setFps(Math.max(1, Math.min(30, parseInt(e.target.value) || 15)))}
-                className="w-12 rounded bg-[#1E3038] px-1 py-0.5 text-center text-[#E6F1F3]"
+                className="w-12 rounded bg-[#1E3038] px-1 py-0.5 text-center text-white"
               />
             </label>
           </div>
@@ -617,9 +611,9 @@ export default function TrainingViewerPage({ isDark, navigate }) {
         {/* ── Feature vector ── */}
         <div className={cx(
           "rounded-xl border p-4",
-          isDark ? "bg-[#101E24] border-[#1E3038]" : "bg-white border-[#D9E4E7]"
+          isDark ? "bg-brand-card border-brand-line" : "bg-white border-brand-mist"
         )}>
-          <h2 className={cx("mb-3 text-xs font-bold uppercase", isDark ? "text-[#8AA8B0]" : "text-[#5B7883]")}>
+          <h2 className={cx("mb-3 text-xs font-bold uppercase", isDark ? "text-brand-soft" : "text-brand-muted")}>
             Vector de Features · Frame {currentFrame + 1}
           </h2>
 
@@ -635,46 +629,46 @@ export default function TrainingViewerPage({ isDark, navigate }) {
               ))}
             </div>
           ) : (
-            <p className="text-xs text-[#8AA8B0]">Sin datos</p>
+            <p className="text-xs text-brand-soft">Sin datos</p>
           )}
 
           {frameData?.fs && (
             <>
-              <h2 className={cx("mb-2 mt-4 text-xs font-bold uppercase", isDark ? "text-[#8AA8B0]" : "text-[#5B7883]")}>
+              <h2 className={cx("mb-2 mt-4 text-xs font-bold uppercase", isDark ? "text-brand-soft" : "text-brand-muted")}>
                 Estados de dedos
               </h2>
               <div className="grid grid-cols-5 gap-1 text-center">
                 {["thumb", "index", "middle", "ring", "pinky"].map(d => (
                   <div key={d} className={cx(
                     "rounded-md py-1 text-[10px] font-bold",
-                    frameData.fs[d] ? "bg-[#1A6B4A] text-[#D4F5E4]" : "bg-[#3A1B1B] text-[#F5C9C9]"
+                    frameData.fs[d] ? "bg-green-700 text-green-200" : "bg-[#3A1B1B] text-[#F5C9C9]"
                   )}>
                     {d === "thumb" ? "P" : d === "index" ? "I" : d === "middle" ? "M" : d === "ring" ? "A" : "Q"}
                   </div>
                 ))}
               </div>
 
-              <h2 className={cx("mb-2 mt-4 text-xs font-bold uppercase", isDark ? "text-[#8AA8B0]" : "text-[#5B7883]")}>
+              <h2 className={cx("mb-2 mt-4 text-xs font-bold uppercase", isDark ? "text-brand-soft" : "text-brand-muted")}>
                 Ángulos articulares
               </h2>
-              <div className="space-y-1 font-mono text-[10px] text-[#E6F1F3]">
+              <div className="space-y-1 font-mono text-[10px] text-white">
                 {["index", "middle", "ring", "pinky", "thumb"].map(d => (
                   <div key={d} className="flex justify-between">
-                    <span className="text-[#8AA8B0]">ang.{d}</span>
+                    <span className="text-brand-soft">ang.{d}</span>
                     <span>{frameData.fs.ang?.[d]?.toFixed(1) || "—"}°</span>
                   </div>
                 ))}
               </div>
 
-              <h2 className={cx("mb-2 mt-4 text-xs font-bold uppercase", isDark ? "text-[#8AA8B0]" : "text-[#5B7883]")}>
+              <h2 className={cx("mb-2 mt-4 text-xs font-bold uppercase", isDark ? "text-brand-soft" : "text-brand-muted")}>
                 Orientación
               </h2>
-              <div className="space-y-1 font-mono text-[10px] text-[#E6F1F3]">
-                <div className="flex justify-between"><span className="text-[#8AA8B0]">palmOriY</span><span>{frameData.fs.palmOriY?.toFixed(3)}</span></div>
-                <div className="flex justify-between"><span className="text-[#8AA8B0]">fingerOriY</span><span>{frameData.fs.fingerOriY?.toFixed(3)}</span></div>
-                <div className="flex justify-between"><span className="text-[#8AA8B0]">fingerOriZ</span><span>{frameData.fs.fingerOriZ?.toFixed(3)}</span></div>
-                <div className="flex justify-between"><span className="text-[#8AA8B0]">palmNormZ</span><span>{frameData.fs.palmNormalZ?.toFixed(3)}</span></div>
-                <div className="flex justify-between"><span className="text-[#8AA8B0]">imGap</span><span>{frameData.fs.imGap?.toFixed(3)}</span></div>
+              <div className="space-y-1 font-mono text-[10px] text-white">
+                <div className="flex justify-between"><span className="text-brand-soft">palmOriY</span><span>{frameData.fs.palmOriY?.toFixed(3)}</span></div>
+                <div className="flex justify-between"><span className="text-brand-soft">fingerOriY</span><span>{frameData.fs.fingerOriY?.toFixed(3)}</span></div>
+                <div className="flex justify-between"><span className="text-brand-soft">fingerOriZ</span><span>{frameData.fs.fingerOriZ?.toFixed(3)}</span></div>
+                <div className="flex justify-between"><span className="text-brand-soft">palmNormZ</span><span>{frameData.fs.palmNormalZ?.toFixed(3)}</span></div>
+                <div className="flex justify-between"><span className="text-brand-soft">imGap</span><span>{frameData.fs.imGap?.toFixed(3)}</span></div>
               </div>
             </>
           )}
@@ -685,9 +679,9 @@ export default function TrainingViewerPage({ isDark, navigate }) {
       {sequence.length > 0 && (
         <div className={cx(
           "mx-4 mb-4 rounded-xl border p-4",
-          isDark ? "bg-[#101E24] border-[#1E3038]" : "bg-white border-[#D9E4E7]"
+          isDark ? "bg-brand-card border-brand-line" : "bg-white border-brand-mist"
         )}>
-          <h2 className={cx("mb-3 text-xs font-bold uppercase", isDark ? "text-[#8AA8B0]" : "text-[#5B7883]")}>
+          <h2 className={cx("mb-3 text-xs font-bold uppercase", isDark ? "text-brand-soft" : "text-brand-muted")}>
             Evolución temporal · {selectedSign} #{selectedExample} ({sequence.length} frames)
           </h2>
           <TimelineChart sequence={sequence} currentFrame={currentFrame} labels={FEATURE_LABELS} />
@@ -784,7 +778,7 @@ function TimelineChart({ sequence, currentFrame, labels }) {
       <canvas ref={canvasRef} width={900} height={200} className="w-full" />
       <div className="mt-2 flex flex-wrap gap-2">
         {labels.map((l, i) => (
-          <span key={i} className="flex items-center gap-1 text-[9px] text-[#8AA8B0]">
+          <span key={i} className="flex items-center gap-1 text-[9px] text-brand-soft">
             <span className="h-2 w-2 rounded-full" style={{
               backgroundColor: ["#2AABB8","#D98E36","#1A6B4A","#D96B6B","#E6F1F3",
                 "#5B7883","#8AA8B0","#F5C9C9","#D4F5E4","#FFE08A",

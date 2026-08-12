@@ -3777,24 +3777,24 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
     <div className={cx('min-h-screen transition-colors', isDark ? 'bg-brand-deep' : 'bg-brand-cream')}>
 
-      {/* Header */}
+      {/* Sub-toolbar */}
 
-      <header className={cx('flex items-center justify-between border-b px-6 py-3 gap-4 flex-wrap', isDark ? 'border-brand-line bg-brand-card' : 'border-brand-mist bg-white')}>
+      <div className={cx('flex items-center justify-between border-b px-6 py-3 gap-4 flex-wrap', isDark ? 'border-brand-line bg-brand-card' : 'border-brand-mist bg-white')}>
 
-        <span className={cx('text-lg font-extrabold shrink-0', isDark ? 'text-white' : 'text-brand-ink')}>≡ƒö¼ Diagn├│stico LSM</span>
+        <span className={cx('text-lg font-extrabold shrink-0', isDark ? 'text-white' : 'text-brand-ink')}>🔬 Diagnóstico LSM</span>
 
         <div className='flex gap-2 flex-wrap items-center'>
 
           {!videoOnly && (
             <div className={cx('flex rounded-lg overflow-hidden border', isDark ? 'border-brand-line' : 'border-brand-mist')}>
 
-              {[['cam','≡ƒô╖ C├ímara'],['video','≡ƒÄ¼ Video']].map(([t, lbl]) => (
+              {[['cam','📷 Cámara'],['video','🎬 Video']].map(([t, lbl]) => (
 
                 <button key={t} onClick={() => { setTab(t); setStates(null); setScores([]); setBest(null); }}
 
                   className={cx('px-3 py-1 text-xs font-bold transition',
 
-                    tab === t ? 'bg-brand-teal text-white' : isDark ? 'bg-brand-deep text-[#5A8A94]' : 'bg-white text-brand-muted'
+                    tab === t ? 'bg-brand-teal text-white' : isDark ? 'bg-brand-deep text-brand-soft' : 'bg-white text-brand-muted'
 
                   )}>{lbl}</button>
 
@@ -3803,11 +3803,9 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
             </div>
           )}
 
-          <button onClick={() => navigate('/practice')} className={cx('rounded-lg px-3 py-1 text-xs font-bold', isDark ? 'bg-brand-card text-brand-soft' : 'bg-gray-100 text-brand-muted')}>ΓåÉ Pr├íctica</button>
-
         </div>
 
-      </header>
+      </div>
 
 
 
@@ -4315,17 +4313,43 @@ function App() {
   if (path === "/signup") return <AuthPage mode="signup" isDark={isDark} setIsDark={setIsDark} navigate={navigate} />;
   if (path === "/confirm-email") return <EmailConfirmationPage isDark={isDark} setIsDark={setIsDark} navigate={navigate} email={state?.email || ""} />;
 
-  // Developer/training pages - accessible without auth
-  if (path === "/debug") return <DebugPage isDark={isDark} navigate={navigate} />;
-  if (path === "/video-test") return <DebugPage isDark={isDark} navigate={navigate} videoOnly />;
+  // Developer/training pages - accessible without auth, con AppHeader uniforme
+  if (path === "/debug") return (
+    <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
+      <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
+      <DebugPage isDark={isDark} navigate={navigate} />
+    </div>
+  );
+  if (path === "/video-test") return (
+    <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
+      <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
+      <DebugPage isDark={isDark} navigate={navigate} videoOnly />
+    </div>
+  );
   if (path === "/model-test") return (
-    <ModelTestPage isDark={isDark} navigate={navigate} useCameraMediaPipe={useCameraMediaPipe} reloadDynamicPatterns={reloadDynamicPatterns} />
+    <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
+      <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
+      <ModelTestPage isDark={isDark} navigate={navigate} useCameraMediaPipe={useCameraMediaPipe} reloadDynamicPatterns={reloadDynamicPatterns} />
+    </div>
   );
   if (path === "/train") return (
-    <TrainPage isDark={isDark} navigate={navigate} useCameraMediaPipe={useCameraMediaPipe} reloadDynamicPatterns={reloadDynamicPatterns} />
+    <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
+      <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
+      <TrainPage isDark={isDark} navigate={navigate} useCameraMediaPipe={useCameraMediaPipe} reloadDynamicPatterns={reloadDynamicPatterns} />
+    </div>
   );
-  if (path === "/training-viewer") return <TrainingViewerPage isDark={isDark} navigate={navigate} />;
-  if (path === "/retrain") return <RetrainPage isDark={isDark} navigate={navigate} />;
+  if (path === "/training-viewer") return (
+    <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
+      <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
+      <TrainingViewerPage isDark={isDark} navigate={navigate} />
+    </div>
+  );
+  if (path === "/retrain") return (
+    <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
+      <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
+      <RetrainPage isDark={isDark} navigate={navigate} />
+    </div>
+  );
 
   // Protected routes - redirect to login if not authenticated
   if (!user) {
