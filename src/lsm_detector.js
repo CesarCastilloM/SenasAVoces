@@ -148,18 +148,7 @@ export function fingerStates(lms) {
 }
 
 // ── Extras por letra ────────────────────────────────────────────────────
-function extraA(s)  {
-  // A en LSM: puño cerrado con pulgar al lado del puño (no extendido, no tocando índice/medio)
-  if (!s.fistTight) return -0.30;
-  if (s.thumbOut) return -0.20;          // pulgar fuera → no es A
-  if (s.thumbTouchIndex || s.thumbTouchMiddle) return -0.25; // pulgar tocando → no es A
-  if (s.thumbOverTop) return -0.20;       // pulgar encima → más bien E
-  if (s.thumbBelowMcps) return -0.15;     // pulgar muy abajo → más bien M
-  // pulgar al lado del índice = A clásica
-  if (s.thumbSideIndex) return +0.35;
-  if (s.thumbAtLevel) return +0.20;
-  return +0.08;
-}
+function extraA(s)  { return (s.thumbOut?+0.12:-0.10)+(s.fistTight?+0.06:-0.08); }
 function extraL(s)  { return (s.thumbOut?+0.12:-0.25)+(s.handUp?+0.06:-0.08); }
 function extraY(s)  {
   if (!s.thumbOut) return -0.22;
@@ -357,7 +346,7 @@ export function scoreLetter(states, template, letter) {
 
 // ── LSM_ALPHABET (igual que lsm_teacher.py) ────────────────────────────
 export const LSM_ALPHABET = [
-  ['A','CCCCC',false],['B','CEEEE',false],['C','?????',false],
+  ['A','ECCCC',false],['B','CEEEE',false],['C','?????',false],
   ['D','CECCC',false],['E','CCCCC',false],['F','CCEEE',false],
   ['G','EECCC',false],['H','?EECC',false],['I','CCCCE',false],
   ['J','CCCCE',true], ['K','EEECC',true], ['L','EECCC',false],

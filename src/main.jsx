@@ -2540,35 +2540,38 @@ async function reloadDynamicPatterns() {
     if (!manifestRes.ok) throw new Error(`No se pudo cargar manifest (${manifestRes.status})`);
     const man = await manifestRes.json();
 
-    // Cargar todas las señas en paralelo: cada seña intenta _1.._20
-    // simultaneamente. Formato principal: .npy (binario, más eficiente).
-    const tasks = [];
+    // Construir lista de URLs a cargar (hasta 30 ejemplos por seña)
+    const urls = [];
     for (const [cat, signs] of Object.entries(man)) {
       if (!Array.isArray(signs)) continue;
       for (const sign of signs) {
-        for (let n = 1; n <= 20; n++) {
-          tasks.push(
-            fetch(`/api/training-data/${cat}/${sign}_${n}.npy${bust}`)
-              .then(res => {
-                if (res.ok) return res.arrayBuffer().then(buf => {
-                  const parsed = parseNpy(buf);
-                  const frames = npyToFrames(parsed);
-                  return { sign, data: frames };
-                });
-                // Fallback: intentar .json si no hay .npy
-                return fetch(`/api/training-data/${cat}/${sign}_${n}.json${bust}`)
-                  .then(r2 => r2.ok ? r2.json().then(data => ({ sign, data })) : null)
-                  .catch(() => null);
-              })
-              .catch(() => null)
-          );
+        for (let n = 1; n <= 30; n++) {
+          urls.push({ sign, url: `/api/training-data/${cat}/${sign}_${n}.npy${bust}` });
         }
       }
     }
-    const results = await Promise.all(tasks);
+    console.log(`[DYNAMIC] ${urls.length} URLs a cargar, procesando en lotes de 80...`);
+
+    // Cargar en lotes para no saturar el navegador con miles de fetches en paralelo
+    const BATCH_SIZE = 80;
     let loaded = 0;
-    for (const r of results) {
-      if (r) { dynamicDetector.loadPattern(r.sign, r.data); loaded++; }
+    for (let i = 0; i < urls.length; i += BATCH_SIZE) {
+      const batch = urls.slice(i, i + BATCH_SIZE);
+      const results = await Promise.all(batch.map(({ sign, url }) =>
+        fetch(url)
+          .then(res => {
+            if (!res.ok) return null;
+            return res.arrayBuffer().then(buf => {
+              const parsed = parseNpy(buf);
+              const frames = npyToFrames(parsed);
+              return { sign, data: frames };
+            });
+          })
+          .catch(() => null)
+      ));
+      for (const r of results) {
+        if (r) { dynamicDetector.loadPattern(r.sign, r.data); loaded++; }
+      }
     }
     console.log(`[DYNAMIC] ${loaded} secuencias cargadas`);
   } catch (e) { console.warn('[DYNAMIC] reload error:', e); }
