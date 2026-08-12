@@ -25,9 +25,6 @@ models/*.h5
 models/*.tflite
 models/*.onnx
 
-# ── Modelos de MediaPipe (se descargan aparte) ────────────────
-mediapipe_models/
-
 # ── Archivos temporales / logs ────────────────────────────────
 *.log
 *.tmp
