@@ -3,7 +3,9 @@ Dataset loader para clasificador de senas dinamicas.
 Lee los mismos archivos .npy de public/training_data/ que usa el detector DTW,
 sin modificarlos ni tocar el pipeline en produccion.
 
-Formato de cada .npy: shape (N_frames, 42, 3) -> 21 landmarks mano derecha + 21 izquierda.
+Formato de cada .npy: shape (N_frames, K, 3) donde K=42 (solo manos) o K=124 (manos + cara).
+42 = 21 landmarks mano derecha + 21 izquierda.
+124 = 42 manos + 82 cara (cejas, ojos, boca, nariz, contorno).
 Landmarks en cero (0,0,0) para toda la mano = mano ausente en ese frame.
 """
 import json
@@ -14,6 +16,10 @@ from torch.utils.data import Dataset
 
 TRAINING_DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "training_data")
 TARGET_FRAMES = 24  # igual al pipeline de extraccion
+HAND_LM = 42  # 21 derecha + 21 izquierda
+FACE_LM = 82  # subset de FaceLandmarker relevante para LSM
+TOTAL_LM = HAND_LM + FACE_LM  # 124
+INPUT_DIM = TOTAL_LM * 3  # 372
 
 
 def load_manifest():
@@ -28,29 +34,34 @@ def _hand_present(hand):
 
 def normalize_sequence(arr):
     """
-    arr: (N, 42, 3) float32 crudo, x/y en [0,1] relativo a imagen, z relativo.
-    Normaliza cada frame usando el centro y escala de las manos presentes,
-    igual que hace frameInfo() en el detector DTW (para consistencia conceptual),
-    pero aqui devolvemos landmarks relativos en vez de features hechas a mano,
-    dejando que el modelo aprenda las features.
+    arr: (N, K, 3) float32 crudo, K=42 o K=124.
+    x/y en [0,1] relativo a imagen, z relativo.
+    Normaliza cada frame usando el centro y escala de las manos presentes.
+    La parte facial se normaliza relativa al puente de la nariz (landmark face idx 6 = nose tip).
     """
-    N = arr.shape[0]
+    N, K, _ = arr.shape
+    has_face = K > HAND_LM
     out = np.zeros_like(arr, dtype=np.float32)
     for f in range(N):
         right = arr[f, :21]
-        left = arr[f, 21:]
+        left = arr[f, 21:42]
         has_r = _hand_present(right)
         has_l = _hand_present(left)
-        # Centro: promedio de munecas presentes (landmark 0 = wrist)
         wrists = []
         if has_r:
             wrists.append(right[0])
         if has_l:
             wrists.append(left[0])
-        if not wrists:
+        if not wrists and not (has_face and _hand_present(arr[f, HAND_LM:])):
             continue
-        center = np.mean(wrists, axis=0)
-        # Escala: distancia wrist->middle_finger_mcp (landmark 9), promedio de manos presentes
+        # Centro: promedio de munecas presentes
+        if wrists:
+            center = np.mean(wrists, axis=0)
+        elif has_face:
+            center = arr[f, HAND_LM + 6]  # nose tip como centro fallback
+        else:
+            continue
+        # Escala: distancia wrist->middle_finger_mcp, promedio de manos presentes
         scales = []
         if has_r:
             scales.append(np.linalg.norm(right[9] - right[0]) + 1e-6)
@@ -60,7 +71,13 @@ def normalize_sequence(arr):
         if has_r:
             out[f, :21] = (right - center) / scale
         if has_l:
-            out[f, 21:] = (left - center) / scale
+            out[f, 21:42] = (left - center) / scale
+        # Normalizar cara: relativa al centro de las manos, misma escala
+        if has_face:
+            face = arr[f, HAND_LM:]
+            face_present = _hand_present(face)
+            if face_present:
+                out[f, HAND_LM:] = (face - center) / scale
     return out
 
 
@@ -87,14 +104,19 @@ def load_npy_sequence(path):
         arr = arr[None, :, :]
         if arr.shape[1] == 21:
             arr = np.concatenate([arr, np.zeros_like(arr)], axis=1)
+    # Pad old .npy (42 lm) to 124 with zeros for face landmarks
+    if arr.shape[1] == HAND_LM and TOTAL_LM > HAND_LM:
+        pad = np.zeros((arr.shape[0], FACE_LM, 3), dtype=np.float32)
+        arr = np.concatenate([arr, pad], axis=1)
     return arr
 
 
 class SignSequenceDataset(Dataset):
     """
     Carga todos los ejemplos .npy de todas las senas del manifest.
-    Cada item: (sequence_tensor [T, 126], label_idx)
-    126 = 42 landmarks * 3 coords, aplanado por frame.
+    Cada item: (sequence_tensor [T, K*3], label_idx)
+    K=42 -> 126 dims (solo manos) o K=124 -> 372 dims (manos + cara).
+    Se detecta automaticamente segun la shape del .npy.
     """
 
     def __init__(self, manifest=None, holdout_index=None, only_holdout=False,
@@ -130,7 +152,7 @@ class SignSequenceDataset(Dataset):
         arr = load_npy_sequence(fp)
         arr = normalize_sequence(arr)
         arr = resample_to_length(arr, self.target_frames)
-        flat = arr.reshape(self.target_frames, -1)  # (T, 126)
+        flat = arr.reshape(self.target_frames, -1)  # (T, K*3)
         label = self.label_to_idx[sign]
         return torch.from_numpy(flat), label
 

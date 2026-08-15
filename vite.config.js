@@ -167,8 +167,5 @@ function trainSignPlugin() {
 
 export default defineConfig({
   plugins: [react(), trainSignPlugin()],
-  optimizeDeps: {
-    exclude: ["onnxruntime-web"],
-  },
   assetsInclude: ["**/*.onnx", "**/*.wasm"],
 });

@@ -16,7 +16,7 @@ import torch
 from torch.utils.data import DataLoader
 
 sys.path.insert(0, os.path.dirname(__file__))
-from dataset import SignSequenceDataset, load_manifest
+from dataset import SignSequenceDataset, load_manifest, INPUT_DIM
 from augment import AugmentedDataset
 from model import SignClassifier, supervised_contrastive_loss
 
@@ -73,7 +73,7 @@ def main():
     val_loader = DataLoader(val_ds, batch_size=args.batch_size, shuffle=False, num_workers=0)
 
     model = SignClassifier(
-        input_dim=126,
+        input_dim=INPUT_DIM,
         hidden_dim=args.hidden_dim,
         num_classes=num_classes,
         embed_dim=args.embed_dim,
@@ -127,6 +127,7 @@ def main():
                 "num_classes": num_classes,
                 "hidden_dim": args.hidden_dim,
                 "embed_dim": args.embed_dim,
+                "input_dim": INPUT_DIM,
                 "label_to_idx": train_base.label_to_idx,
                 "labels": train_base.labels,
                 "val_top1": val_acc[1],

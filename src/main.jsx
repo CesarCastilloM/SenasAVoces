@@ -2470,6 +2470,10 @@ function useCameraMediaPipe({ onResults, enabled = true }) {
   const streamRef    = useRef(null); // Store stream reference for cleanup
   const [camReady, setCamReady] = useState(false);
   const [camError, setCamError] = useState(null);
+  // Ref para siempre invocar la ultima version de onResults (evita stale closures
+  // dentro del loop de deteccion, que solo se monta una vez).
+  const onResultsRef = useRef(onResults);
+  onResultsRef.current = onResults;
 
   useEffect(() => {
     if (!enabled) return;
@@ -2585,7 +2589,7 @@ function useCameraMediaPipe({ onResults, enabled = true }) {
             }
           }
 
-          if (onResults) onResults({ handRes, poseRes: lastPoseRef.current, faceRes: lastFaceRef.current });
+          if (onResultsRef.current) onResultsRef.current({ handRes, poseRes: lastPoseRef.current, faceRes: lastFaceRef.current });
           rafRef.current = requestAnimationFrame(detect);
         }
         rafRef.current = requestAnimationFrame(detect);
@@ -3591,6 +3595,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
   const autoTrainRef = useRef(true);
   const onnxFramesRef = useRef([]); // buffer de frames crudos para ONNX
   const onnxFrameCountRef = useRef(0);
+  const lastSpokenRef = useRef(null); // ultima palabra dicha para evitar repetir
   autoTrainRef.current = autoTrain;
 
   useEffect(() => {
@@ -3605,12 +3610,14 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
   const trainInfoRef = useRef(null);
   trainInfoRef.current = trainInfo;
 
-  const handleResults = useCallback(({ handRes }) => {
+  const handleResults = useCallback(({ handRes, faceRes }) => {
 
     const { right, left } = splitHands(handRes);
     const lms = right || left;
 
     if (!lms) { setStates(null); setScores([]); setBest(null); return; }
+
+    const faceLms = faceRes?.landmarks?.[0] || null;
 
     const s = fingerStates(lms);
 
@@ -3649,6 +3656,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
         onnxFramesRef.current.push({
           landmarksRight: right ? right.map(p => ({ x: p.x, y: p.y, z: p.z })) : null,
           landmarksLeft: left ? left.map(p => ({ x: p.x, y: p.y, z: p.z })) : null,
+          landmarksFace: faceLms ? faceLms.map(p => ({ x: p.x, y: p.y, z: p.z })) : null,
         });
         if (onnxFramesRef.current.length > 60) onnxFramesRef.current.shift();
         onnxFrameCountRef.current++;
@@ -3659,9 +3667,25 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
             if (result) {
               setOnnxSign(result.top1);
               setOnnxTop5(result.top5);
-              // Si confianza > 0.7, limpiar buffer para siguiente deteccion
-              if (result.confidence > 0.7) {
+              // Si confianza > 0.5, limpiar buffer para siguiente deteccion
+              if (result.confidence > 0.5) {
                 onnxFramesRef.current = [];
+              }
+              // Hablar la palabra del top 1 si es diferente a la ultima dicha
+              const spoken = result.top1;
+              console.log('[ONNX] top1:', spoken, 'conf:', result.confidence, 'top5:', result.top5.map(r => r.name));
+              if (spoken && spoken !== lastSpokenRef.current && 'speechSynthesis' in window) {
+                lastSpokenRef.current = spoken;
+                const text = spoken.replace(/_/g, ' ');
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'es-MX';
+                utterance.rate = 0.9;
+                const voices = window.speechSynthesis.getVoices();
+                const esVoice = voices.find(v => v.lang.startsWith('es'));
+                if (esVoice) utterance.voice = esVoice;
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.speak(utterance);
+                console.log('[SPEECH] Diciendo:', text, esVoice ? esVoice.name : 'default voice');
               }
             }
           });
@@ -4306,13 +4330,6 @@ function App() {
     );
   }
 
-  if (authConfigError) return <ConfigErrorPage isDark={isDark} />;
-
-  // Auth pages
-  if (path === "/" || path === "/login") return <AuthPage mode="login" isDark={isDark} setIsDark={setIsDark} navigate={navigate} />;
-  if (path === "/signup") return <AuthPage mode="signup" isDark={isDark} setIsDark={setIsDark} navigate={navigate} />;
-  if (path === "/confirm-email") return <EmailConfirmationPage isDark={isDark} setIsDark={setIsDark} navigate={navigate} email={state?.email || ""} />;
-
   // Developer/training pages - accessible without auth, con AppHeader uniforme
   if (path === "/debug") return (
     <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
@@ -4350,6 +4367,16 @@ function App() {
       <RetrainPage isDark={isDark} navigate={navigate} />
     </div>
   );
+
+  // Skip auth for local testing - redirect to model-test
+  if (path === "/" || path === "/login" || path === "/signup") {
+    navigate("/model-test");
+    return null;
+  }
+
+  // Auth pages (only if Supabase is configured)
+  if (authConfigError) return <ConfigErrorPage isDark={isDark} />;
+  if (path === "/confirm-email") return <EmailConfirmationPage isDark={isDark} setIsDark={setIsDark} navigate={navigate} email={state?.email || ""} />;
 
   // Protected routes - redirect to login if not authenticated
   if (!user) {

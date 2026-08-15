@@ -13,6 +13,7 @@ import torch
 
 sys.path.insert(0, os.path.dirname(__file__))
 from model import SignClassifier
+from dataset import INPUT_DIM
 
 CKPT_DIR = os.path.join(os.path.dirname(__file__), "checkpoints")
 PUBLIC_DIR = os.path.join(os.path.dirname(__file__), "..", "public")
@@ -23,7 +24,7 @@ def main():
     ckpt = torch.load(os.path.join(CKPT_DIR, "best_model.pt"), map_location=device, weights_only=False)
 
     model = SignClassifier(
-        input_dim=126,
+        input_dim=ckpt.get("input_dim", INPUT_DIM),
         hidden_dim=ckpt["hidden_dim"],
         num_classes=ckpt["num_classes"],
         embed_dim=ckpt["embed_dim"],
@@ -31,8 +32,8 @@ def main():
     model.load_state_dict(ckpt["model_state"])
     model.eval()
 
-    # Dummy input: (batch=1, seq_len=24, features=126)
-    dummy = torch.randn(1, 24, 126)
+    # Dummy input: (batch=1, seq_len=24, features=INPUT_DIM)
+    dummy = torch.randn(1, 24, INPUT_DIM)
 
     onnx_path = os.path.join(CKPT_DIR, "sign_model.onnx")
     torch.onnx.export(

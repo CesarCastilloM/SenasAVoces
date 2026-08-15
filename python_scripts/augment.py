@@ -1,12 +1,14 @@
 """
-Augmentacion on-the-fly para secuencias normalizadas (T, 126).
-126 = 42 landmarks * 3 coords (21 right + 21 left), ya centrados/escalados
+Augmentacion on-the-fly para secuencias normalizadas (T, K*3).
+K=124 landmarks (42 manos + 82 cara), ya centrados/escalados
 por normalize_sequence(). Aplica ruido, rotacion 2D leve, escala y time-warp,
-preservando relacion espacial entre ambas manos (se transforma la secuencia
-completa con los mismos parametros, no cada mano por separado).
+preservando relacion espacial entre ambas manos y cara (se transforma la secuencia
+completa con los mismos parametros, no cada parte por separado).
 """
 import numpy as np
 import torch
+
+NUM_LM = 124  # 42 manos + 82 cara
 
 
 def _rotate_2d(coords_xy, angle_rad):
@@ -16,16 +18,17 @@ def _rotate_2d(coords_xy, angle_rad):
 
 
 def augment_sequence(seq_np, rng=None):
-    """seq_np: (T, 126) numpy float32. Devuelve copia aumentada."""
+    """seq_np: (T, K*3) numpy float32. Devuelve copia aumentada."""
     rng = rng or np.random.default_rng()
     T = seq_np.shape[0]
-    arr = seq_np.reshape(T, 42, 3).copy()
+    K = NUM_LM
+    arr = seq_np.reshape(T, K, 3).copy()
 
     # Rotacion leve en el plano XY (+/- 8 grados), misma rotacion para toda la secuencia
     angle = rng.uniform(-8, 8) * np.pi / 180
     xy = arr[:, :, :2].reshape(-1, 2)
     xy = _rotate_2d(xy, angle)
-    arr[:, :, :2] = xy.reshape(T, 42, 2)
+    arr[:, :, :2] = xy.reshape(T, K, 2)
 
     # Escala global leve
     scale = rng.uniform(0.92, 1.08)
@@ -51,7 +54,7 @@ def augment_sequence(seq_np, rng=None):
         flat2 = np.zeros((T, flat.shape[1]), dtype=np.float32)
         for c in range(flat.shape[1]):
             flat2[:, c] = np.interp(final_idx, warped_idx2, warped[:, c])
-        arr = flat2.reshape(T, 42, 3)
+        arr = flat2.reshape(T, K, 3)
 
     return arr.reshape(T, -1).astype(np.float32)
 

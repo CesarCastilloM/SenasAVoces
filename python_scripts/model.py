@@ -30,12 +30,12 @@ class TemporalAttention(nn.Module):
 
 class SignClassifier(nn.Module):
     """
-    input_dim=126 (42 landmarks * 3), BiLSTM de 2 capas + attention pooling
+    input_dim=372 (124 landmarks * 3), BiLSTM de 2 capas + attention pooling
     + cabeza de proyeccion (embedding, para contrastive loss) + cabeza de
     clasificacion (logits, para cross-entropy).
     """
 
-    def __init__(self, input_dim=126, hidden_dim=128, num_classes=200,
+    def __init__(self, input_dim=372, hidden_dim=128, num_classes=200,
                  num_layers=2, dropout=0.3, embed_dim=64):
         super().__init__()
         self.input_norm = nn.LayerNorm(input_dim)

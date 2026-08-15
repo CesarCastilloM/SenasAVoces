@@ -53,6 +53,7 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
   const [lastResult, setLastResult] = useState(null); // { correct, guess, score, margin, target }
   const [stats, setStats] = useState({ correct: 0, total: 0, top3: 0 });
   const [history, setHistory] = useState([]);
+  const lastSpokenRef = useRef(null);
 
   const idleRef = useRef(0);
   const activeFramesRef = useRef(0);
@@ -63,6 +64,13 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
   const stableGuessRef = useRef(null);  // { name, score } que se mantiene estable
   const stableCountRef = useRef(0);     // frames consecutivos con el mismo #1
   const lastDetectedRef = useRef(null); // última seña detectada (para evitar duplicados)
+
+  // ── Inicializar voces de speechSynthesis ──────────────────
+  useEffect(() => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.getVoices();
+    }
+  }, []);
 
   // ── Carga de patrones ────────────────────────────────────────────────
   useEffect(() => {
@@ -121,6 +129,7 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
     stableGuessRef.current = null;
     stableCountRef.current = 0;
     lastDetectedRef.current = null;
+    lastSpokenRef.current = null;
   }, []);
 
   const nextTarget = useCallback(() => {
@@ -175,9 +184,10 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
   }, []);
 
   // ── Loop de MediaPipe ────────────────────────────────────────────────
-  const handleResults = useCallback(({ handRes }) => {
+  const handleResults = useCallback(({ handRes, faceRes }) => {
     const { right, left } = splitHands(handRes);
     const lms = right || left;
+    const faceLms = faceRes?.landmarks?.[0] || null;
     setHandDetected(!!lms);
 
     if (!lms) {
@@ -219,7 +229,25 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
       if (full.length > 0) {
         const guess = full[0];
         const margin = full.length > 1 ? full[1].score - guess.score : Infinity;
-        setRanking(full.slice(0, 5));
+        const top5 = full.slice(0, 5);
+        setRanking(top5);
+
+        // Hablar la palabra objetivo si aparece en el top 5 del ranking DTW
+        const tgt = targetRef.current;
+        const foundInTop5 = tgt && top5.some(r => r.name === tgt.name);
+        if (foundInTop5 && tgt.name !== lastSpokenRef.current && 'speechSynthesis' in window) {
+          lastSpokenRef.current = tgt.name;
+          const text = tgt.name.replace(/_/g, ' ');
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'es-MX';
+          utterance.rate = 0.9;
+          const voices = window.speechSynthesis.getVoices();
+          const googleEs = voices.find(v => v.name.toLowerCase().includes('google') && v.lang.startsWith('es'));
+          const esVoice = googleEs || voices.find(v => v.lang.startsWith('es'));
+          if (esVoice) utterance.voice = esVoice;
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(utterance);
+        }
 
         // Si el score es muy alto, el buffer no coincide con nada.
         // Resetear para eliminar frames idle y empezar fresco.
