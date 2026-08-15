@@ -503,11 +503,11 @@ a:focus-visible {
 }
 
 .account-menu {
-  position: fixed;
-  top: 5.25rem;
-  right: max(1.5rem, calc((100vw - 72rem) / 2 + 1.5rem));
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
   z-index: 80;
-  width: min(18rem, calc(100vw - 2rem));
+  width: min(20rem, calc(100vw - 2rem));
   overflow: hidden;
   border-radius: 16px;
   padding: 0.75rem;
@@ -628,10 +628,10 @@ a:focus-visible {
   }
   
   .account-menu {
-    top: 4.5rem;
-    right: 1rem;
+    top: calc(100% + 0.5rem);
+    right: 0;
     width: calc(100vw - 2rem);
-    max-width: none;
+    max-width: 20rem;
   }
 }
 
@@ -767,6 +767,51 @@ a:focus-visible {
 }
 
 /* Success Animation */
+/* Fullscreen overlay that always covers the viewport, even on mobile scroll */
+.success-overlay-mobile {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  z-index: 9999 !important;
+  overscroll-behavior: none !important;
+  -webkit-overflow-scrolling: none !important;
+  background-color: rgba(0, 0, 0, 0.92) !important;
+}
+
+/* On desktop, revert to absolute positioning over the camera */
+@media (min-width: 640px) {
+  .success-overlay-mobile {
+    position: absolute !important;
+    z-index: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgba(0, 0, 0, 0.4) !important;
+  }
+}
+
+/* Fullscreen overlay for module completion — always fullscreen on all devices */
+.success-overlay-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  z-index: 9999 !important;
+  overscroll-behavior: none !important;
+  -webkit-overflow-scrolling: none !important;
+  background-color: rgba(0, 0, 0, 0.95) !important;
+}
+
 @keyframes scale-up {
   from {
     transform: scale(0);

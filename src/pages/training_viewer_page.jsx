@@ -4,8 +4,8 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
-import { fingerStates } from "./lsm_detector.js";
-import { featureFromFingerStates, frameInfo, buildSequence } from "./dynamic_sign_detector.js";
+import { fingerStates } from "../utils/lsm_detector.js";
+import { featureFromFingerStates, frameInfo, buildSequence } from "../utils/dynamic_sign_detector.js";
 
 function cx(...c) { return c.filter(Boolean).join(" "); }
 

@@ -1,22 +1,23 @@
-import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
+﻿import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { HandLandmarker, PoseLandmarker, FaceLandmarker, FilesetResolver, DrawingUtils } from "@mediapipe/tasks-vision";
 import { createRoot } from "react-dom/client";
 import { createPortal } from "react-dom";
 import "./styles/styles.css";
-import { GLOSARIO_LESSONS, ALPHABET_LESSON } from "./lessons_glosario.js";
-import { fingerStates, scoreTarget, detectBestLetter, MATCH_THR, scoreLetter, LSM_ALPHABET, NUMBER_TEMPLATES } from "./lsm_detector.js";
-import { dynamicDetector, featureFromFingerStates, frameInfo, buildSequence, splitHands } from "./dynamic_sign_detector.js";
-import { parseNpy, npyToFrames } from "./npy_parser.js";
-import { initClassifier, classifySequence, isClassifierReady } from "./onnx_classifier.js";
-import ModelTestPage from "./model_test_page.jsx";
-import TrainPage from "./train_page.jsx";
-import TrainingViewerPage from "./training_viewer_page.jsx";
-import RetrainPage from "./retrain_page.jsx";
+import { GLOSARIO_LESSONS, ALPHABET_LESSON } from "./data/lessons_glosario.js";
+import { fingerStates, scoreTarget, detectBestLetter, MATCH_THR, scoreLetter, LSM_ALPHABET, NUMBER_TEMPLATES } from "./utils/lsm_detector.js";
+import { dynamicDetector, featureFromFingerStates, frameInfo, buildSequence, splitHands } from "./utils/dynamic_sign_detector.js";
+import { parseNpy, npyToFrames } from "./utils/npy_parser.js";
+import { initClassifier, classifySequence, isClassifierReady } from "./utils/onnx_classifier.js";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import AuthPage from "./components/AuthPage";
 import EmailConfirmationPage from "./components/EmailConfirmationPage";
-import { updateSignProgress, updateModuleProgress, updateStreak, recordVideoView, updateWeeklyActivity, updatePracticeDays, getRecommendations } from "./services/progressService";
+import ModelTestPage from "./pages/model_test_page.jsx";
+import TrainPage from "./pages/train_page.jsx";
+import TrainingViewerPage from "./pages/training_viewer_page.jsx";
+import RetrainPage from "./pages/retrain_page.jsx";
+import { updateSignProgress, updateModuleProgress, updateStreak, recordVideoView, updateWeeklyActivity, updatePracticeDays, getRecommendations, fetchPracticedSigns, evaluateAchievements, getAchievementStats, ACHIEVEMENT_DEFS } from "./services/progressService";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { supabase } from "./lib/supabaseClient";
 
 const navItems = [
@@ -25,12 +26,20 @@ const navItems = [
   { path: "/learn", label: "Progreso", icon: "sparkles" },
   { path: "/lesson", label: "Lecciones", icon: "book" },
   { path: "/practice", label: "Práctica", icon: "camera" },
-  { path: "/video-test", label: "Videos", icon: "video" },
   { path: "/model-test", label: "Probar modelo", icon: "beaker" },
   { path: "/train", label: "Entrenar", icon: "pencil" },
   { path: "/retrain", label: "Re-entrenar", icon: "refresh" },
   { path: "/training-viewer", label: "Ver entrenamiento", icon: "chart" }
 ];
+
+// ─── Contact info —  ───────────────
+const CONTACT_INFO = {
+  email: "senasavocesac@gmail.com",
+  whatsapp: "+52 645 115 9917",
+  whatsappLink: "https://wa.me/526451159917",
+  instagram: "@senasavocesac",
+  instagramLink: "https://instagram.com/senasavoceac",
+};
 
 const modules = [ALPHABET_LESSON, ...GLOSARIO_LESSONS].map((lesson, i) => ({
   id: lesson.id,
@@ -193,11 +202,42 @@ const dailyQuest = [
   { task: "Graba una práctica corta", done: false }
 ];
 
-const accountActions = [
-  { label: "Mi perfil", helper: "Datos y preferencias", icon: "user", path: "/dashboard" },
-  { label: "Progreso", helper: "Racha y módulos", icon: "trophy", path: "/learn" },
-  { label: "Práctica", helper: "Abrir cámara", icon: "camera", path: "/practice" },
-  { label: "Cerrar sesión", helper: "Volver al acceso", icon: "lock", path: "/" }
+const accountMenuSections = [
+  {
+    title: "Cuenta",
+    items: [
+      { label: "Mi perfil", helper: "Datos personales", icon: "user", path: "/profile" },
+      { label: "Logros", helper: "Insignias y estadísticas", icon: "trophy", path: "/achievements" },
+    ],
+  },
+  {
+    title: "Aprendizaje",
+    items: [
+      { label: "Lecciones", helper: "Continuar aprendiendo", icon: "book", path: "/lesson" },
+      { label: "Practicar", helper: "Abrir cámara", icon: "camera", path: "/practice" },
+      { label: "Mi progreso", helper: "Racha y módulos", icon: "chart", path: "/learn" },
+    ],
+  },
+  {
+    title: "Preferencias",
+    items: [
+      { type: "theme", label: "Tema oscuro", helper: "Cambiar apariencia", icon: "moon" },
+      { type: "font", label: "Tamaño de texto", helper: "Pequeño · Mediano · Grande", icon: "palette" },
+    ],
+  },
+  {
+    title: "Ayuda",
+    items: [
+      { label: "Centro de ayuda", helper: "Guías y tutoriales", icon: "help", path: "/help" },
+      { label: "Acerca de", helper: "Sobre la app", icon: "info", path: "/about" },
+    ],
+  },
+  {
+    title: "Sesión",
+    items: [
+      { label: "Cerrar sesión", helper: "Volver al acceso", icon: "logout", path: "/", danger: true },
+    ],
+  },
 ];
 
 const LOGO_SRC = "/logo-senas-a-voces-crop.png";
@@ -254,6 +294,7 @@ function Icon({ name, className = "h-5 w-5" }) {
     health: <svg {...common}><path d="M9 2v6H3v8h6v6h6v-6h6V8h-6V2H9z" fill="currentColor" fillOpacity="0.85" /><path d="M9 2v6H3v8h6v6h6v-6h6V8h-6V2H9z" /></svg>,
     education: <svg {...common}><path d="M3 9l9-4 9 4-9 4-9-4z" fill="currentColor" fillOpacity="0.2" /><path d="M3 9l9-4 9 4-9 4-9-4z" /><path d="M7 11v5c0 1 2 2 5 2s5-1 5-2v-5" /><path d="M21 9v5" strokeLinecap="round" /></svg>,
     technology: <svg {...common}><rect x="2" y="4" width="20" height="13" rx="2" /><path d="M2 17h20M9 21h6M12 17v4" strokeLinecap="round" /></svg>,
+    chevron: <svg {...common}><polyline points="6 9 12 15 18 9" /></svg>,
     // Iconos específicos para señas individuales
     "number-1": <svg {...common}><text x="12" y="17" textAnchor="middle" fontSize="16" fontWeight="bold" fill="currentColor">1</text></svg>,
     "number-2": <svg {...common}><text x="12" y="17" textAnchor="middle" fontSize="16" fontWeight="bold" fill="currentColor">2</text></svg>,
@@ -299,7 +340,17 @@ function Icon({ name, className = "h-5 w-5" }) {
     "phone": <svg {...common}><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" /></svg>,
     "computer": <svg {...common}><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M6 17h12M12 17v4" /></svg>,
     "instagram": <svg {...common}><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="3" /><circle cx="18" cy="6" r="1" /></svg>,
-    "youtube": <svg {...common}><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" /><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" /></svg>
+    "youtube": <svg {...common}><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" /><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" /></svg>,
+    settings: <svg {...common}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>,
+    bell: <svg {...common}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></svg>,
+    help: <svg {...common}><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>,
+    chart: <svg {...common}><line x1="12" y1="20" x2="12" y2="10" /><line x1="18" y1="20" x2="18" y2="4" /><line x1="6" y1="20" x2="6" y2="16" /></svg>,
+    palette: <svg {...common}><circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" /></svg>,
+    info: <svg {...common}><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>,
+    shield: <svg {...common}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>,
+    logout: <svg {...common}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>,
+    target: <svg {...common}><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>,
+    heart: <svg {...common}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>
   };
   return icons[name] || icons.play;
 }
@@ -542,15 +593,72 @@ function AppHeader({ isDark, setIsDark, navigate, path, fontScale = 'md', setFon
                           <small className={cx("block text-xs", isDark ? "text-brand-soft" : "text-brand-muted")}>{userEmail}</small>
                         </span>
                       </div>
-                      <div className="mt-2">
-                        {accountActions.map((action) => (
-                          <button key={action.label} type="button" role="menuitem" className="account-menu-item text-left" onClick={() => selectAccountAction(action.path)}>
-                            <span className={cx("account-menu-icon", isDark ? "text-brand-cyan" : "text-brand-teal")}><Icon name={action.icon} className="h-4 w-4" /></span>
-                            <span>
-                              <strong className={cx("block text-xs", isDark ? "text-white" : "text-brand-ink")}>{action.label}</strong>
-                              <small className={cx("block text-[10px]", isDark ? "text-brand-soft" : "text-brand-muted")}>{action.helper}</small>
-                            </span>
-                          </button>
+                      <div className="mt-2 max-h-[70vh] overflow-y-auto">
+                        {accountMenuSections.map((section) => (
+                          <div key={section.title} className="mb-1">
+                            <div className={cx("px-2 py-1 text-[10px] font-bold uppercase tracking-wider", isDark ? "text-brand-soft/60" : "text-brand-muted/60")}>
+                              {section.title}
+                            </div>
+                            {section.items.map((action) => {
+                              if (action.type === "theme") {
+                                return (
+                                  <button key={action.label} type="button" role="menuitem" className="account-menu-item text-left" onClick={() => setIsDark(!isDark)}>
+                                    <span className={cx("account-menu-icon", isDark ? "text-brand-cyan" : "text-brand-teal")}><Icon name={isDark ? "sun" : "moon"} className="h-4 w-4" /></span>
+                                    <span className="flex-1">
+                                      <strong className={cx("block text-xs", isDark ? "text-white" : "text-brand-ink")}>{isDark ? "Tema claro" : "Tema oscuro"}</strong>
+                                      <small className={cx("block text-[10px]", isDark ? "text-brand-soft" : "text-brand-muted")}>{isDark ? "Activar modo claro" : "Activar modo oscuro"}</small>
+                                    </span>
+                                    <span className={cx("ml-2 flex h-5 w-9 items-center rounded-full transition-colors", isDark ? "bg-brand-cyan" : "bg-brand-mist")}>
+                                      <span className={cx("h-4 w-4 rounded-full bg-white shadow transition-transform", isDark ? "translate-x-4" : "translate-x-0.5")} />
+                                    </span>
+                                  </button>
+                                );
+                              }
+                              if (action.type === "font") {
+                                return (
+                                  <div key={action.label} className="account-menu-item text-left">
+                                    <span className={cx("account-menu-icon", isDark ? "text-brand-cyan" : "text-brand-teal")}><Icon name={action.icon} className="h-4 w-4" /></span>
+                                    <span className="flex-1">
+                                      <strong className={cx("block text-xs", isDark ? "text-white" : "text-brand-ink")}>{action.label}</strong>
+                                      <div className="mt-1 flex gap-1">
+                                        {[
+                                          { key: 'sm', label: 'A' },
+                                          { key: 'md', label: 'A' },
+                                          { key: 'lg', label: 'A' },
+                                        ].map((opt, i) => (
+                                          <button
+                                            key={opt.key}
+                                            type="button"
+                                            onClick={() => setFontScale?.(opt.key)}
+                                            className={cx(
+                                              "flex h-6 w-7 items-center justify-center rounded-md text-xs font-bold transition-colors",
+                                              fontScale === opt.key
+                                                ? (isDark ? "bg-brand-cyan text-brand-deep" : "bg-brand-teal text-white")
+                                                : (isDark ? "bg-brand-deep text-brand-soft" : "bg-brand-cream text-brand-muted"),
+                                              i === 0 && "text-[10px]",
+                                              i === 1 && "text-xs",
+                                              i === 2 && "text-sm"
+                                            )}
+                                          >
+                                            {opt.label}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    </span>
+                                  </div>
+                                );
+                              }
+                              return (
+                                <button key={action.label} type="button" role="menuitem" className="account-menu-item text-left" onClick={() => selectAccountAction(action.path)}>
+                                  <span className={cx("account-menu-icon", action.danger ? "text-red-500" : isDark ? "text-brand-cyan" : "text-brand-teal")}><Icon name={action.icon} className="h-4 w-4" /></span>
+                                  <span className="flex-1">
+                                    <strong className={cx("block text-xs", action.danger ? "text-red-500" : isDark ? "text-white" : "text-brand-ink")}>{action.label}</strong>
+                                    <small className={cx("block text-[10px]", isDark ? "text-brand-soft" : "text-brand-muted")}>{action.helper}</small>
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -591,6 +699,22 @@ function AppHeader({ isDark, setIsDark, navigate, path, fontScale = 'md', setFon
             </div>
 
             <div className="flex-1 overflow-y-auto px-5 py-5">
+              {/* Profile header — clickable to open profile page */}
+              <button
+                onClick={() => { navigate("/profile"); setMobileNavOpen(false); }}
+                className={cx(
+                  "mb-5 flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-all hover:scale-[1.01]",
+                  isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+                )}
+              >
+                <span className={cx("flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-sm font-bold", isDark ? "bg-brand-cyan text-brand-deep" : "bg-brand-teal text-white")}>{userInitials}</span>
+                <div className="min-w-0 flex-1">
+                  <p className={cx("truncate text-sm font-bold", isDark ? "text-white" : "text-[#1A2E3B]")}>{userName}</p>
+                  <p className={cx("truncate text-[11px]", isDark ? "text-brand-soft" : "text-[#607274]")}>{userEmail}</p>
+                </div>
+                <Icon name="chevron" className={cx("h-4 w-4 shrink-0 rotate-90", isDark ? "text-brand-soft" : "text-brand-muted")} />
+              </button>
+
               <span className={cx("mb-2 block text-[10px] font-semibold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-[#607274]")}>
                 Navegación
               </span>
@@ -613,6 +737,65 @@ function AppHeader({ isDark, setIsDark, navigate, path, fontScale = 'md', setFon
                     </button>
                   );
                 })}
+              </div>
+
+              {/* Account section — same options as desktop profile menu */}
+              <span className={cx("mb-2 block text-[10px] font-semibold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-[#607274]")}>
+                Cuenta
+              </span>
+              <div className="mb-6 space-y-1">
+                {/* Mi perfil */}
+                <button
+                  onClick={() => { navigate("/profile"); setMobileNavOpen(false); }}
+                  className={cx(
+                    "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-bold transition-colors",
+                    path === "/profile"
+                      ? (isDark ? "bg-brand-cyan text-brand-deep" : "bg-brand-teal text-white")
+                      : (isDark ? "text-brand-soft hover:bg-brand-card" : "text-[#1A2E3B] hover:bg-[#F4EFE6]")
+                  )}
+                >
+                  <Icon name="user" className="h-4 w-4 shrink-0" />
+                  Mi perfil
+                </button>
+                {/* Logros */}
+                <button
+                  onClick={() => { navigate("/achievements"); setMobileNavOpen(false); }}
+                  className={cx(
+                    "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-bold transition-colors",
+                    path === "/achievements"
+                      ? (isDark ? "bg-brand-cyan text-brand-deep" : "bg-brand-teal text-white")
+                      : (isDark ? "text-brand-soft hover:bg-brand-card" : "text-[#1A2E3B] hover:bg-[#F4EFE6]")
+                  )}
+                >
+                  <Icon name="trophy" className="h-4 w-4 shrink-0" />
+                  Logros
+                </button>
+                {/* Centro de ayuda */}
+                <button
+                  onClick={() => { navigate("/help"); setMobileNavOpen(false); }}
+                  className={cx(
+                    "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-bold transition-colors",
+                    path === "/help"
+                      ? (isDark ? "bg-brand-cyan text-brand-deep" : "bg-brand-teal text-white")
+                      : (isDark ? "text-brand-soft hover:bg-brand-card" : "text-[#1A2E3B] hover:bg-[#F4EFE6]")
+                  )}
+                >
+                  <Icon name="help" className="h-4 w-4 shrink-0" />
+                  Centro de ayuda
+                </button>
+                {/* Acerca de */}
+                <button
+                  onClick={() => { navigate("/about"); setMobileNavOpen(false); }}
+                  className={cx(
+                    "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-bold transition-colors",
+                    path === "/about"
+                      ? (isDark ? "bg-brand-cyan text-brand-deep" : "bg-brand-teal text-white")
+                      : (isDark ? "text-brand-soft hover:bg-brand-card" : "text-[#1A2E3B] hover:bg-[#F4EFE6]")
+                  )}
+                >
+                  <Icon name="info" className="h-4 w-4 shrink-0" />
+                  Acerca de
+                </button>
               </div>
 
               <span className={cx("mb-2 block text-[10px] font-semibold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-[#607274]")}>
@@ -643,13 +826,6 @@ function AppHeader({ isDark, setIsDark, navigate, path, fontScale = 'md', setFon
             </div>
 
             <div className={cx("shrink-0 border-t px-5 py-4", isDark ? "border-brand-line" : "border-[#E8E4D8]")}>
-              <div className="mb-3 flex items-center gap-3">
-                <span className={cx("flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-bold", isDark ? "bg-brand-cyan text-brand-deep" : "bg-brand-teal text-white")}>{userInitials}</span>
-                <div className="min-w-0 flex-1">
-                  <p className={cx("truncate text-xs font-bold", isDark ? "text-white" : "text-[#1A2E3B]")}>{userName}</p>
-                  <p className={cx("truncate text-[10px]", isDark ? "text-brand-soft" : "text-[#607274]")}>{userEmail}</p>
-                </div>
-              </div>
               <button
                 onClick={() => { signOut(); setMobileNavOpen(false); }}
                 className="btn-press w-full rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-orange/90"
@@ -1146,6 +1322,1115 @@ function StatTile({ icon, value, label, color, isDark }) {
       </div>
       <div className={cx("stat-tile__value", isDark ? "text-white" : "text-[#1A2E3B]")}>{value}</div>
       <div className="stat-tile__label">{label}</div>
+    </div>
+  );
+}
+
+// Tier styling for achievement badges
+// FAQ data
+const FAQ_ITEMS = [
+  {
+    q: "¿Cómo empiezo a aprender?",
+    a: "Ve a la pestaña Lecciones, selecciona el primer módulo (Abecedario) y toca una seña. Mira el video de referencia, imita la seña frente a la cámara y mantén la pose hasta que se confirme. Cuando completes todas las señas de un módulo, se desbloqueará el siguiente.",
+  },
+  {
+    q: "¿Por qué no se detecta mi mano?",
+    a: "Asegúrate de estar en un lugar bien iluminado, con la mano dentro del encuadre de la cámara y fondo preferentemente uniforme. Evita ropa del mismo color que tu mano. Si el problema persiste, recarga la página y permite el acceso a la cámara nuevamente.",
+  },
+  {
+    q: "¿Cómo funciona la racha diaria?",
+    a: "Tu racha aumenta cada día que practicas al menos una seña. Si dejas de practicar un día, la racha se reinicia. Mantén tu racha para desbloquear insignias especiales.",
+  },
+  {
+    q: "¿Puedo practicar sin cámara?",
+    a: "Sí. Puedes ver los videos de referencia y estudiar las señas visualmente. Sin embargo, para registrar progreso y completar módulos necesitas practicar con la cámara.",
+  },
+  {
+    q: "¿Se guarda mi progreso automáticamente?",
+    a: "Sí. Cada vez que completas una seña, tu progreso se guarda en tu cuenta. Puedes continuar desde donde lo dejaste en cualquier dispositivo iniciando sesión.",
+  },
+  {
+    q: "¿Qué son las insignias?",
+    a: "Las insignias son reconocimientos que desbloqueas al cumplir ciertos retos: mantener rachas, aprender cierta cantidad de señas, alcanzar precisión alta, entre otros. Ve a la sección Logros para verlas todas.",
+  },
+  {
+    q: "¿Puedo cambiar el tamaño del texto?",
+    a: "Sí. Toca tu foto de perfil en la esquina superior derecha, ve a Preferencias y selecciona el tamaño de texto que prefieras: pequeño, mediano o grande.",
+  },
+  {
+    q: "¿La app funciona sin conexión?",
+    a: "Necesitas conexión a internet para cargar los videos de referencia y sincronizar tu progreso. Las señas que ya hayas practicado quedan registradas en tu cuenta.",
+  },
+];
+
+const TROUBLESHOOTING_ITEMS = [
+  {
+    title: "La cámara no se abre",
+    steps: [
+      "Verifica que permitiste el acceso a la cámara en tu navegador.",
+      "Cierra otras apps que puedan estar usando la cámara (Zoom, Meet, etc.).",
+      "Recarga la página e inténtalo de nuevo.",
+      "Si usas iOS Safari, ve a Ajustes > Safari > Cámara y selecciona 'Permitir'.",
+    ],
+  },
+  {
+    title: "El video de referencia no carga",
+    steps: [
+      "Verifica tu conexión a internet.",
+      "Espera unos segundos — YouTube puede tardar en cargar.",
+      "Si el video sigue sin cargar, puede que no esté disponible en tu región.",
+      "Reporta el problema si persiste usando el email de soporte.",
+    ],
+  },
+  {
+    title: "Mi progreso no se guarda",
+    steps: [
+      "Asegúrate de estar conectado a internet al practicar.",
+      "Cierra sesión y vuelve a entrar para forzar la sincronización.",
+      "Verifica que no estés usando modo incógnito (puede perder datos).",
+      "Si el problema continúa, contacta a soporte con tu email de cuenta.",
+    ],
+  },
+  {
+    title: "La detección es muy lenta",
+    steps: [
+      "Cierra pestañas innecesarias del navegador para liberar memoria.",
+      "Usa un dispositivo con mejor cámara si es posible.",
+      "Asegúrate de tener buena iluminación para acelerar el procesamiento.",
+      "Evita fondos con mucho movimiento o ruido visual.",
+    ],
+  },
+];
+
+const LSM_FACTS = [
+  { icon: "book",   title: "Lengua oficial",       desc: "La LSM fue reconocida como lengua oficial en México en 2005, junto con el español y las lenguas indígenas." },
+  { icon: "user",   title: "Comunidad sorda",       desc: "Más de 2 millones de personas sordas viven en México. La LSM es su lengua materna." },
+  { icon: "sparkles", title: "No es universal",    desc: "Cada país tiene su propia lengua de señas. La LSM es distinta de la ASL (americana) y la LSE (española)." },
+  { icon: "heart",  title: "Más que señas",         desc: "La LSM tiene su propia gramática, sintaxis y expresiones faciales. Es una lengua completa y rica." },
+  { icon: "target", title: "Inclusión",             desc: "Aprender LSM rompe barreras comunicativas y fomenta una sociedad más inclusiva." },
+  { icon: "trophy", title: "Cultura sorda",         desc: "La comunidad sorda tiene una cultura vibrante con tradiciones, arte y literatura propias." },
+];
+
+function AboutPage({ isDark, navigate }) {
+  const totalSigns = modules.reduce((sum, m) => sum + m.signs, 0);
+
+  const features = [
+    { icon: "camera",   title: "Detección con cámara",   desc: "Practica señas en tiempo real con detección de manos por IA. Recibe feedback inmediato sobre tu precisión." },
+    { icon: "book",     title: "Lecciones estructuradas", desc: "Módulos progresivos desde el abecedario hasta vocabulario especializado en familia, salud, tecnología y más." },
+    { icon: "youtube",  title: "Videos de referencia",    desc: "Cada seña incluye un video de YouTube para que observes el movimiento correcto antes de practicar." },
+    { icon: "trophy",   title: "Sistema de logros",       desc: "Desbloquea insignias de bronce, plata y oro mientras superas retos de racha, precisión y constancia." },
+    { icon: "flame",    title: "Rachas diarias",          desc: "Mantén tu motivación con rachas que crecen cada día que practicas. La consistencia es clave." },
+    { icon: "chart",    title: "Estadísticas reales",     desc: "Visualiza tu progreso con mapas de calor, gráficas de actividad y métricas detalladas de tu aprendizaje." },
+  ];
+
+  const techStack = [
+    { name: "React",      desc: "Interfaz de usuario" },
+    { name: "Vite",       desc: "Build y desarrollo" },
+    { name: "Tailwind",   desc: "Estilos y diseño" },
+    { name: "Supabase",   desc: "Autenticación y datos" },
+    { name: "MediaPipe",  desc: "Detección de manos" },
+    { name: "YouTube",    desc: "Videos de referencia" },
+  ];
+
+  const values = [
+    { icon: "heart",   title: "Inclusión",       desc: "Construir puentes entre la comunidad sorda y oyente a través del aprendizaje mutuo." },
+    { icon: "shield",  title: "Accesibilidad",   desc: "Tecnología al servicio de todos, sin barreras de costo ni ubicación." },
+    { icon: "sparkles", title: "Excelencia",     desc: "Contenido pedagógico de calidad con detección precisa y feedback claro." },
+    { icon: "target",  title: "Impacto real",    desc: "Cada seña aprendida es una nueva conversación posible." },
+  ];
+
+  return (
+    <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-[#F8F5EE]")}>
+      <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+        {/* Back button */}
+        <button
+          onClick={() => navigate("/dashboard")}
+          className={cx(
+            "btn-press group flex items-center gap-2 text-sm font-medium transition-all duration-200",
+            isDark ? "text-brand-soft hover:text-white" : "text-brand-muted hover:text-brand-ink"
+          )}
+        >
+          <Icon name="arrow" className="h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-1" />
+          Volver al inicio
+        </button>
+
+        {/* Hero section */}
+        <div className="mb-10 mt-6 flex flex-col items-center text-center">
+          <img
+            src={LOGO_SRC}
+            alt="Señas a Voces Academy"
+            className={cx("h-auto w-48 object-contain sm:w-64", isDark && "logo-on-dark")}
+          />
+          <div className="mt-4">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#8C4A27]">— Acerca de</span>
+          </div>
+          <h1 className={cx("mt-2 font-display text-3xl font-extrabold sm:text-4xl", isDark ? "text-white" : "text-brand-ink")}>
+            Señas a <span className={isDark ? "text-brand-cyan" : "text-brand-teal"}>Voces</span> Academy
+          </h1>
+          <p className={cx("mt-3 max-w-2xl text-sm leading-relaxed sm:text-base", isDark ? "text-brand-soft" : "text-brand-muted")}>
+            Una plataforma de aprendizaje de la Lengua de Señas Mexicana (LSM) que combina tecnología de
+            visión por computadora, contenido pedagógico estructurado y gamificación para hacer que aprender
+            señas sea accesible, divertido y efectivo.
+          </p>
+
+          {/* Stats badges */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <div className={cx(
+              "flex items-center gap-2 rounded-full border px-4 py-2",
+              isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+            )}>
+              <Icon name="book" className={cx("h-4 w-4", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+              <span className={cx("text-sm font-bold", isDark ? "text-white" : "text-brand-ink")}>{modules.length} módulos</span>
+            </div>
+            <div className={cx(
+              "flex items-center gap-2 rounded-full border px-4 py-2",
+              isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+            )}>
+              <Icon name="sparkles" className={cx("h-4 w-4", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+              <span className={cx("text-sm font-bold", isDark ? "text-white" : "text-brand-ink")}>{totalSigns}+ señas</span>
+            </div>
+            <div className={cx(
+              "flex items-center gap-2 rounded-full border px-4 py-2",
+              isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+            )}>
+              <Icon name="camera" className={cx("h-4 w-4", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+              <span className={cx("text-sm font-bold", isDark ? "text-white" : "text-brand-ink")}>Detección IA</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Mission & Vision */}
+        <div className="mb-8 grid gap-4 sm:grid-cols-2">
+          <div className={cx(
+            "rounded-3xl border p-6 backdrop-blur-xl sm:p-8",
+            isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+          )}>
+            <div className={cx(
+              "mb-3 flex h-10 w-10 items-center justify-center rounded-xl",
+              isDark ? "bg-brand-cyan/15" : "bg-brand-teal/10"
+            )}>
+              <Icon name="target" className={cx("h-5 w-5", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+            </div>
+            <h2 className={cx("font-display text-lg font-extrabold", isDark ? "text-white" : "text-brand-ink")}>Misión</h2>
+            <p className={cx("mt-2 text-sm leading-relaxed", isDark ? "text-brand-soft" : "text-brand-muted")}>
+              Democratizar el aprendizaje de la Lengua de Señas Mexicana mediante tecnología accesible,
+              eliminando barreras comunicativas y construyendo una sociedad más inclusiva donde cada
+              persona pueda expresarse y ser entendida.
+            </p>
+          </div>
+          <div className={cx(
+            "rounded-3xl border p-6 backdrop-blur-xl sm:p-8",
+            isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+          )}>
+            <div className={cx(
+              "mb-3 flex h-10 w-10 items-center justify-center rounded-xl",
+              isDark ? "bg-brand-orange/15" : "bg-brand-orange/10"
+            )}>
+              <Icon name="sparkles" className="h-5 w-5 text-brand-orange" />
+            </div>
+            <h2 className={cx("font-display text-lg font-extrabold", isDark ? "text-white" : "text-brand-ink")}>Visión</h2>
+            <p className={cx("mt-2 text-sm leading-relaxed", isDark ? "text-brand-soft" : "text-brand-muted")}>
+              Ser la plataforma líder en Latinoamérica para el aprendizaje de lenguas de señas, impulsada
+              por inteligencia artificial y diseño centrado en el usuario, formando una comunidad de
+              millones de personas que se comunican con las manos y el corazón.
+            </p>
+          </div>
+        </div>
+
+        {/* Features */}
+        <section className="mb-8">
+          <div className="mb-4 flex items-center gap-2">
+            <div className={cx("flex h-8 w-8 items-center justify-center rounded-lg", isDark ? "bg-brand-card" : "bg-brand-cream")}>
+              <Icon name="sparkles" className={cx("h-4 w-4", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+            </div>
+            <h2 className={cx("font-display text-lg font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+              Características principales
+            </h2>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {features.map((feat, i) => (
+              <div
+                key={i}
+                className={cx(
+                  "rounded-2xl border p-5 backdrop-blur-xl transition-all hover:scale-[1.02]",
+                  isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+                )}
+              >
+                <div className={cx(
+                  "mb-3 flex h-10 w-10 items-center justify-center rounded-xl",
+                  isDark ? "bg-brand-cyan/15" : "bg-brand-teal/10"
+                )}>
+                  <Icon name={feat.icon} className={cx("h-5 w-5", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+                </div>
+                <h3 className={cx("text-sm font-extrabold", isDark ? "text-white" : "text-brand-ink")}>{feat.title}</h3>
+                <p className={cx("mt-1.5 text-xs leading-relaxed", isDark ? "text-brand-soft" : "text-brand-muted")}>{feat.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Values */}
+        <section className="mb-8">
+          <div className="mb-4 flex items-center gap-2">
+            <div className={cx("flex h-8 w-8 items-center justify-center rounded-lg", isDark ? "bg-brand-card" : "bg-brand-cream")}>
+              <Icon name="heart" className={cx("h-4 w-4", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+            </div>
+            <h2 className={cx("font-display text-lg font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+              Nuestros valores
+            </h2>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {values.map((val, i) => (
+              <div
+                key={i}
+                className={cx(
+                  "rounded-2xl border p-5 text-center backdrop-blur-xl transition-all hover:scale-[1.02]",
+                  isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+                )}
+              >
+                <div className={cx(
+                  "mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl",
+                  isDark ? "bg-brand-cyan/15" : "bg-brand-teal/10"
+                )}>
+                  <Icon name={val.icon} className={cx("h-6 w-6", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+                </div>
+                <h3 className={cx("text-sm font-extrabold", isDark ? "text-white" : "text-brand-ink")}>{val.title}</h3>
+                <p className={cx("mt-1.5 text-xs leading-relaxed", isDark ? "text-brand-soft" : "text-brand-muted")}>{val.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Tech stack */}
+        <section className="mb-8">
+          <div className="mb-4 flex items-center gap-2">
+            <div className={cx("flex h-8 w-8 items-center justify-center rounded-lg", isDark ? "bg-brand-card" : "bg-brand-cream")}>
+              <Icon name="settings" className={cx("h-4 w-4", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+            </div>
+            <h2 className={cx("font-display text-lg font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+              Construido con
+            </h2>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {techStack.map((tech) => (
+              <div
+                key={tech.name}
+                className={cx(
+                  "flex items-center gap-2 rounded-xl border px-4 py-2.5",
+                  isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+                )}
+              >
+                <span className={cx("text-sm font-extrabold", isDark ? "text-white" : "text-brand-ink")}>{tech.name}</span>
+                <span className={cx("text-xs", isDark ? "text-brand-soft" : "text-brand-muted")}>{tech.desc}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Contact CTA */}
+        <div className={cx(
+          "rounded-3xl border p-6 text-center backdrop-blur-xl sm:p-8",
+          isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+        )}>
+          <h2 className={cx("font-display text-lg font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+            ¿Tienes preguntas o sugerencias?
+          </h2>
+          <p className={cx("mt-2 text-sm", isDark ? "text-brand-soft" : "text-brand-muted")}>
+            Nos encantaría escucharte. Contáctanos por cualquiera de estos medios:
+          </p>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href={`mailto:${CONTACT_INFO.email}`}
+              className={cx(
+                "btn-press flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all",
+                isDark ? "bg-brand-cyan text-brand-deep hover:bg-brand-cyan/90" : "bg-brand-teal text-white hover:bg-brand-teal/90"
+              )}
+            >
+              <Icon name="mail" className="h-4 w-4" />
+              {CONTACT_INFO.email}
+            </a>
+            <a
+              href={CONTACT_INFO.whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-press flex items-center gap-2 rounded-xl bg-green-500 px-4 py-2.5 text-sm font-bold text-white transition-all hover:bg-green-500/90"
+            >
+              <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z" /></svg>
+              WhatsApp
+            </a>
+            <a
+              href={CONTACT_INFO.instagramLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-press flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2.5 text-sm font-bold text-white transition-all hover:opacity-90"
+            >
+              <Icon name="instagram" className="h-4 w-4" />
+              {CONTACT_INFO.instagram}
+            </a>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 text-center">
+          <p className={cx("text-xs", isDark ? "text-brand-soft/60" : "text-brand-muted/60")}>
+            Señas a Voces Academy · v0.1.0 · Hecho con <Icon name="heart" className="inline h-3 w-3 text-brand-orange" /> para la comunidad sorda de México
+          </p>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function HelpPage({ isDark, navigate }) {
+  const [openFaq, setOpenFaq] = useState(null);
+  const [openTrouble, setOpenTrouble] = useState(null);
+
+  return (
+    <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-[#F8F5EE]")}>
+      <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+        {/* Back button */}
+        <button
+          onClick={() => navigate("/dashboard")}
+          className={cx(
+            "btn-press group flex items-center gap-2 text-sm font-medium transition-all duration-200",
+            isDark ? "text-brand-soft hover:text-white" : "text-brand-muted hover:text-brand-ink"
+          )}
+        >
+          <Icon name="arrow" className="h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-1" />
+          Volver al inicio
+        </button>
+
+        {/* Header */}
+        <div className="mb-8 mt-4">
+          <div className="mb-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#8C4A27]">— Centro de ayuda</span>
+          </div>
+          <h1 className={cx("font-display text-3xl font-extrabold sm:text-4xl", isDark ? "text-white" : "text-brand-ink")}>
+            ¿Cómo podemos <span className={isDark ? "text-brand-cyan" : "text-brand-teal"}>ayudarte?</span>
+          </h1>
+          <p className={cx("mt-2 text-sm", isDark ? "text-brand-soft" : "text-brand-muted")}>
+            Encuentra respuestas, soluciona problemas y conoce más sobre la Lengua de Señas Mexicana.
+          </p>
+        </div>
+
+        {/* Quick contact card */}
+        <div className={cx(
+          "mb-8 rounded-3xl border p-6 backdrop-blur-xl sm:p-8",
+          isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+        )}>
+          <h2 className={cx("mb-4 font-display text-lg font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+            Contacto directo
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {/* Email */}
+            <a
+              href={`mailto:${CONTACT_INFO.email}`}
+              className={cx(
+                "btn-press flex items-center gap-3 rounded-2xl border p-4 transition-all hover:scale-[1.02]",
+                isDark ? "border-brand-line/30 bg-brand-deep/50 hover:bg-brand-deep/80" : "border-brand-mist/30 bg-brand-cream/50 hover:bg-brand-cream/80"
+              )}
+            >
+              <div className={cx("flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl", isDark ? "bg-brand-cyan/20" : "bg-brand-teal/15")}>
+                <Icon name="mail" className={cx("h-5 w-5", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+              </div>
+              <div className="min-w-0">
+                <div className={cx("text-[10px] font-bold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-brand-muted")}>Email</div>
+                <div className={cx("truncate text-sm font-semibold", isDark ? "text-white" : "text-brand-ink")}>{CONTACT_INFO.email}</div>
+              </div>
+            </a>
+
+            {/* WhatsApp */}
+            <a
+              href={CONTACT_INFO.whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cx(
+                "btn-press flex items-center gap-3 rounded-2xl border p-4 transition-all hover:scale-[1.02]",
+                isDark ? "border-brand-line/30 bg-brand-deep/50 hover:bg-brand-deep/80" : "border-brand-mist/30 bg-brand-cream/50 hover:bg-brand-cream/80"
+              )}
+            >
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-green-500/15">
+                <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.16c-.24.68-1.42 1.31-1.96 1.36-.5.05-1.13.07-1.83-.11-.42-.13-.96-.31-1.66-.61-2.92-1.26-4.83-4.19-4.97-4.38-.15-.19-1.2-1.59-1.2-3.03s.75-2.15 1.02-2.44c.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.82 2.01.89 2.16.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.38-.42.51-.14.14-.28.29-.12.56.16.27.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.23 1.38.27.14.43.12.59-.07.16-.19.68-.79.86-1.06.18-.27.36-.22.61-.13.24.09 1.55.73 1.81.86.27.13.44.2.51.31.07.12.07.68-.17 1.36z" /></svg>
+              </div>
+              <div className="min-w-0">
+                <div className={cx("text-[10px] font-bold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-brand-muted")}>WhatsApp</div>
+                <div className={cx("truncate text-sm font-semibold", isDark ? "text-white" : "text-brand-ink")}>{CONTACT_INFO.whatsapp}</div>
+              </div>
+            </a>
+
+            {/* Instagram */}
+            <a
+              href={CONTACT_INFO.instagramLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cx(
+                "btn-press flex items-center gap-3 rounded-2xl border p-4 transition-all hover:scale-[1.02]",
+                isDark ? "border-brand-line/30 bg-brand-deep/50 hover:bg-brand-deep/80" : "border-brand-mist/30 bg-brand-cream/50 hover:bg-brand-cream/80"
+              )}
+            >
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+                <Icon name="instagram" className="h-5 w-5 text-pink-500" />
+              </div>
+              <div className="min-w-0">
+                <div className={cx("text-[10px] font-bold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-brand-muted")}>Instagram</div>
+                <div className={cx("truncate text-sm font-semibold", isDark ? "text-white" : "text-brand-ink")}>{CONTACT_INFO.instagram}</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        {/* FAQ Section */}
+        <section className="mb-8">
+          <div className="mb-4 flex items-center gap-2">
+            <div className={cx("flex h-8 w-8 items-center justify-center rounded-lg", isDark ? "bg-brand-card" : "bg-brand-cream")}>
+              <Icon name="help" className={cx("h-4 w-4", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+            </div>
+            <h2 className={cx("font-display text-lg font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+              Preguntas frecuentes
+            </h2>
+          </div>
+          <div className="space-y-2">
+            {FAQ_ITEMS.map((item, i) => (
+              <div
+                key={i}
+                className={cx(
+                  "overflow-hidden rounded-2xl border transition-all",
+                  isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+                )}
+              >
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className={cx(
+                    "flex w-full items-center justify-between gap-3 px-5 py-4 text-left transition-colors",
+                    isDark ? "hover:bg-brand-deep/30" : "hover:bg-brand-cream/30"
+                  )}
+                >
+                  <span className={cx("text-sm font-bold", isDark ? "text-white" : "text-brand-ink")}>{item.q}</span>
+                  <Icon
+                    name="chevron"
+                    className={cx(
+                      "h-4 w-4 flex-shrink-0 transition-transform duration-200",
+                      openFaq === i && "rotate-180",
+                      isDark ? "text-brand-cyan" : "text-brand-teal"
+                    )}
+                  />
+                </button>
+                {openFaq === i && (
+                  <div className={cx("px-5 pb-4 text-sm leading-relaxed animate-fade", isDark ? "text-brand-soft" : "text-brand-muted")}>
+                    {item.a}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Troubleshooting Section */}
+        <section className="mb-8">
+          <div className="mb-4 flex items-center gap-2">
+            <div className={cx("flex h-8 w-8 items-center justify-center rounded-lg", isDark ? "bg-brand-card" : "bg-brand-cream")}>
+              <Icon name="settings" className={cx("h-4 w-4", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+            </div>
+            <h2 className={cx("font-display text-lg font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+              Solución de problemas
+            </h2>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {TROUBLESHOOTING_ITEMS.map((item, i) => (
+              <div
+                key={i}
+                className={cx(
+                  "overflow-hidden rounded-2xl border transition-all",
+                  isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+                )}
+              >
+                <button
+                  onClick={() => setOpenTrouble(openTrouble === i ? null : i)}
+                  className={cx(
+                    "flex w-full items-center justify-between gap-3 px-5 py-4 text-left transition-colors",
+                    isDark ? "hover:bg-brand-deep/30" : "hover:bg-brand-cream/30"
+                  )}
+                >
+                  <span className={cx("text-sm font-bold", isDark ? "text-white" : "text-brand-ink")}>{item.title}</span>
+                  <Icon
+                    name="chevron"
+                    className={cx(
+                      "h-4 w-4 flex-shrink-0 transition-transform duration-200",
+                      openTrouble === i && "rotate-180",
+                      isDark ? "text-brand-cyan" : "text-brand-teal"
+                    )}
+                  />
+                </button>
+                {openTrouble === i && (
+                  <div className="px-5 pb-4 animate-fade">
+                    <ol className="space-y-2">
+                      {item.steps.map((step, j) => (
+                        <li key={j} className="flex gap-3 text-sm leading-relaxed">
+                          <span className={cx(
+                            "flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
+                            isDark ? "bg-brand-cyan/20 text-brand-cyan" : "bg-brand-teal/15 text-brand-teal"
+                          )}>
+                            {j + 1}
+                          </span>
+                          <span className={cx(isDark ? "text-brand-soft" : "text-brand-muted")}>{step}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* About LSM Section */}
+        <section className="mb-8">
+          <div className="mb-4 flex items-center gap-2">
+            <div className={cx("flex h-8 w-8 items-center justify-center rounded-lg", isDark ? "bg-brand-card" : "bg-brand-cream")}>
+              <Icon name="sparkles" className={cx("h-4 w-4", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+            </div>
+            <h2 className={cx("font-display text-lg font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+              Sobre la Lengua de Señas Mexicana
+            </h2>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {LSM_FACTS.map((fact, i) => (
+              <div
+                key={i}
+                className={cx(
+                  "rounded-2xl border p-5 backdrop-blur-xl transition-all hover:scale-[1.02]",
+                  isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+                )}
+              >
+                <div className={cx(
+                  "mb-3 flex h-10 w-10 items-center justify-center rounded-xl",
+                  isDark ? "bg-brand-cyan/15" : "bg-brand-teal/10"
+                )}>
+                  <Icon name={fact.icon} className={cx("h-5 w-5", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+                </div>
+                <h3 className={cx("text-sm font-extrabold", isDark ? "text-white" : "text-brand-ink")}>{fact.title}</h3>
+                <p className={cx("mt-1.5 text-xs leading-relaxed", isDark ? "text-brand-soft" : "text-brand-muted")}>{fact.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Footer note */}
+        <div className={cx(
+          "rounded-2xl border p-5 text-center",
+          isDark ? "border-brand-line/20 bg-brand-card/30" : "border-brand-mist/20 bg-white/30"
+        )}>
+          <p className={cx("text-xs", isDark ? "text-brand-soft" : "text-brand-muted")}>
+            ¿No encuentras lo que buscas? Escríbenos a <a href={`mailto:${CONTACT_INFO.email}`} className="font-bold text-brand-orange hover:underline">{CONTACT_INFO.email}</a> y te responderemos a la brevedad.
+          </p>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+const TIER_STYLES = {
+  bronze: {
+    glow: 'shadow-[0_0_20px_rgba(205,127,50,0.4)]',
+    ring: 'ring-[#CD7F32]',
+    bg: 'bg-gradient-to-br from-[#CD7F32]/20 to-[#8B5A2B]/10',
+    text: 'text-[#CD7F32]',
+    label: 'Bronce',
+  },
+  silver: {
+    glow: 'shadow-[0_0_20px_rgba(192,192,192,0.4)]',
+    ring: 'ring-[#C0C0C0]',
+    bg: 'bg-gradient-to-br from-[#C0C0C0]/20 to-[#808080]/10',
+    text: 'text-[#A8A8A8]',
+    label: 'Plata',
+  },
+  gold: {
+    glow: 'shadow-[0_0_24px_rgba(255,215,0,0.5)]',
+    ring: 'ring-[#FFD700]',
+    bg: 'bg-gradient-to-br from-[#FFD700]/25 to-[#DAA520]/10',
+    text: 'text-[#FFD700]',
+    label: 'Oro',
+  },
+};
+
+function AchievementsPage({ isDark, navigate }) {
+  const { user, userProgress, moduleProgress } = useAuth();
+  const [achievements, setAchievements] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    const loadAchievements = async () => {
+      if (!user?.id) return;
+      setLoading(true);
+      const totalModules = modules.length;
+      const s = await getAchievementStats(user.id, userProgress, moduleProgress, totalModules);
+      if (cancelled) return;
+      setStats(s);
+      setAchievements(evaluateAchievements(s));
+      setLoading(false);
+    };
+    loadAchievements();
+    return () => { cancelled = true; };
+  }, [user?.id, userProgress, moduleProgress]);
+
+  const unlockedCount = achievements.filter(a => a.unlocked).length;
+  const totalCount = achievements.length;
+  const progressPct = totalCount > 0 ? Math.round((unlockedCount / totalCount) * 100) : 0;
+
+  // Group achievements by category (based on icon)
+  const categories = [
+    { key: 'flame',  title: 'Rachas',         icon: 'flame',  items: achievements.filter(a => a.icon === 'flame') },
+    { key: 'book',   title: 'Vocabulario',    icon: 'book',   items: achievements.filter(a => a.icon === 'book') },
+    { key: 'trophy', title: 'Módulos',        icon: 'trophy', items: achievements.filter(a => a.icon === 'trophy') },
+    { key: 'target', title: 'Precisión',      icon: 'target', items: achievements.filter(a => a.icon === 'target') },
+    { key: 'check',  title: 'Constancia',     icon: 'check',  items: achievements.filter(a => a.icon === 'check') },
+    { key: 'chart',  title: 'Tiempo',         icon: 'chart',  items: achievements.filter(a => a.icon === 'chart') },
+  ];
+
+  return (
+    <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-[#F8F5EE]")}>
+      <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        {/* Back button */}
+        <button
+          onClick={() => navigate("/dashboard")}
+          className={cx(
+            "btn-press group flex items-center gap-2 text-sm font-medium transition-all duration-200",
+            isDark ? "text-brand-soft hover:text-white" : "text-brand-muted hover:text-brand-ink"
+          )}
+        >
+          <Icon name="arrow" className="h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-1" />
+          Volver al inicio
+        </button>
+
+        {/* Header */}
+        <div className="mb-8 mt-4">
+          <div className="mb-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#8C4A27]">— Logros</span>
+          </div>
+          <h1 className={cx("font-display text-3xl font-extrabold sm:text-4xl", isDark ? "text-white" : "text-brand-ink")}>
+            Insignias y <span className={isDark ? "text-brand-cyan" : "text-brand-teal"}>desafíos</span>
+          </h1>
+          <p className={cx("mt-2 text-sm", isDark ? "text-brand-soft" : "text-brand-muted")}>
+            Supera retos, mantén tu racha y desbloquea insignias mientras aprendes LSM.
+          </p>
+        </div>
+
+        {/* Progress summary card */}
+        <div className={cx(
+          "mb-8 rounded-3xl border p-6 backdrop-blur-xl sm:p-8",
+          isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+        )}>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="flex items-baseline gap-2">
+                <span className={cx("font-display text-4xl font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+                  {unlockedCount}
+                </span>
+                <span className={cx("text-lg font-bold", isDark ? "text-brand-soft" : "text-brand-muted")}>
+                  / {totalCount}
+                </span>
+                <span className={cx("ml-2 text-sm font-semibold", isDark ? "text-brand-cyan" : "text-brand-teal")}>
+                  {progressPct}% completado
+                </span>
+              </div>
+              <p className={cx("mt-1 text-xs", isDark ? "text-brand-soft" : "text-brand-muted")}>
+                {unlockedCount === 0 ? '¡Empieza a practicar para desbloquear tu primera insignia!' :
+                 unlockedCount < 5 ? '¡Vas por buen camino! Sigue practicando.' :
+                 unlockedCount < 10 ? '¡Excelente progreso! Cada vez más cerca del oro.' :
+                 '¡Eres un maestro del lenguaje de señas! 🏆'}
+              </p>
+            </div>
+            {/* Progress ring */}
+            <div className="relative h-20 w-20 flex-shrink-0">
+              <svg className="h-full w-full -rotate-90" viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="34" fill="none" stroke={isDark ? "rgba(92,196,214,0.15)" : "rgba(13,92,111,0.12)"} strokeWidth="6" />
+                <circle
+                  cx="40" cy="40" r="34" fill="none"
+                  stroke={isDark ? "#2aabb8" : "#0d5c6f"}
+                  strokeWidth="6"
+                  strokeLinecap="round"
+                  strokeDasharray={2 * Math.PI * 34}
+                  strokeDashoffset={2 * Math.PI * 34 * (1 - progressPct / 100)}
+                  className="transition-all duration-700"
+                />
+              </svg>
+              <div className={cx("absolute inset-0 flex items-center justify-center text-sm font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+                {progressPct}%
+              </div>
+            </div>
+          </div>
+
+          {/* Quick stats */}
+          {stats && !loading && (
+            <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-6">
+              {[
+                { label: 'Racha', value: `${stats.streakDays}d`, icon: 'flame' },
+                { label: 'Señas', value: stats.totalSigns, icon: 'book' },
+                { label: 'Módulos', value: `${stats.modulesCompleted}/${stats.totalModules}`, icon: 'trophy' },
+                { label: 'Precisión', value: `${Math.round(stats.avgAccuracy * 100)}%`, icon: 'target' },
+                { label: 'Días', value: stats.practiceDays, icon: 'check' },
+                { label: 'Tiempo', value: `${Math.round(stats.totalPracticeTime / 60)}m`, icon: 'chart' },
+              ].map((s) => (
+                <div key={s.label} className={cx("rounded-xl p-2.5 text-center", isDark ? "bg-brand-deep/50" : "bg-brand-cream/50")}>
+                  <Icon name={s.icon} className={cx("mx-auto mb-1 h-4 w-4", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+                  <div className={cx("text-sm font-extrabold", isDark ? "text-white" : "text-brand-ink")}>{s.value}</div>
+                  <div className={cx("text-[9px] font-semibold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-brand-muted")}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Achievement categories */}
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-teal border-t-transparent"></div>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {categories.map((cat) => cat.items.length > 0 && (
+              <section key={cat.key}>
+                {/* Category header */}
+                <div className="mb-4 flex items-center gap-2">
+                  <div className={cx(
+                    "flex h-8 w-8 items-center justify-center rounded-lg",
+                    isDark ? "bg-brand-card" : "bg-brand-cream"
+                  )}>
+                    <Icon name={cat.icon} className={cx("h-4 w-4", isDark ? "text-brand-cyan" : "text-brand-teal")} />
+                  </div>
+                  <h2 className={cx("font-display text-lg font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+                    {cat.title}
+                  </h2>
+                  <span className={cx("text-xs font-semibold", isDark ? "text-brand-soft" : "text-brand-muted")}>
+                    {cat.items.filter(a => a.unlocked).length}/{cat.items.length}
+                  </span>
+                </div>
+
+                {/* Badge grid */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {cat.items.map((achievement) => {
+                    const tier = TIER_STYLES[achievement.tier] || TIER_STYLES.bronze;
+                    return (
+                      <div
+                        key={achievement.id}
+                        className={cx(
+                          "relative overflow-hidden rounded-2xl border p-5 transition-all duration-300",
+                          achievement.unlocked
+                            ? cx("border-transparent ring-2", tier.ring, tier.glow, isDark ? "bg-brand-card/80" : "bg-white/80")
+                            : cx("border-dashed", isDark ? "border-brand-line/40 bg-brand-card/20" : "border-brand-mist/40 bg-white/20")
+                        )}
+                      >
+                        {/* Tier badge */}
+                        <div className={cx(
+                          "absolute right-3 top-3 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider",
+                          achievement.unlocked
+                            ? cx(tier.bg, tier.text)
+                            : (isDark ? "bg-brand-deep/50 text-brand-soft/40" : "bg-brand-cream/50 text-brand-muted/40")
+                        )}>
+                          {tier.label}
+                        </div>
+
+                        <div className="flex items-start gap-4">
+                          {/* Icon */}
+                          <div className={cx(
+                            "flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl transition-all",
+                            achievement.unlocked
+                              ? cx(tier.bg, "ring-2", tier.ring)
+                              : (isDark ? "bg-brand-deep/50" : "bg-brand-cream/50")
+                          )}>
+                            <Icon
+                              name={achievement.icon}
+                              className={cx(
+                                "h-7 w-7",
+                                achievement.unlocked ? tier.text : (isDark ? "text-brand-soft/30" : "text-brand-muted/30")
+                              )}
+                            />
+                          </div>
+
+                          {/* Text */}
+                          <div className="flex-1 pt-0.5">
+                            <h3 className={cx(
+                              "text-sm font-extrabold",
+                              achievement.unlocked
+                                ? (isDark ? "text-white" : "text-brand-ink")
+                                : (isDark ? "text-brand-soft/50" : "text-brand-muted/50")
+                            )}>
+                              {achievement.title}
+                            </h3>
+                            <p className={cx(
+                              "mt-1 text-xs leading-snug",
+                              achievement.unlocked
+                                ? (isDark ? "text-brand-soft" : "text-brand-muted")
+                                : (isDark ? "text-brand-soft/40" : "text-brand-muted/40")
+                            )}>
+                              {achievement.desc}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Status footer */}
+                        <div className={cx(
+                          "mt-4 flex items-center gap-1.5 border-t pt-3 text-xs font-bold",
+                          achievement.unlocked ? "border-green-500/20 text-green-500" : (isDark ? "border-brand-line/30 text-brand-soft/40" : "border-brand-mist/30 text-brand-muted/40")
+                        )}>
+                          {achievement.unlocked ? (
+                            <>
+                              <Icon name="check" className="h-3.5 w-3.5" />
+                              Desbloqueada
+                            </>
+                          ) : (
+                            <>
+                              <Icon name="lock" className="h-3.5 w-3.5" />
+                              Bloqueada
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
+
+function ProfilePage({ isDark, navigate }) {
+  const { user, profile, userProgress, moduleProgress, updateProfile } = useAuth();
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [savedMsg, setSavedMsg] = useState(false);
+  const [formData, setFormData] = useState({
+    full_name: profile?.full_name || "",
+    avatar_initials: profile?.avatar_initials || "",
+  });
+
+  // Sync form when profile loads/changes
+  useEffect(() => {
+    setFormData({
+      full_name: profile?.full_name || "",
+      avatar_initials: profile?.avatar_initials || "",
+    });
+  }, [profile]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    const updates = {};
+    if (formData.full_name !== profile?.full_name) updates.full_name = formData.full_name;
+    if (formData.avatar_initials !== profile?.avatar_initials) {
+      // Ensure initials are max 2 chars, uppercase
+      updates.avatar_initials = formData.avatar_initials.substring(0, 2).toUpperCase();
+    }
+    if (Object.keys(updates).length === 0) {
+      setEditing(false);
+      setSaving(false);
+      return;
+    }
+    await updateProfile(updates);
+    setSaving(false);
+    setEditing(false);
+    setSavedMsg(true);
+    setTimeout(() => setSavedMsg(false), 2500);
+  };
+
+  const userInitials = formData.avatar_initials || formData.full_name?.substring(0, 2).toUpperCase() || "US";
+  const userEmail = profile?.email || user?.email || "";
+  const createdAt = profile?.created_at || user?.created_at;
+  const memberSince = createdAt ? new Date(createdAt).toLocaleDateString('es-MX', { year: 'numeric', month: 'long' }) : '';
+
+  // Stats
+  const totalSigns = userProgress?.total_signs_learned || 0;
+  const streakDays = userProgress?.streak_days || 0;
+  const practiceDays = userProgress?.practice_days || 0;
+  const avgAccuracy = userProgress?.average_accuracy || 0;
+  const modulesCompleted = moduleProgress?.filter(mp => (mp.signs_completed || 0) >= (mp.total_signs || 0)).length || 0;
+
+  return (
+    <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-[#F8F5EE]")}>
+      <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+        {/* Back button */}
+        <button
+          onClick={() => navigate("/dashboard")}
+          className={cx(
+            "btn-press group flex items-center gap-2 text-sm font-medium transition-all duration-200",
+            isDark ? "text-brand-soft hover:text-white" : "text-brand-muted hover:text-brand-ink"
+          )}
+        >
+          <Icon name="arrow" className="h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-1" />
+          Volver al inicio
+        </button>
+
+        {/* Header */}
+        <div className="mb-8 mt-4">
+          <div className="mb-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#8C4A27]">— Mi perfil</span>
+          </div>
+          <h1 className={cx("font-display text-3xl font-extrabold sm:text-4xl", isDark ? "text-white" : "text-brand-ink")}>
+            Datos <span className={isDark ? "text-brand-cyan" : "text-brand-teal"}>personales</span>
+          </h1>
+        </div>
+
+        {/* Profile card */}
+        <div className={cx(
+          "rounded-3xl border p-6 backdrop-blur-xl sm:p-8",
+          isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+        )}>
+          {/* Avatar + info */}
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
+            <div className={cx(
+              "flex h-24 w-24 items-center justify-center rounded-3xl text-2xl font-extrabold shadow-lg",
+              isDark ? "bg-brand-cyan text-brand-deep" : "bg-brand-teal text-white"
+            )}>
+              {userInitials}
+            </div>
+            <div className="flex-1 text-center sm:text-left">
+              {editing ? (
+                <div className="space-y-3">
+                  <div>
+                    <label className={cx("mb-1 block text-xs font-semibold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-brand-muted")}>Nombre completo</label>
+                    <input
+                      type="text"
+                      value={formData.full_name}
+                      onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                      className={cx(
+                        "input-focus-ring w-full rounded-xl border px-4 py-2.5 text-sm font-semibold",
+                        isDark ? "border-brand-line bg-brand-deep text-white" : "border-brand-mist bg-white text-brand-ink"
+                      )}
+                      placeholder="Tu nombre"
+                    />
+                  </div>
+                  <div>
+                    <label className={cx("mb-1 block text-xs font-semibold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-brand-muted")}>Iniciales del avatar (máx. 2)</label>
+                    <input
+                      type="text"
+                      maxLength={2}
+                      value={formData.avatar_initials}
+                      onChange={(e) => setFormData({ ...formData, avatar_initials: e.target.value.toUpperCase() })}
+                      className={cx(
+                        "input-focus-ring w-20 rounded-xl border px-4 py-2.5 text-center text-sm font-bold uppercase",
+                        isDark ? "border-brand-line bg-brand-deep text-white" : "border-brand-mist bg-white text-brand-ink"
+                      )}
+                      placeholder="US"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h2 className={cx("font-display text-2xl font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+                    {profile?.full_name || "Usuario"}
+                  </h2>
+                  <p className={cx("mt-1 text-sm", isDark ? "text-brand-soft" : "text-brand-muted")}>{userEmail}</p>
+                  {memberSince && (
+                    <p className={cx("mt-1 text-xs", isDark ? "text-brand-soft/60" : "text-brand-muted/60")}>
+                      Miembro desde {memberSince}
+                    </p>
+                  )}
+                </>
+              )}
+            </div>
+            {/* Edit / Save buttons */}
+            <div className="flex gap-2">
+              {editing ? (
+                <>
+                  <button
+                    onClick={() => {
+                      setFormData({
+                        full_name: profile?.full_name || "",
+                        avatar_initials: profile?.avatar_initials || "",
+                      });
+                      setEditing(false);
+                    }}
+                    className={cx(
+                      "btn-press rounded-xl px-4 py-2 text-xs font-bold transition-all",
+                      isDark ? "bg-brand-card text-brand-soft hover:bg-brand-card/80" : "bg-brand-cream text-brand-muted hover:bg-brand-cream/80"
+                    )}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="btn-press rounded-xl bg-brand-orange px-4 py-2 text-xs font-bold text-white transition-all hover:bg-brand-orange/90 disabled:opacity-50"
+                  >
+                    {saving ? "Guardando..." : "Guardar"}
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setEditing(true)}
+                  className={cx(
+                    "btn-press flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold transition-all",
+                    isDark ? "bg-brand-card text-brand-cyan hover:bg-brand-card/80" : "bg-brand-cream text-brand-teal hover:bg-brand-cream/80"
+                  )}
+                >
+                  <Icon name="settings" className="h-3.5 w-3.5" />
+                  Editar
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Saved message */}
+          {savedMsg && (
+            <div className="mt-4 flex items-center gap-2 rounded-xl bg-green-500/15 px-4 py-2.5 text-sm font-semibold text-green-500">
+              <Icon name="check" className="h-4 w-4" />
+              Perfil actualizado correctamente
+            </div>
+          )}
+        </div>
+
+        {/* Stats grid */}
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {[
+            { label: "Señas aprendidas", value: totalSigns, icon: "book", color: "text-brand-teal" },
+            { label: "Días de racha", value: streakDays, icon: "flame", color: "text-brand-orange" },
+            { label: "Días practicados", value: practiceDays, icon: "check", color: "text-green-500" },
+            { label: "Módulos completados", value: modulesCompleted, icon: "trophy", color: "text-yellow-500" },
+          ].map((stat) => (
+            <div key={stat.label} className={cx(
+              "rounded-2xl border p-4 text-center backdrop-blur-xl",
+              isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+            )}>
+              <div className={cx("mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
+                <Icon name={stat.icon} className={cx("h-5 w-5", stat.color)} />
+              </div>
+              <div className={cx("text-2xl font-extrabold", isDark ? "text-white" : "text-brand-ink")}>{stat.value}</div>
+              <div className={cx("mt-0.5 text-[10px] font-semibold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-brand-muted")}>{stat.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Account info */}
+        <div className={cx(
+          "mt-6 rounded-3xl border p-6 backdrop-blur-xl sm:p-8",
+          isDark ? "border-brand-line/30 bg-brand-card/50" : "border-brand-mist/30 bg-white/50"
+        )}>
+          <h3 className={cx("mb-4 font-display text-lg font-extrabold", isDark ? "text-white" : "text-brand-ink")}>
+            Información de cuenta
+          </h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between border-b border-dashed pb-3" style={{ borderColor: isDark ? 'rgba(92,196,214,0.15)' : 'rgba(13,92,111,0.12)' }}>
+              <span className={cx("text-xs font-semibold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-brand-muted")}>Email</span>
+              <span className={cx("text-sm font-semibold", isDark ? "text-white" : "text-brand-ink")}>{userEmail}</span>
+            </div>
+            <div className="flex items-center justify-between border-b border-dashed pb-3" style={{ borderColor: isDark ? 'rgba(92,196,214,0.15)' : 'rgba(13,92,111,0.12)' }}>
+              <span className={cx("text-xs font-semibold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-brand-muted")}>Precisión promedio</span>
+              <span className={cx("text-sm font-semibold", isDark ? "text-white" : "text-brand-ink")}>{Math.round(avgAccuracy * 100)}%</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className={cx("text-xs font-semibold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-brand-muted")}>Tiempo total de práctica</span>
+              <span className={cx("text-sm font-semibold", isDark ? "text-white" : "text-brand-ink")}>
+                {Math.round((userProgress?.total_practice_time || 0) / 60)} min
+              </span>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
@@ -1648,11 +2933,261 @@ function SkillNode({ module, index, isDark, selected, onClick }) {
   );
 }
 
+// Visual snake indicator showing per-sign progress within a module
+// Each sign is a numbered dot on a winding path: completed = teal with check badge, current = orange pulse, pending = gray
+function SignProgressSnake({ items, practicedSigns, activeSignLabel, isDark, onSelect }) {
+  if (!items || items.length === 0) return null;
+
+  const total = items.length;
+  const completedCount = items.filter((item) => practicedSigns.has(item.label || item.name)).length;
+  // For alphabet module, show the letter instead of the number
+  const isAlphabet = items.every((it) => it.glyph && it.glyph.length === 1 && /[A-ZÑ]/i.test(it.glyph));
+
+  // Zigzag positions — same pattern as the module roadmap but compact
+  const NODE_SPACING = 60; // px between nodes
+  const xPattern = [50, 78, 22, 72, 28, 75, 25, 68];
+  const positions = items.map((_, index) => ({
+    xPct: xPattern[index % xPattern.length],
+    yPx: index * NODE_SPACING,
+  }));
+
+  // Build smooth path through all dots
+  const buildPath = () => {
+    if (total === 0) return "";
+    let d = `M ${positions[0].xPct} 0`;
+    for (let i = 1; i < total; i++) {
+      const prev = positions[i - 1];
+      const curr = positions[i];
+      const midY = (prev.yPx + curr.yPx) / 2;
+      d += ` C ${prev.xPct} ${midY}, ${curr.xPct} ${midY}, ${curr.xPct} ${curr.yPx}`;
+    }
+    return d;
+  };
+
+  const pathD = buildPath();
+  const pathHeight = (total - 1) * NODE_SPACING;
+
+  // Determine the "current" sign (first not practiced)
+  const currentIndex = items.findIndex((item) => !practicedSigns.has(item.label || item.name));
+
+  return (
+    <div className={cx(
+      "mb-6 rounded-2xl border p-4",
+      isDark ? "border-brand-line/30 bg-brand-deep/30" : "border-gray-200 bg-gray-50"
+    )}>
+      <div className="mb-3 flex items-center justify-between">
+        <span className={cx("text-xs font-bold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-gray-500")}>
+          Progreso del módulo
+        </span>
+        <span className={cx("text-xs font-bold", isDark ? "text-brand-cyan" : "text-brand-teal")}>
+          {completedCount}/{total}
+        </span>
+      </div>
+
+      <div
+        className="relative mx-auto"
+        style={{ maxWidth: '360px', minHeight: `${pathHeight + 48}px` }}
+      >
+        {/* SVG path */}
+        <svg
+          className="absolute left-0 w-full"
+          style={{ top: '19px', height: pathHeight, overflow: 'visible' }}
+          viewBox={`0 0 100 ${pathHeight}`}
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            d={pathD}
+            fill="none"
+            stroke={isDark ? "#1A5C6A" : "#D4CFC0"}
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray="6 6"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+
+        {/* Dots — always show the number, with a small status badge for completed */}
+        <div className="relative" style={{ height: pathHeight + 38 }}>
+          {items.map((item, index) => {
+            const pos = positions[index];
+            const label = item.label || item.name;
+            const isCompleted = practicedSigns.has(label);
+            const isCurrent = index === currentIndex;
+            const isActive = activeSignLabel === label;
+
+            return (
+              <button
+                key={label}
+                onClick={() => onSelect(item)}
+                className="absolute flex flex-col items-center group"
+                style={{
+                  left: `${pos.xPct}%`,
+                  top: `${pos.yPx}px`,
+                  transform: 'translate(-50%, -50%)',
+                }}
+                title={label}
+              >
+                <div className="relative">
+                  <div
+                    className={cx(
+                      "flex items-center justify-center rounded-full border-2 transition-all duration-200 group-hover:scale-110 font-bold",
+                      isAlphabet && "font-display",
+                      isCompleted
+                        ? "bg-brand-teal border-brand-teal text-white"
+                        : isCurrent
+                        ? "bg-brand-orange border-brand-orange text-white animate-pulse"
+                        : isActive
+                        ? "bg-brand-orange/30 border-brand-orange text-brand-orange"
+                        : isDark
+                          ? "bg-brand-deep border-brand-line text-brand-soft"
+                          : "bg-white border-gray-300 text-gray-400"
+                    )}
+                    style={{
+                      width: '38px',
+                      height: '38px',
+                      fontSize: isAlphabet ? '15px' : '13px',
+                    }}
+                  >
+                    {isAlphabet ? (item.glyph || label) : (index + 1)}
+                  </div>
+                  {/* Completed check badge */}
+                  {isCompleted && (
+                    <div className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-500 border-2 border-white shadow-sm">
+                      <Icon name="check" className="h-2 w-2 text-white" />
+                    </div>
+                  )}
+                  {/* Current play badge */}
+                  {isCurrent && !isCompleted && (
+                    <div className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand-orange border-2 border-white shadow-sm">
+                      <Icon name="play" className="h-2 w-2 text-white" />
+                    </div>
+                  )}
+                </div>
+                {/* Label tooltip on hover */}
+                <span className={cx(
+                  "pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded px-1.5 py-0.5 text-[9px] font-bold opacity-0 transition-opacity group-hover:opacity-100 z-20",
+                  isDark ? "bg-brand-card text-white" : "bg-white text-gray-700 shadow"
+                )}>
+                  {label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Congratulation screen shown when a module is completed
+function ModuleCompleteScreen({ module, nextModule, isDark, onContinue, onBackToModules }) {
+  return createPortal(
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 99999,
+        backgroundColor: 'rgba(0, 0, 0, 0.95)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overscrollBehavior: 'none',
+      }}
+    >
+      <div className="flex flex-col items-center gap-4 px-6 text-center animate-fade">
+        {/* Trophy icon */}
+        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-brand-orange/20 shadow-2xl sm:h-32 sm:w-32">
+          <Icon name="trophy" className="h-12 w-12 text-brand-orange sm:h-16 sm:w-16" />
+        </div>
+
+        {/* Title */}
+        <div className="text-center">
+          <div className="text-2xl font-extrabold text-white sm:text-4xl">¡Módulo completado!</div>
+          <div className="mt-2 text-base text-brand-orange sm:text-lg font-bold">{module?.title}</div>
+          <div className="mt-1 text-sm text-white/70">{module?.signs || module?.totalSigns} señas dominadas</div>
+        </div>
+
+        {/* Next module preview */}
+        {nextModule ? (
+          <div className="mt-2 w-full max-w-sm rounded-2xl border-2 border-white/20 bg-white/10 p-4 backdrop-blur-sm">
+            <div className="text-xs font-bold uppercase tracking-wider text-green-300">Siguiente módulo desbloqueado</div>
+            <div className="mt-2 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-teal/30">
+                <Icon name={nextModule.icon || "book"} className="h-5 w-5 text-brand-cyan" />
+              </div>
+              <div className="text-left">
+                <div className="text-sm font-bold text-white">{nextModule.title}</div>
+                <div className="text-xs text-white/60">{nextModule.signs} señas · Nivel {nextModule.level}</div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-2 rounded-2xl border-2 border-brand-orange/40 bg-brand-orange/10 px-6 py-4">
+            <div className="text-sm font-bold text-brand-orange">¡Has completado todos los módulos! 🎉</div>
+          </div>
+        )}
+
+        {/* Action buttons */}
+        <div className="mt-4 flex w-full max-w-xs flex-col gap-2 sm:max-w-md sm:flex-row">
+          <button
+            onClick={onBackToModules}
+            className="btn-press flex-1 rounded-xl border-2 border-white/30 bg-white/10 px-4 py-3 text-sm font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20"
+          >
+            Volver a módulos
+          </button>
+          {nextModule && (
+            <button
+              onClick={onContinue}
+              className="btn-press flex-1 rounded-xl bg-brand-orange px-4 py-3 text-sm font-bold text-white transition-all hover:bg-brand-orange/90"
+            >
+              Empezar siguiente →
+            </button>
+          )}
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 function LessonPage({ isDark, navigate }) {
-  const { userProgress, moduleProgress } = useAuth();
+  const { userProgress, moduleProgress, user } = useAuth();
   const [selected, setSelected] = useState(modules[0]);
   const [activeSign, setActiveSign] = useState(null);
   const [search, setSearch] = useState("");
+  const [practicedSigns, setPracticedSigns] = useState(new Set());
+  const [completedModule, setCompletedModule] = useState(null); // { moduleId, totalSigns, nextModule }
+
+  // Keep body scroll locked while the congratulation screen is visible
+  useEffect(() => {
+    if (completedModule) {
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = ''; };
+    }
+  }, [completedModule]);
+
+  // Safety: always restore body scroll when LessonPage unmounts (e.g. navigating to another tab)
+  useEffect(() => {
+    return () => { document.body.style.overflow = ''; };
+  }, []);
+
+  // Fetch which signs the user has practiced for the selected module
+  useEffect(() => {
+    if (!user?.id || !selected?.id) return;
+    let cancelled = false;
+    fetchPracticedSigns(user.id, selected.id).then((set) => {
+      if (!cancelled) setPracticedSigns(set);
+    });
+    return () => { cancelled = true; };
+  }, [user?.id, selected?.id]);
 
   // Auto-advance to next sign in current module
   const handleNextSign = () => {
@@ -1661,6 +3196,26 @@ function LessonPage({ isDark, navigate }) {
     if (currentIndex !== -1 && currentIndex < selected.items.length - 1) {
       setActiveSign(selected.items[currentIndex + 1]);
     }
+  };
+
+  // Handle module completion — mark in DB, unlock next, show congratulation screen
+  const handleModuleCompleted = async (moduleId, totalSigns) => {
+    if (!user?.id) return;
+
+    // Find the next module in the list
+    const currentIdx = modules.findIndex((m) => m.id === moduleId);
+    const nextModule = currentIdx >= 0 && currentIdx < modules.length - 1 ? modules[currentIdx + 1] : null;
+
+    // Mark current module as completed in DB
+    await updateModuleProgress(user.id, moduleId, totalSigns, totalSigns, 'completed');
+
+    // Unlock next module in DB
+    if (nextModule) {
+      await updateModuleProgress(user.id, nextModule.id, 0, nextModule.signs, 'current');
+    }
+
+    // Show congratulation screen
+    setCompletedModule({ moduleId, totalSigns, nextModule });
   };
 
   // Merge module data with progress from database
@@ -1790,7 +3345,16 @@ function LessonPage({ isDark, navigate }) {
                       />
                     </div>
                   </div>
-                  
+
+                  {/* Sign progress snake — visual indicator of which signs are done */}
+                  <SignProgressSnake
+                    items={selected.items}
+                    practicedSigns={practicedSigns}
+                    activeSignLabel={activeSign?.label}
+                    isDark={isDark}
+                    onSelect={(item) => setActiveSign(item)}
+                  />
+
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 max-h-96 overflow-y-auto pr-2">
                     {filteredItems.map((item, index) => (
                       <button
@@ -1834,9 +3398,35 @@ function LessonPage({ isDark, navigate }) {
             onClose={() => setActiveSign(null)}
             moduleId={selected.id}
             onNextSign={handleNextSign}
+            onSignCompleted={(signName) => setPracticedSigns((prev) => new Set([...prev, signName]))}
+            allItems={selected.items}
+            practicedSigns={practicedSigns}
+            onSelectSign={(item) => setActiveSign(item)}
+            onModuleCompleted={handleModuleCompleted}
           />
         )}
       </main>
+
+      {/* Module completion congratulation screen */}
+      {completedModule && (
+        <ModuleCompleteScreen
+          module={modules.find((m) => m.id === completedModule.moduleId)}
+          nextModule={completedModule.nextModule}
+          isDark={isDark}
+          onContinue={() => {
+            if (completedModule.nextModule) {
+              setSelected(completedModule.nextModule);
+              setActiveSign(completedModule.nextModule.items[0]);
+              setPracticedSigns(new Set());
+            }
+            setCompletedModule(null);
+          }}
+          onBackToModules={() => {
+            setActiveSign(null);
+            setCompletedModule(null);
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -1876,7 +3466,113 @@ function SignVideoPanel({ sign, isDark, onClose, moduleId }) {
   );
 }
 
-function LessonView({ sign, isDark, onClose, moduleId, onNextSign }) {
+// Compact progress tracker shown during a lesson
+// Mobile: collapsed bar that expands into a mini-snake. Desktop: horizontal row with connectors.
+// For alphabet module, shows the letter instead of the number.
+function LessonSignTracker({ items, currentLabel, practicedSigns, isDark, onSelect }) {
+  const [expanded, setExpanded] = useState(false);
+  if (!items || items.length === 0) return null;
+
+  const total = items.length;
+  const currentIndex = items.findIndex((item) => (item.label || item.name) === currentLabel);
+  const completedCount = items.filter((item) => practicedSigns.has(item.label || item.name)).length;
+  // Show the letter/glyph for alphabet items, otherwise the number
+  const isAlphabet = items.every((it) => it.glyph && it.glyph.length === 1 && /[A-ZÑ]/i.test(it.glyph));
+  const getDisplayLabel = (item, index) => isAlphabet ? (item.glyph || item.label) : String(index + 1);
+
+  return (
+    <div className={cx(
+      "rounded-xl border p-2.5 sm:p-3",
+      isDark ? "border-brand-line/30 bg-brand-deep/30" : "border-gray-200 bg-gray-50"
+    )}>
+      {/* Header — tap to expand/collapse on mobile */}
+      <button
+        onClick={() => setExpanded((v) => !v)}
+        className="flex w-full items-center justify-between sm:cursor-default"
+      >
+        <span className={cx("text-[10px] font-bold uppercase tracking-wider", isDark ? "text-brand-soft" : "text-gray-500")}>
+          {completedCount}/{total} {isAlphabet ? "letras" : "señas"}
+        </span>
+        <div className="flex items-center gap-2">
+          {/* Progress bar mini */}
+          <div className={cx("h-1.5 w-20 overflow-hidden rounded-full sm:w-32", isDark ? "bg-brand-line" : "bg-gray-300")}>
+            <div
+              className="h-full rounded-full bg-brand-teal transition-all duration-300"
+              style={{ width: `${total > 0 ? (completedCount / total) * 100 : 0}%` }}
+            />
+          </div>
+          {/* Expand icon — only on mobile */}
+          <Icon
+            name="chevron"
+            className={cx(
+              "h-4 w-4 transition-transform sm:hidden",
+              isDark ? "text-brand-soft" : "text-gray-400",
+              expanded ? "rotate-180" : ""
+            )}
+          />
+        </div>
+      </button>
+
+      {/* Desktop: always visible row. Mobile: only when expanded */}
+      <div className={cx(
+        "mt-2.5 sm:mt-3",
+        expanded ? "block" : "hidden sm:block"
+      )}>
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:flex-nowrap sm:justify-start sm:gap-1 sm:overflow-x-auto sm:pb-1">
+          {items.map((item, index) => {
+            const label = item.label || item.name;
+            const isCompleted = practicedSigns.has(label);
+            const isCurrent = index === currentIndex;
+            const canNavigate = isCompleted && onSelect && !isCurrent;
+            const displayLabel = getDisplayLabel(item, index);
+
+            return (
+              <div key={label} className="flex items-center">
+                {/* Dot — clickable if completed and not current */}
+                <button
+                  disabled={!canNavigate}
+                  onClick={() => canNavigate && onSelect(item)}
+                  className={cx(
+                    "relative flex items-center justify-center rounded-full border-2 font-bold transition-all",
+                    isAlphabet && "font-display",
+                    canNavigate && "cursor-pointer hover:scale-110 hover:ring-2 hover:ring-brand-teal/40",
+                    !canNavigate && !isCurrent && "cursor-default",
+                    isCompleted
+                      ? "bg-brand-teal border-brand-teal text-white"
+                      : isCurrent
+                      ? "bg-brand-orange border-brand-orange text-white scale-110 animate-pulse"
+                      : isDark
+                        ? "bg-brand-deep border-brand-line text-brand-soft"
+                        : "bg-white border-gray-300 text-gray-400"
+                  )}
+                  style={{ width: '34px', height: '34px', fontSize: isAlphabet ? '14px' : '12px' }}
+                  title={canNavigate ? `Repasar: ${label}` : label}
+                >
+                  {displayLabel}
+                  {/* Completed check badge — inside the dot to avoid clipping */}
+                  {isCompleted && (
+                    <div className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-500 border-2 border-white">
+                      <Icon name="check" className="h-2 w-2 text-white" />
+                    </div>
+                  )}
+                </button>
+                {/* Connector line — only on desktop (sm+) */}
+                {index < total - 1 && (
+                  <div className={cx(
+                    "hidden h-0.5 w-4 sm:block",
+                    isCompleted ? "bg-brand-teal" : isDark ? "bg-brand-line" : "bg-gray-300"
+                  )} />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignCompleted, allItems, practicedSigns, onSelectSign, onModuleCompleted }) {
   const { user } = useAuth();
   const [viewRecorded, setViewRecorded] = useState(false);
   const [handDetected, setHandDetected] = useState(false);
@@ -1884,6 +3580,7 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign }) {
   const [matchScore, setMatchScore] = useState(0);
   const [practiceSuccess, setPracticeSuccess] = useState(false);
   const holdStartRef = useRef(null);
+  const successRef = useRef(false); // synchronous guard against double-trigger
   const HOLD_MS = 600;
 
   // Extract YouTube video ID from URL
@@ -1903,14 +3600,24 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign }) {
     }
   }, [user, sign, moduleId, viewRecorded]);
 
+  // Reset success state when sign changes (e.g. via "Continuar" or tracker navigation)
+  useEffect(() => {
+    successRef.current = false;
+    setPracticeSuccess(false);
+    holdStartRef.current = null;
+    setGestureState("waiting");
+    setMatchScore(0);
+  }, [sign]);
+
   // Simplified practice handler for lesson view
   const handlePracticeResults = useCallback(({ handRes }) => {
     const lms = handRes?.landmarks?.[0] ?? null;
     setHandDetected(!!lms);
 
-    if (!lms || practiceSuccess) {
+    // Use successRef for synchronous guard — practiceSuccess in closure may be stale
+    if (!lms || successRef.current) {
       holdStartRef.current = null;
-      if (!practiceSuccess) setGestureState("waiting");
+      if (!successRef.current) setGestureState("waiting");
       setMatchScore(0);
       return;
     }
@@ -1929,32 +3636,75 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign }) {
       setGestureState(pct >= 1 ? "match" : "partial");
 
       if (held >= HOLD_MS) {
+        // Synchronous guard — prevents double-trigger across frames
+        if (successRef.current) return;
+        successRef.current = true;
         setPracticeSuccess(true);
         setGestureState("confirmed");
-        
+
         // Save progress
         if (user) {
           updateSignProgress(user.id, sign.label || sign.name, moduleId, sc, 0);
           updateStreak(user.id);
         }
-        
-        setTimeout(() => {
-          setPracticeSuccess(false);
-          holdStartRef.current = null;
-          setGestureState("waiting");
-          setMatchScore(0);
-          // Auto-advance to next sign
-          if (onNextSign) onNextSign();
-        }, 800);
+
+        // Notify parent so the snake indicator updates
+        if (onSignCompleted) onSignCompleted(sign.label || sign.name);
+
+        // Check if this was the last sign in the module
+        if (allItems && allItems.length > 0 && onModuleCompleted) {
+          const signLabel = sign.label || sign.name;
+          const allDone = allItems.every((item) => {
+            const itemLabel = item.label || item.name;
+            return itemLabel === signLabel || practicedSigns.has(itemLabel);
+          });
+          if (allDone) {
+            onModuleCompleted(moduleId, allItems.length);
+          }
+        }
+
+        // Stay on the same sign — user taps "Continuar" to advance
       }
     } else {
       holdStartRef.current = null;
       setGestureState(sc > 0.45 ? "partial" : "waiting");
     }
-  }, [sign, user, moduleId, practiceSuccess]);
+  }, [sign, user, moduleId, practiceSuccess, onSignCompleted, onModuleCompleted, allItems, practicedSigns]);
 
-  const { videoRef, canvasRef, camReady, camError } = useSimpleCamera({ 
-    onResults: handlePracticeResults 
+  // Handler for the "Continuar" button — advances to next sign and resets state
+  const handleContinue = () => {
+    successRef.current = false;
+    setPracticeSuccess(false);
+    holdStartRef.current = null;
+    setGestureState("waiting");
+    setMatchScore(0);
+    if (onNextSign) onNextSign();
+  };
+
+  // Handler to let user keep practicing the same sign
+  const handleKeepPracticing = () => {
+    successRef.current = false;
+    setPracticeSuccess(false);
+    holdStartRef.current = null;
+    setGestureState("waiting");
+    setMatchScore(0);
+  };
+
+  // Lock body scroll while success overlay is visible
+  useEffect(() => {
+    if (practiceSuccess) {
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = ''; };
+    }
+  }, [practiceSuccess]);
+
+  // Safety: restore body scroll on unmount
+  useEffect(() => {
+    return () => { document.body.style.overflow = ''; };
+  }, []);
+
+  const { videoRef, canvasRef, camReady, camError } = useSimpleCamera({
+    onResults: handlePracticeResults
   });
 
   if (!sign || !videoId) return null;
@@ -1984,32 +3734,20 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign }) {
         <div className="w-24" />
       </div>
 
-      {/* Split view: Video on left (larger), Camera on right (smaller) */}
+      {/* Compact sign progress bar — shows position in the module while practicing */}
+      {allItems && allItems.length > 0 && (
+        <LessonSignTracker
+          items={allItems}
+          currentLabel={sign.label || sign.name}
+          practicedSigns={practicedSigns || new Set()}
+          isDark={isDark}
+          onSelect={onSelectSign}
+        />
+      )}
+      {/* Split view: Camera on left (larger), Video on right (smaller) */}
       <div className="grid grid-cols-1 gap-4 rounded-2xl p-4 sm:grid-cols-3">
-        {/* YouTube Video - 2 columns wide */}
-        <div className="relative overflow-hidden rounded-2xl bg-black sm:col-span-2" style={{ paddingBottom: "56.25%" }}>
-          <iframe
-            key={videoId}
-            src={iframeSrc}
-            title={sign.label || sign.name}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="absolute inset-0 h-full w-full border-0"
-          />
-          {/* Success animation overlay */}
-          {practiceSuccess && (
-            <div className="absolute inset-0 flex items-center justify-center bg-brand-teal/90 animate-fade-in">
-              <div className="text-center animate-success-bounce">
-                <div className="text-7xl mb-4">✓</div>
-                <div className="text-3xl font-bold text-white">¡Excelente!</div>
-                <div className="text-base text-white/90 mt-2">Seña aprendida</div>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        {/* Camera with hand detection - 1 column wide */}
-        <div className="relative overflow-hidden rounded-2xl bg-black" style={{ paddingBottom: "56.25%", position: "relative" }}>
+        {/* Camera with hand detection - 2 columns wide (larger) */}
+        <div className="relative overflow-hidden rounded-2xl bg-black sm:col-span-2" style={{ paddingBottom: "56.25%", position: "relative" }}>
           <video
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover"
@@ -2036,7 +3774,7 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign }) {
               </div>
             </div>
           )}
-          {camReady && (
+          {camReady && !practiceSuccess && (
             <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
               <div className={cx("rounded-lg px-3 py-2 text-sm font-bold transition-all duration-300 transform",
                 gestureState === "confirmed" ? "bg-brand-teal text-white scale-110 shadow-lg shadow-brand-teal/30" :
@@ -2056,6 +3794,69 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign }) {
               )}
             </div>
           )}
+          {/* Success animation overlay — fixed fullscreen on mobile, over camera on desktop */}
+          {practiceSuccess && createPortal(
+            <div
+              className="flex items-center justify-center transition-opacity duration-300"
+              style={{
+                position: window.innerWidth < 640 ? 'fixed' : 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                width: window.innerWidth < 640 ? '100vw' : '100%',
+                height: window.innerWidth < 640 ? '100vh' : '100%',
+                zIndex: window.innerWidth < 640 ? 99999 : 50,
+                backgroundColor: window.innerWidth < 640 ? 'rgba(0, 0, 0, 0.92)' : 'rgba(0, 0, 0, 0.4)',
+                backdropFilter: 'blur(4px)',
+                WebkitBackdropFilter: 'blur(4px)',
+                overscrollBehavior: 'none',
+              }}
+            >
+              <div className="flex flex-col items-center gap-3 animate-fade px-6 sm:gap-4">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-500/20 shadow-2xl sm:h-32 sm:w-32">
+                  <Icon name="check" className="h-10 w-10 text-green-400 sm:h-16 sm:w-16" />
+                </div>
+                <div className="text-center">
+                  <div className="text-xl font-extrabold text-white sm:text-3xl">¡Excelente!</div>
+                  <div className="mt-1 text-sm text-green-300 sm:mt-2">Seña aprendida</div>
+                </div>
+                {/* Continue / Keep practicing buttons */}
+                <div className="mt-3 flex w-full max-w-xs flex-col gap-2 sm:mt-4 sm:max-w-none sm:flex-row">
+                  <button
+                    onClick={handleKeepPracticing}
+                    className="btn-press flex-1 rounded-xl border-2 border-white/30 bg-white/10 px-4 py-2.5 text-sm font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20"
+                  >
+                    Seguir practicando
+                  </button>
+                  <button
+                    onClick={handleContinue}
+                    className="btn-press flex-1 rounded-xl bg-brand-orange px-4 py-2.5 text-sm font-bold text-white transition-all hover:bg-brand-orange/90"
+                  >
+                    Continuar →
+                  </button>
+                </div>
+              </div>
+            </div>,
+            document.body
+          )}
+        </div>
+
+        {/* YouTube Video - 1 column wide (smaller), cropped to fill container */}
+        <div className="relative overflow-hidden rounded-2xl bg-black" style={{ paddingBottom: "56.25%" }}>
+          <div
+            className="absolute top-1/2 left-0 w-full"
+            style={{ transform: 'translateY(-50%)', height: '177.78%' }}
+          >
+            <iframe
+              key={videoId}
+              src={iframeSrc}
+              title={sign.label || sign.name}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0 h-full w-full border-0"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -2074,6 +3875,7 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
   const [matchScore, setMatchScore] = useState(0);
   const [practiceSuccess, setPracticeSuccess] = useState(false);
   const holdStartRef = useRef(null);
+  const successRef = useRef(false); // synchronous guard against double-trigger
   const HOLD_MS = 600;
 
   // Extract YouTube video ID from URL
@@ -2092,6 +3894,15 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
       setViewRecorded(true);
     }
   }, [user, sign, moduleId, viewRecorded]);
+
+  // Reset success state when sign changes
+  useEffect(() => {
+    successRef.current = false;
+    setPracticeSuccess(false);
+    holdStartRef.current = null;
+    setGestureState("waiting");
+    setMatchScore(0);
+  }, [sign]);
 
   // Block body scroll when modal is open
   useEffect(() => {
@@ -2157,9 +3968,10 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
     const lms = handRes?.landmarks?.[0] ?? null;
     setHandDetected(!!lms);
 
-    if (!lms || practiceSuccess) {
+    // Use successRef for synchronous guard — practiceSuccess in closure may be stale
+    if (!lms || successRef.current) {
       holdStartRef.current = null;
-      if (!practiceSuccess) setGestureState("waiting");
+      if (!successRef.current) setGestureState("waiting");
       setMatchScore(0);
       return;
     }
@@ -2178,23 +3990,19 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
       setGestureState(pct >= 1 ? "match" : "partial");
 
       if (held >= HOLD_MS) {
+        // Synchronous guard — prevents double-trigger across frames
+        if (successRef.current) return;
+        successRef.current = true;
         setPracticeSuccess(true);
         setGestureState("confirmed");
-        
+
         // Save progress
         if (user) {
           updateSignProgress(user.id, sign.label || sign.name, moduleId, sc, 0);
           updateStreak(user.id);
         }
-        
-        setTimeout(() => {
-          setPracticeSuccess(false);
-          holdStartRef.current = null;
-          setGestureState("waiting");
-          setMatchScore(0);
-          // Auto-advance to next sign
-          if (onNextSign) onNextSign();
-        }, 800);
+
+        // Stay on the same sign — user taps "Continuar" to advance
       }
     } else {
       holdStartRef.current = null;
@@ -2202,8 +4010,40 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
     }
   }, [sign, user, moduleId, practiceSuccess]);
 
-  const { videoRef, canvasRef, camReady, camError } = useSimpleCamera({ 
-    onResults: handlePracticeResults 
+  // Handler for the "Continuar" button — advances to next sign and resets state
+  const handleContinue = () => {
+    successRef.current = false;
+    setPracticeSuccess(false);
+    holdStartRef.current = null;
+    setGestureState("waiting");
+    setMatchScore(0);
+    if (onNextSign) onNextSign();
+  };
+
+  // Handler to let user keep practicing the same sign
+  const handleKeepPracticing = () => {
+    successRef.current = false;
+    setPracticeSuccess(false);
+    holdStartRef.current = null;
+    setGestureState("waiting");
+    setMatchScore(0);
+  };
+
+  // Lock body scroll while success overlay is visible
+  useEffect(() => {
+    if (practiceSuccess) {
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = ''; };
+    }
+  }, [practiceSuccess]);
+
+  // Safety: restore body scroll on unmount
+  useEffect(() => {
+    return () => { document.body.style.overflow = ''; };
+  }, []);
+
+  const { videoRef, canvasRef, camReady, camError } = useSimpleCamera({
+    onResults: handlePracticeResults
   });
 
   if (!sign || !videoId) return null;
@@ -2253,32 +4093,10 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
           </button>
         </div>
         
-        {/* Split view: Video on left (larger), Camera on right */}
+        {/* Split view: Camera on left (larger), Video on right (smaller) */}
         <div className="grid grid-cols-1 gap-4 rounded-b-2xl p-4 sm:grid-cols-3">
-          {/* YouTube Video - 2 columns wide */}
-          <div className="relative overflow-hidden rounded-2xl bg-black sm:col-span-2" style={{ paddingBottom: "56.25%" }}>
-            <iframe
-              key={videoId}
-              src={iframeSrc}
-              title={sign.label || sign.name}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="absolute inset-0 h-full w-full border-0"
-            />
-            {/* Success animation overlay */}
-            {practiceSuccess && (
-              <div className="absolute inset-0 flex items-center justify-center bg-brand-teal/90 animate-fade-in">
-                <div className="text-center animate-success-bounce">
-                  <div className="text-7xl mb-4">✓</div>
-                  <div className="text-3xl font-bold text-white">¡Excelente!</div>
-                  <div className="text-base text-white/90 mt-2">Seña aprendida</div>
-                </div>
-              </div>
-            )}
-          </div>
-          
-          {/* Camera with hand detection - 1 column */}
-          <div className="relative overflow-hidden rounded-2xl bg-black" style={{ paddingBottom: "56.25%", position: "relative" }}>
+          {/* Camera with hand detection - 2 columns wide (larger) */}
+          <div className="relative overflow-hidden rounded-2xl bg-black sm:col-span-2" style={{ paddingBottom: "56.25%", position: "relative" }}>
             <video
               ref={videoRef}
               className="absolute inset-0 h-full w-full object-cover"
@@ -2305,7 +4123,7 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
                 </div>
               </div>
             )}
-            {camReady && (
+            {camReady && !practiceSuccess && (
               <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
                 <div className={cx("rounded-lg px-3 py-2 text-sm font-bold transition-all duration-300 transform",
                   gestureState === "confirmed" ? "bg-brand-teal text-white scale-110 shadow-lg shadow-brand-teal/30" :
@@ -2325,6 +4143,69 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
                 )}
               </div>
             )}
+            {/* Success animation overlay — fixed fullscreen on mobile, over camera on desktop */}
+            {practiceSuccess && createPortal(
+              <div
+                className="flex items-center justify-center transition-opacity duration-300"
+                style={{
+                  position: window.innerWidth < 640 ? 'fixed' : 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  width: window.innerWidth < 640 ? '100vw' : '100%',
+                  height: window.innerWidth < 640 ? '100vh' : '100%',
+                  zIndex: window.innerWidth < 640 ? 99999 : 50,
+                  backgroundColor: window.innerWidth < 640 ? 'rgba(0, 0, 0, 0.92)' : 'rgba(0, 0, 0, 0.4)',
+                  backdropFilter: 'blur(4px)',
+                  WebkitBackdropFilter: 'blur(4px)',
+                  overscrollBehavior: 'none',
+                }}
+              >
+                <div className="flex flex-col items-center gap-3 animate-fade px-6 sm:gap-4">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-500/20 shadow-2xl sm:h-32 sm:w-32">
+                    <Icon name="check" className="h-10 w-10 text-green-400 sm:h-16 sm:w-16" />
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xl font-extrabold text-white sm:text-3xl">¡Excelente!</div>
+                    <div className="mt-1 text-sm text-green-300 sm:mt-2">Seña aprendida</div>
+                  </div>
+                  {/* Continue / Keep practicing buttons */}
+                  <div className="mt-3 flex w-full max-w-xs flex-col gap-2 sm:mt-4 sm:max-w-none sm:flex-row">
+                    <button
+                      onClick={handleKeepPracticing}
+                      className="btn-press flex-1 rounded-xl border-2 border-white/30 bg-white/10 px-4 py-2.5 text-sm font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20"
+                    >
+                      Seguir practicando
+                    </button>
+                    <button
+                      onClick={handleContinue}
+                      className="btn-press flex-1 rounded-xl bg-brand-orange px-4 py-2.5 text-sm font-bold text-white transition-all hover:bg-brand-orange/90"
+                    >
+                      Continuar →
+                    </button>
+                  </div>
+                </div>
+              </div>,
+              document.body
+            )}
+          </div>
+
+          {/* YouTube Video - 1 column wide (smaller), cropped to fill container */}
+          <div className="relative overflow-hidden rounded-2xl bg-black" style={{ paddingBottom: "56.25%" }}>
+            <div
+              className="absolute top-1/2 left-0 w-full"
+              style={{ transform: 'translateY(-50%)', height: '177.78%' }}
+            >
+              <iframe
+                key={videoId}
+                src={iframeSrc}
+                title={sign.label || sign.name}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full border-0"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -2457,7 +4338,7 @@ function useSimpleCamera({ onResults }) {
 }
 
 // Full camera hook for PracticePage - hands, pose, face
-function useCameraMediaPipe({ onResults, enabled = true }) {
+function useCameraMediaPipe({ onResults }) {
   const videoRef  = useRef(null);
   const canvasRef = useRef(null);
   const hlRef        = useRef(null);
@@ -2470,13 +4351,8 @@ function useCameraMediaPipe({ onResults, enabled = true }) {
   const streamRef    = useRef(null); // Store stream reference for cleanup
   const [camReady, setCamReady] = useState(false);
   const [camError, setCamError] = useState(null);
-  // Ref para siempre invocar la ultima version de onResults (evita stale closures
-  // dentro del loop de deteccion, que solo se monta una vez).
-  const onResultsRef = useRef(onResults);
-  onResultsRef.current = onResults;
 
   useEffect(() => {
-    if (!enabled) return;
     let cancelled = false;
 
     async function init() {
@@ -2589,7 +4465,7 @@ function useCameraMediaPipe({ onResults, enabled = true }) {
             }
           }
 
-          if (onResultsRef.current) onResultsRef.current({ handRes, poseRes: lastPoseRef.current, faceRes: lastFaceRef.current });
+          if (onResults) onResults({ handRes, poseRes: lastPoseRef.current, faceRes: lastFaceRef.current });
           rafRef.current = requestAnimationFrame(detect);
         }
         rafRef.current = requestAnimationFrame(detect);
@@ -3006,8 +4882,6 @@ function ConfigErrorPage({ isDark }) {
 }
 
 
-// ΓöÇΓöÇ useVideoFileMediaPipe: procesa un archivo de video con HandLandmarker ΓöÇΓöÇ
-
 function useVideoFileMediaPipe({ onResults, videoFile, videoUrl, onEnded }) {
 
   const videoRef  = useRef(null);
@@ -3070,7 +4944,7 @@ function useVideoFileMediaPipe({ onResults, videoFile, videoUrl, onEnded }) {
             console.log(`[MP] HandLandmarker usando delegate: ${delegate}`);
             break;
           } catch (err) {
-            console.warn(`[MP] delegate ${delegate} fall├│:`, err.message);
+            console.warn(`[MP] delegate ${delegate} fallΓö£Γöé:`, err.message);
           }
         }
 
@@ -3152,7 +5026,7 @@ function useVideoFileMediaPipe({ onResults, videoFile, videoUrl, onEnded }) {
 
 
 
-  // Loop de detecci├│n: corre siempre, solo procesa cuando video est├í activo
+  // Loop de detecciΓö£Γöén: corre siempre, solo procesa cuando video estΓö£├¡ activo
 
   useEffect(() => {
 
@@ -3170,7 +5044,7 @@ function useVideoFileMediaPipe({ onResults, videoFile, videoUrl, onEnded }) {
 
       if (stopped) return;
 
-      // Procesar mientras el video tenga un frame disponible (aunque est├⌐ pausado)
+      // Procesar mientras el video tenga un frame disponible (aunque estΓö£ΓîÉ pausado)
 
       if (vid.readyState >= 2 && vid.videoWidth > 0) {
 
@@ -3178,7 +5052,7 @@ function useVideoFileMediaPipe({ onResults, videoFile, videoUrl, onEnded }) {
 
         const h = vid.videoHeight;
 
-        // El canvas visible usa las dimensiones intr├¡nsecas del video para alinear landmarks
+        // El canvas visible usa las dimensiones intrΓö£┬ínsecas del video para alinear landmarks
         canvas.width = w;
         canvas.height = h;
 
@@ -3201,7 +5075,7 @@ function useVideoFileMediaPipe({ onResults, videoFile, videoUrl, onEnded }) {
           const cropSize = Math.min(w, h);
           const cropX = (w - cropSize) / 2;
           const cropY = (h - cropSize) / 2;
-          const S = 640; // resoluci├│n cuadrada de proceso
+          const S = 640; // resoluciΓö£Γöén cuadrada de proceso
           if (!offRef.current) offRef.current = document.createElement('canvas');
           const off = offRef.current;
           off.width = S; off.height = S;
@@ -3214,7 +5088,7 @@ function useVideoFileMediaPipe({ onResults, videoFile, videoUrl, onEnded }) {
 
           setHandCount(lmsList.length);
 
-          // Diagn├│stico throttled (cada ~1s)
+          // DiagnΓö£Γöéstico throttled (cada ~1s)
           if (Math.floor(now / 1000) !== dbgFrameRef.current) {
             dbgFrameRef.current = Math.floor(now / 1000);
             console.log(`[VIDEO] rs=${vid.readyState} ${vid.videoWidth}x${vid.videoHeight} crop=${Math.round(cropSize)} manos=${lmsList.length} t=${vid.currentTime.toFixed(1)}`);
@@ -3286,7 +5160,7 @@ function useVideoFileMediaPipe({ onResults, videoFile, videoUrl, onEnded }) {
 
 
 
-// ΓöÇΓöÇ Helpers para auto-entrenamiento desde video ΓöÇΓöÇ
+// ╬ô├╢├ç╬ô├╢├ç Helpers para auto-entrenamiento desde video ╬ô├╢├ç╬ô├╢├ç
 
 function segmentFrames(frames, { motionStart = 0.18, stillFrames = 10, minSegLen = 8 } = {}) {
   const feats = frames.map(f => featureFromFingerStates(f.fingerStates));
@@ -3327,7 +5201,7 @@ function signInfoFromFilename(filename) {
   return { sign, category };
 }
 
-// Convierte ruta absoluta del proyecto a URL p├║blica si est├í en public/
+// Convierte ruta absoluta del proyecto a URL pΓö£Γòæblica si estΓö£├¡ en public/
 function pathToPublicUrl(absPath) {
   if (!absPath) return null;
   const lower = absPath.toLowerCase().replace(/\\/g, '/');
@@ -3344,8 +5218,8 @@ async function reloadDynamicPatterns() {
     if (!manifestRes.ok) throw new Error(`No se pudo cargar manifest (${manifestRes.status})`);
     const man = await manifestRes.json();
 
-    // Cargar todas las se├▒as en paralelo: cada se├▒a intenta _1.._20
-    // simultaneamente. Formato principal: .npy (binario, m├ís eficiente).
+    // Cargar todas las seΓö£ΓûÆas en paralelo: cada seΓö£ΓûÆa intenta _1.._20
+    // simultaneamente. Formato principal: .npy (binario, mΓö£├¡s eficiente).
     const tasks = [];
     for (const [cat, signs] of Object.entries(man)) {
       if (!Array.isArray(signs)) continue;
@@ -3379,13 +5253,13 @@ async function reloadDynamicPatterns() {
   return dynamicDetector.getStatus().patternsLoaded;
 }
 
-// ΓöÇΓöÇ DebugPage: diagn├│stico visual de fingerStates + scores ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// ╬ô├╢├ç╬ô├╢├ç DebugPage: diagnΓö£Γöéstico visual de fingerStates + scores ╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç
 
 const ALL_SIGNS = [
 
   ...LSM_ALPHABET.map(([l, tpl]) => ({ name: l, template: tpl, group: 'Abecedario' })),
 
-  ...['1','2','3','4','5','6','7','8','9'].map(n => ({ name: n, template: NUMBER_TEMPLATES[n] || '?????', group: 'N├║meros' })),
+  ...['1','2','3','4','5','6','7','8','9'].map(n => ({ name: n, template: NUMBER_TEMPLATES[n] || '?????', group: 'NΓö£Γòæmeros' })),
 
 ];
 
@@ -3397,7 +5271,7 @@ function DebugPanel({ states, scores, filterG, setFilterG, isDark, shown }) {
 
   const FINGERS   = ['thumb','index','middle','ring','pinky'];
 
-  const FINGER_ES = { thumb:'Pulgar', index:'├ìndice', middle:'Medio', ring:'Anular', pinky:'Me├▒ique' };
+  const FINGER_ES = { thumb:'Pulgar', index:'Γö£├¼ndice', middle:'Medio', ring:'Anular', pinky:'MeΓö£ΓûÆique' };
 
   return (
 
@@ -3423,7 +5297,7 @@ function DebugPanel({ states, scores, filterG, setFilterG, isDark, shown }) {
 
             )}>
 
-              <span className='text-lg'>{ext === true ? '≡ƒƒó' : ext === false ? '≡ƒö┤' : 'ΓÜ¬'}</span>
+              <span className='text-lg'>{ext === true ? 'Γëí╞Æ╞Æ├│' : ext === false ? 'Γëí╞Æ├╢Γöñ' : '╬ô├£┬¼'}</span>
 
               <span className={cx('text-[10px] font-bold text-center leading-tight', isDark ? 'text-[#8AA8B0]' : 'text-brand-muted')}>{FINGER_ES[f]}</span>
 
@@ -3447,13 +5321,13 @@ function DebugPanel({ states, scores, filterG, setFilterG, isDark, shown }) {
 
           {[
 
-            ['Pu├▒o', states.fistTight], ['Palma plana', states.palmFlat],
+            ['PuΓö£ΓûÆo', states.fistTight], ['Palma plana', states.palmFlat],
 
-            ['Pulgar lateral', states.thumbOut], ['PulgarΓåö├¡ndice', states.thumbTouchIndex],
+            ['Pulgar lateral', states.thumbOut], ['Pulgar╬ô├Ñ├╢Γö£┬índice', states.thumbTouchIndex],
 
-            ['PulgarΓåömedio', states.thumbTouchMiddle], ['Mano arriba', states.handUp],
+            ['Pulgar╬ô├Ñ├╢medio', states.thumbTouchMiddle], ['Mano arriba', states.handUp],
 
-            ['Mano abajo', states.handDown], ['Palma a c├ímara', states.palmFacingCamera],
+            ['Mano abajo', states.handDown], ['Palma a cΓö£├¡mara', states.palmFacingCamera],
 
             ['UV juntos', states.uvClose], ['UV separados', states.uvSpread],
 
@@ -3469,7 +5343,7 @@ function DebugPanel({ states, scores, filterG, setFilterG, isDark, shown }) {
 
               <span className={isDark ? 'text-[#8AA8B0]' : 'text-brand-muted'}>{lbl}</span>
 
-              <span className={cx('font-bold', val ? 'text-green-400' : isDark ? 'text-[#5A8A94]' : 'text-[#B0C4CC]')}>{val ? 'S├ì' : 'no'}</span>
+              <span className={cx('font-bold', val ? 'text-green-400' : isDark ? 'text-[#5A8A94]' : 'text-[#B0C4CC]')}>{val ? 'SΓö£├¼' : 'no'}</span>
 
             </div>
 
@@ -3487,7 +5361,7 @@ function DebugPanel({ states, scores, filterG, setFilterG, isDark, shown }) {
 
         <div className='mb-2 flex gap-1'>
 
-          {['Todos','Abecedario','N├║meros'].map(g => (
+          {['Todos','Abecedario','NΓö£Γòæmeros'].map(g => (
 
             <button key={g} onClick={() => setFilterG(g)}
 
@@ -3503,7 +5377,7 @@ function DebugPanel({ states, scores, filterG, setFilterG, isDark, shown }) {
 
         <div className='space-y-0.5 max-h-52 overflow-y-auto'>
 
-          {shown.length === 0 && <p className={cx('py-4 text-center text-xs', isDark ? 'text-[#5A8A94]' : 'text-brand-muted')}>Sin mano detectadaΓÇª</p>}
+          {shown.length === 0 && <p className={cx('py-4 text-center text-xs', isDark ? 'text-[#5A8A94]' : 'text-brand-muted')}>Sin mano detectada╬ô├ç┬¬</p>}
 
           {shown.map(({ name, score, template }) => {
 
@@ -3577,7 +5451,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
   const [signTitle, setSignTitle] = useState('');
 
-  const [speed, setSpeed]     = useState(0.5);      // velocidad de reproducci├│n
+  const [speed, setSpeed]     = useState(0.5);      // velocidad de reproducciΓö£Γöén
 
   const fileInputRef = useRef(null);
 
@@ -3635,7 +5509,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
     setBest(all[0]?.score >= 0.50 ? all[0].name : null);
 
-    // Captura de frames del video (auto-entrenamiento o clasificaci├│n al terminar)
+    // Captura de frames del video (auto-entrenamiento o clasificaciΓö£Γöén al terminar)
     if ((autoTrainRef.current && trainInfoRef.current) || videoOnly) {
       autoFramesRef.current.push({
         fingerStates: s,
@@ -3644,14 +5518,14 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
       });
     }
 
-    // Detecci├│n din├ímica en vivo (solo c├ímara / diagn├│stico).
+    // DetecciΓö£Γöén dinΓö£├¡mica en vivo (solo cΓö£├¡mara / diagnΓö£Γöéstico).
     if (!videoOnly) {
       dynamicDetector.pushFrameInfo(frameInfo(right, left));
       const dyn = dynamicDetector.detect();
       if (dyn?.accepted) dynamicCandidateRef.current = { name: dyn.matched, score: dyn.score };
       setDynamicSign(dyn?.matched || null);
 
-      // Clasificador ONNX (LSTM+Attention) ΓÇö paralelo al DTW
+      // Clasificador ONNX (LSTM+Attention) ╬ô├ç├╢ paralelo al DTW
       if (onnxReady && (right || left)) {
         onnxFramesRef.current.push({
           landmarksRight: right ? right.map(p => ({ x: p.x, y: p.y, z: p.z })) : null,
@@ -3660,7 +5534,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
         });
         if (onnxFramesRef.current.length > 60) onnxFramesRef.current.shift();
         onnxFrameCountRef.current++;
-        // Ejecutar cada 10 frames (~3 veces/seg) con los ├║ltimos 24-60 frames
+        // Ejecutar cada 10 frames (~3 veces/seg) con los Γö£Γòæltimos 24-60 frames
         if (onnxFrameCountRef.current % 10 === 0 && onnxFramesRef.current.length >= 8) {
           const frames = onnxFramesRef.current.slice(-60);
           classifySequence(frames).then(result => {
@@ -3707,11 +5581,11 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
       return;
     }
     setTrainStatus('training');
-    setTrainMsg(`Segmentando ${frames.length} framesΓÇª`);
+    setTrainMsg(`Segmentando ${frames.length} frames╬ô├ç┬¬`);
     const examples = segmentFrames(frames);
     if (examples.length === 0) {
       setTrainStatus('error');
-      setTrainMsg('No se detect├│ movimiento suficiente para segmentar la se├▒a.');
+      setTrainMsg('No se detectΓö£Γöé movimiento suficiente para segmentar la seΓö£ΓûÆa.');
       return;
     }
     try {
@@ -3725,7 +5599,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
       const loaded = await reloadDynamicPatterns();
       setPatternsLoaded(loaded);
       setTrainStatus('done');
-      setTrainMsg(`Γ£à "${info.sign}" entrenada ┬╖ ${data.saved} ejemplo(s) ┬╖ categor├¡a ${info.category}`);
+      setTrainMsg(`╬ô┬ú├á "${info.sign}" entrenada Γö¼Γòû ${data.saved} ejemplo(s) Γö¼Γòû categorΓö£┬ía ${info.category}`);
     } catch (e) {
       setTrainStatus('error');
       setTrainMsg('Error al guardar: ' + e.message);
@@ -3740,10 +5614,10 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
       .map(seg => buildSequence(seg.map(f => frameInfo(f.landmarksRight, f.landmarksLeft)).filter(Boolean)))
       .filter(seq => seq.length > 0);
     const result = dynamicDetector.classifySequences(sequences);
-    setDynamicSign(result?.accepted ? result.matched : 'No estoy seguro: entrena m├ís ejemplos');
+    setDynamicSign(result?.accepted ? result.matched : 'No estoy seguro: entrena mΓö£├¡s ejemplos');
   }, []);
 
-  // Modo c├ímara (solo activo en pesta├▒a c├ímara para no competir con el video por la GPU)
+  // Modo cΓö£├¡mara (solo activo en pestaΓö£ΓûÆa cΓö£├¡mara para no competir con el video por la GPU)
 
   const cam = useCameraMediaPipe({ onResults: tab === 'cam' ? handleResults : undefined, enabled: tab === 'cam' });
 
@@ -3764,7 +5638,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
     dynamicCandidateRef.current = null;
     setDynamicSign(null);
     setTrainStatus(autoTrain ? 'recording' : 'idle');
-    setTrainMsg(autoTrain ? 'Capturando la se├▒a mientras se reproduceΓÇª' : '');
+    setTrainMsg(autoTrain ? 'Capturando la seΓö£ΓûÆa mientras se reproduce╬ô├ç┬¬' : '');
   }, [videoFile, videoUrl, autoTrain]);
 
   useEffect(() => {
@@ -3805,14 +5679,14 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
       <div className={cx('flex items-center justify-between border-b px-6 py-3 gap-4 flex-wrap', isDark ? 'border-brand-line bg-brand-card' : 'border-brand-mist bg-white')}>
 
-        <span className={cx('text-lg font-extrabold shrink-0', isDark ? 'text-white' : 'text-brand-ink')}>🔬 Diagnóstico LSM</span>
+        <span className={cx('text-lg font-extrabold shrink-0', isDark ? 'text-white' : 'text-brand-ink')}>≡ƒö¼ Diagn├│stico LSM</span>
 
         <div className='flex gap-2 flex-wrap items-center'>
 
           {!videoOnly && (
             <div className={cx('flex rounded-lg overflow-hidden border', isDark ? 'border-brand-line' : 'border-brand-mist')}>
 
-              {[['cam','📷 Cámara'],['video','🎬 Video']].map(([t, lbl]) => (
+              {[['cam','≡ƒô╖ C├ímara'],['video','≡ƒÄ¼ Video']].map(([t, lbl]) => (
 
                 <button key={t} onClick={() => { setTab(t); setStates(null); setScores([]); setBest(null); }}
 
@@ -3845,13 +5719,13 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
 
 
-            {/* ΓöÇΓöÇ TAB C├üMARA ΓöÇΓöÇ */}
+            {/* ╬ô├╢├ç╬ô├╢├ç TAB CΓö£├╝MARA ╬ô├╢├ç╬ô├╢├ç */}
 
             {tab === 'cam' && (
 
               <>
 
-                <SectionLabel isDark={isDark}>C├ímara en vivo</SectionLabel>
+                <SectionLabel isDark={isDark}>CΓö£├¡mara en vivo</SectionLabel>
 
                 <div className='relative mt-3 overflow-hidden rounded-xl bg-black' style={{ aspectRatio: '4/3' }}>
 
@@ -3875,7 +5749,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                     <div className='absolute inset-0 flex items-center justify-center'>
 
-                      <span className={cx('text-xs animate-pulse', isDark ? 'text-[#5A8A94]' : 'text-brand-muted')}>Iniciando c├ímaraΓÇª</span>
+                      <span className={cx('text-xs animate-pulse', isDark ? 'text-[#5A8A94]' : 'text-brand-muted')}>Iniciando cΓö£├¡mara╬ô├ç┬¬</span>
 
                     </div>
 
@@ -3889,7 +5763,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
 
 
-            {/* ΓöÇΓöÇ TAB VIDEO ΓöÇΓöÇ */}
+            {/* ╬ô├╢├ç╬ô├╢├ç TAB VIDEO ╬ô├╢├ç╬ô├╢├ç */}
 
             {tab === 'video' && (
 
@@ -3903,7 +5777,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                     className='rounded-lg bg-brand-teal px-3 py-1 text-xs font-bold text-white hover:bg-brand-cyan transition'>
 
-                    ≡ƒôé Cargar video
+                    Γëí╞Æ├┤├⌐ Cargar video
 
                   </button>
 
@@ -3915,7 +5789,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
 
 
-                {/* ΓöÇΓöÇ Cargar por ruta / URL ΓöÇΓöÇ */}
+                {/* ╬ô├╢├ç╬ô├╢├ç Cargar por ruta / URL ╬ô├╢├ç╬ô├╢├ç */}
                 <div className='mt-3 flex gap-2'>
                   <input
                     type='text'
@@ -3933,7 +5807,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                 {videoOnly && (
                   <div className={cx('mt-3 rounded-xl border p-3', isDark ? 'border-brand-line bg-brand-deep/50' : 'border-brand-mist bg-white')}>
-                    <label className={cx('block text-xs font-bold', isDark ? 'text-white' : 'text-brand-ink')}>Nombre de la se├▒a para entrenar</label>
+                    <label className={cx('block text-xs font-bold', isDark ? 'text-white' : 'text-brand-ink')}>Nombre de la seΓö£ΓûÆa para entrenar</label>
                     <div className='mt-2 flex gap-2'>
                       <input
                         type='text'
@@ -3947,32 +5821,32 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
                         disabled={!trainInfo}
                         className={cx('rounded-lg px-3 py-2 text-xs font-bold', autoTrain ? 'bg-brand-orange text-white' : 'bg-brand-teal text-white', !trainInfo && 'opacity-40')}
                       >
-                        {autoTrain ? 'Entrenar al terminar: S├¡' : 'Entrenar al terminar'}
+                        {autoTrain ? 'Entrenar al terminar: SΓö£┬í' : 'Entrenar al terminar'}
                       </button>
                     </div>
                     <p className={cx('mt-2 text-[10px]', isDark ? 'text-[#8AA8B0]' : 'text-brand-muted')}>
-                      Escribe el nombre, activa el entrenamiento y reproduce el video completo una vez. Luego desact├¡valo y repite el video para probar el reconocimiento.
+                      Escribe el nombre, activa el entrenamiento y reproduce el video completo una vez. Luego desactΓö£┬ívalo y repite el video para probar el reconocimiento.
                     </p>
                     {trainStatus !== 'idle' && trainMsg && <div className={cx('mt-2 rounded-lg px-2 py-1.5 text-[11px] font-semibold', trainStatus === 'done' ? 'bg-green-500/15 text-green-400' : trainStatus === 'error' ? 'bg-red-500/15 text-red-400' : isDark ? 'bg-brand-card text-[#8AA8B0]' : 'bg-brand-cream text-brand-muted')}>{trainMsg}</div>}
                   </div>
                 )}
 
-                {/* ΓöÇΓöÇ Panel auto-entrenamiento ΓöÇΓöÇ */}
+                {/* ╬ô├╢├ç╬ô├╢├ç Panel auto-entrenamiento ╬ô├╢├ç╬ô├╢├ç */}
                 {!videoOnly && <div className={cx('mt-3 rounded-xl border p-3', isDark ? 'border-brand-line bg-brand-deep/50' : 'border-brand-mist bg-white')}> 
                   <div className='flex items-center justify-between gap-2'>
-                    <span className={cx('text-xs font-bold', isDark ? 'text-white' : 'text-brand-ink')}>≡ƒÄô Auto-entrenamiento</span>
+                    <span className={cx('text-xs font-bold', isDark ? 'text-white' : 'text-brand-ink')}>Γëí╞Æ├ä├┤ Auto-entrenamiento</span>
                     <label className='flex items-center gap-1.5 cursor-pointer'>
                       <input type='checkbox' checked={autoTrain} onChange={(e) => setAutoTrain(e.target.checked)} className='accent-brand-teal' />
                       <span className={cx('text-[10px] font-bold', isDark ? 'text-[#8AA8B0]' : 'text-brand-muted')}>Entrenar al terminar</span>
                     </label>
                   </div>
                   <p className={cx('mt-1 text-[10px] leading-snug', isDark ? 'text-[#5A8A94]' : 'text-brand-muted')}>
-                    El video debe estar en <b>public/videos/</b> para cargarse por URL, o usa el bot├│n ≡ƒôé. Se entrena con el nombre del archivo.
+                    El video debe estar en <b>public/videos/</b> para cargarse por URL, o usa el botΓö£Γöén Γëí╞Æ├┤├⌐. Se entrena con el nombre del archivo.
                   </p>
                   {trainInfo && (
                     <div className='mt-2 flex flex-wrap items-center gap-2'>
                       <span className={cx('rounded-lg px-2 py-1 text-xs font-extrabold', isDark ? 'bg-brand-teal/20 text-brand-cyan' : 'bg-brand-teal/10 text-brand-teal')}>
-                        Se├▒a: {trainInfo.sign}
+                        SeΓö£ΓûÆa: {trainInfo.sign}
                       </span>
                       <span className={cx('rounded-lg px-2 py-0.5 text-[10px] font-bold', isDark ? 'bg-brand-card text-[#8AA8B0]' : 'bg-brand-cream text-brand-muted')}>
                         {trainInfo.category}
@@ -3980,7 +5854,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
                       {!autoTrain && (
                         <button onClick={finishAutoTrain}
                           className='rounded-lg bg-brand-orange px-3 py-1 text-xs font-bold text-white hover:opacity-80 transition'>
-                          ≡ƒÄô Entrenar ahora
+                          Γëí╞Æ├ä├┤ Entrenar ahora
                         </button>
                       )}
                     </div>
@@ -3992,7 +5866,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
                       trainStatus === 'training' ? 'bg-brand-orange/15 text-brand-orange ring-1 ring-brand-orange/40' :
                       isDark ? 'bg-brand-card text-[#8AA8B0]' : 'bg-brand-cream text-brand-muted'
                     )}>
-                      {trainStatus === 'training' && <span className='animate-pulse'>ΓÅ│ </span>}
+                      {trainStatus === 'training' && <span className='animate-pulse'>╬ô├àΓöé </span>}
                       {trainMsg}
                     </div>
                   )}
@@ -4012,11 +5886,11 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                     )}>
 
-                    <span className='text-4xl'>≡ƒÄ¼</span>
+                    <span className='text-4xl'>Γëí╞Æ├ä┬╝</span>
 
                     <span className='text-sm font-semibold'>Haz clic para seleccionar un video</span>
 
-                    <span className='text-xs opacity-60'>MP4, MOV, WebMΓÇª</span>
+                    <span className='text-xs opacity-60'>MP4, MOV, WebM╬ô├ç┬¬</span>
 
                   </div>
 
@@ -4036,13 +5910,13 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
 
 
-                      {/* Se├▒a detectada */}
+                      {/* SeΓö£ΓûÆa detectada */}
 
                       {best && (
 
                         <div className='absolute top-3 left-3 rounded-xl bg-green-600/90 px-4 py-1.5 text-center backdrop-blur'>
 
-                          <div className='text-[9px] font-bold uppercase tracking-widest text-green-200'>Est├ítica</div>
+                          <div className='text-[9px] font-bold uppercase tracking-widest text-green-200'>EstΓö£├¡tica</div>
 
                           <div className='text-3xl font-extrabold text-white leading-none'>{best}</div>
 
@@ -4052,11 +5926,11 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                       <div className={cx('absolute top-3 right-3 rounded-xl px-4 py-1.5 text-center backdrop-blur', dynamicSign ? 'bg-green-600/90' : 'bg-black/60')}>
 
-                        <div className={cx('text-[9px] font-bold uppercase tracking-widest', dynamicSign ? 'text-green-200' : 'text-[#A8CDD6]')}>Detector din├ímico</div>
+                        <div className={cx('text-[9px] font-bold uppercase tracking-widest', dynamicSign ? 'text-green-200' : 'text-[#A8CDD6]')}>Detector dinΓö£├¡mico</div>
 
-                        <div className='text-lg font-extrabold text-white leading-none'>{dynamicSign || (videoOnly ? 'Analizando videoΓÇª' : 'Esperando gestoΓÇª')}</div>
+                        <div className='text-lg font-extrabold text-white leading-none'>{dynamicSign || (videoOnly ? 'Analizando video╬ô├ç┬¬' : 'Esperando gesto╬ô├ç┬¬')}</div>
 
-                        <div className='mt-1 text-[9px] text-[#D4EEF4]'>{patternsLoaded.length} se├▒a(s) entrenada(s) cargada(s)</div>
+                        <div className='mt-1 text-[9px] text-[#D4EEF4]'>{patternsLoaded.length} seΓö£ΓûÆa(s) entrenada(s) cargada(s)</div>
 
                       </div>
 
@@ -4066,7 +5940,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
                       <div className={cx('absolute top-20 right-3 rounded-xl px-4 py-1.5 text-center backdrop-blur', onnxSign ? 'bg-purple-600/90' : 'bg-black/60')}>
                         <div className={cx('text-[9px] font-bold uppercase tracking-widest', onnxSign ? 'text-purple-200' : 'text-[#A8CDD6]')}>LSTM+Attention</div>
                         <div className='text-lg font-extrabold text-white leading-none'>
-                          {onnxReady ? (onnxSign || 'Esperando gestoΓÇª') : 'Cargando modeloΓÇª'}
+                          {onnxReady ? (onnxSign || 'Esperando gesto╬ô├ç┬¬') : 'Cargando modelo╬ô├ç┬¬'}
                         </div>
                         {onnxTop5.length > 0 && (
                           <div className='mt-1 space-y-0.5'>
@@ -4085,7 +5959,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                         <div className={vid.handCount > 0 ? 'text-green-300' : 'text-red-300'}>
 
-                          {vid.ready ? (vid.handCount > 0 ? `Manos: ${vid.handCount}` : 'Sin manos detectadas') : 'MediaPipe cargandoΓÇª'}
+                          {vid.ready ? (vid.handCount > 0 ? `Manos: ${vid.handCount}` : 'Sin manos detectadas') : 'MediaPipe cargando╬ô├ç┬¬'}
 
                         </div>
 
@@ -4113,7 +5987,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                         className='rounded-lg bg-brand-teal px-4 py-2 text-xs font-bold text-white hover:bg-brand-cyan transition min-w-[70px]'>
 
-                        {vid.playing ? 'ΓÅ╕ Pausar' : 'Γû╢ Play'}
+                        {vid.playing ? '╬ô├àΓòò Pausar' : '╬ô├╗Γòó Play'}
 
                       </button>
 
@@ -4123,7 +5997,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                         className={cx('rounded-lg px-3 py-2 text-xs font-bold transition', isDark ? 'bg-brand-deep text-[#5A8A94] hover:text-white' : 'bg-brand-cream text-brand-muted')}>
 
-                        ΓÅ« Reiniciar
+                        ╬ô├à┬½ Reiniciar
 
                       </button>
 
@@ -4139,7 +6013,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                               speed === s ? 'bg-brand-orange text-white' : isDark ? 'bg-brand-deep text-[#5A8A94]' : 'bg-brand-cream text-brand-muted'
 
-                            )}>{s}├ù</button>
+                            )}>{s}Γö£├╣</button>
 
                         ))}
 
@@ -4151,7 +6025,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                       className={cx('mt-2 w-full rounded-lg py-1 text-[10px] font-bold', isDark ? 'text-[#5A8A94] hover:text-white' : 'text-brand-muted hover:text-brand-ink')}>
 
-                      ≡ƒùæ Cambiar video
+                      Γëí╞Æ├╣├ª Cambiar video
 
                     </button>
 
@@ -4165,7 +6039,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
 
 
-            {/* Panel de diagn├│stico est├ítico, no se muestra en la p├ígina exclusiva de videos */}
+            {/* Panel de diagnΓö£Γöéstico estΓö£├¡tico, no se muestra en la pΓö£├¡gina exclusiva de videos */}
 
             {!videoOnly && <DebugPanel states={states} scores={scores} filterG={filterG} setFilterG={setFilterG} isDark={isDark} shown={shown} />}
 
@@ -4185,7 +6059,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
               <SectionLabel isDark={isDark}>Ranking completo</SectionLabel>
 
-              {best && <span className='rounded-full bg-green-500/20 px-3 py-1 text-xs font-extrabold text-green-400 ring-1 ring-green-500/40'>Γ£ô {best}</span>}
+              {best && <span className='rounded-full bg-green-500/20 px-3 py-1 text-xs font-extrabold text-green-400 ring-1 ring-green-500/40'>╬ô┬ú├┤ {best}</span>}
 
             </div>
 
@@ -4195,7 +6069,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                 <p className={cx('py-12 text-center text-sm', isDark ? 'text-[#5A8A94]' : 'text-brand-muted')}>
 
-                  {tab === 'cam' ? 'Pon una mano frente a la c├ímaraΓÇª' : 'Carga un video y dale PlayΓÇª'}
+                  {tab === 'cam' ? 'Pon una mano frente a la cΓö£├¡mara╬ô├ç┬¬' : 'Carga un video y dale Play╬ô├ç┬¬'}
 
                 </p>
 
@@ -4260,6 +6134,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
   );
 
 }
+
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -4330,6 +6205,8 @@ function App() {
     );
   }
 
+  if (authConfigError) return <ConfigErrorPage isDark={isDark} />;
+
   // Developer/training pages - accessible without auth, con AppHeader uniforme
   if (path === "/debug") return (
     <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
@@ -4368,19 +6245,13 @@ function App() {
     </div>
   );
 
-  // Auth pages (only if Supabase is configured)
-  if (authConfigError) return <ConfigErrorPage isDark={isDark} />;
+  // Auth pages
+  if (path === "/" || path === "/login") return <AuthPage mode="login" isDark={isDark} setIsDark={setIsDark} navigate={navigate} />;
+  if (path === "/signup") return <AuthPage mode="signup" isDark={isDark} setIsDark={setIsDark} navigate={navigate} />;
   if (path === "/confirm-email") return <EmailConfirmationPage isDark={isDark} setIsDark={setIsDark} navigate={navigate} email={state?.email || ""} />;
 
-  // Show auth page for login/signup when not authenticated
+  // Protected routes - redirect to login if not authenticated
   if (!user) {
-    if (path === "/" || path === "/login") {
-      return <AuthPage mode="login" isDark={isDark} setIsDark={setIsDark} navigate={navigate} />;
-    }
-    if (path === "/signup") {
-      return <AuthPage mode="signup" isDark={isDark} setIsDark={setIsDark} navigate={navigate} />;
-    }
-    // Redirect to login for any other protected route
     navigate("/");
     return null;
   }
@@ -4417,6 +6288,42 @@ function App() {
     return <LessonPage isDark={isDark} navigate={navigate} />;
   }
 
+  if (path === "/profile") {
+    return (
+      <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-[#F8F5EE]")}>
+        <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
+        <ProfilePage isDark={isDark} navigate={navigate} />
+      </div>
+    );
+  }
+
+  if (path === "/achievements") {
+    return (
+      <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-[#F8F5EE]")}>
+        <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
+        <AchievementsPage isDark={isDark} navigate={navigate} />
+      </div>
+    );
+  }
+
+  if (path === "/help") {
+    return (
+      <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-[#F8F5EE]")}>
+        <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
+        <HelpPage isDark={isDark} navigate={navigate} />
+      </div>
+    );
+  }
+
+  if (path === "/about") {
+    return (
+      <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-[#F8F5EE]")}>
+        <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
+        <AboutPage isDark={isDark} navigate={navigate} />
+      </div>
+    );
+  }
+
   return (
     <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-brand-cream")}>
       <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
@@ -4431,5 +6338,6 @@ createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <App />
     <Analytics />
+    <SpeedInsights />
   </AuthProvider>
 );

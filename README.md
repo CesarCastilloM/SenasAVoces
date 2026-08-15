@@ -2,7 +2,7 @@
 
 **Academia web interactiva para aprender Lengua de Señas Mexicana (LSM)** con
 reconocimiento de señas por cámara directamente en el navegador (MediaPipe +
-ONNX Runtime Web), progreso de usuario y práctica inmersiva.
+ONNX Runtime Web), progreso de usuario, logros y práctica inmersiva.
 
 > El reconocimiento corre 100% en el navegador: no hay backend Flask ni
 > guante hardware en el flujo activo. El pipeline de Python solo se usa
@@ -24,26 +24,31 @@ SAVb/                           # Raíz del proyecto (git repo + workspace)
 ├── brand-spec.md               # Especificación de marca
 │
 ├── src/                        # App React (frontend activo)
-│   ├── main.jsx                # App principal + páginas (Dashboard, Learn, Lesson, Practice, Debug)
-│   ├── model_test_page.jsx     # Página: probar modelo ONNX
-│   ├── train_page.jsx          # Página: entrenar nuevas señas (cámara → /api/train-sign)
-│   ├── retrain_page.jsx        # Página: re-extraer landmarks desde videos
-│   ├── training_viewer_page.jsx# Página: visualizar datos de entrenamiento
-│   ├── lessons_glosario.js     # Definición de lecciones y glosario LSM
-│   ├── lsm_detector.js         # Detector de letras estáticas (finger states + scoring)
-│   ├── dynamic_sign_detector.js# Detector de señas dinámicas (DTW sobre secuencias)
-│   ├── onnx_classifier.js      # Wrapper de ONNX Runtime Web (clasificador LSTM)
-│   ├── npy_parser.js           # Parser de archivos .npy en el navegador
+│   ├── main.jsx                # App principal + páginas (Dashboard, Learn, Lesson,
+│   │                           #   Practice, Profile, Achievements, Help, About,
+│   │                           #   Debug, ModelTest, Train, Retrain, TrainingViewer)
 │   ├── components/             # AuthPage, EmailConfirmationPage
 │   ├── contexts/AuthContext.jsx# Contexto de autenticación (Supabase)
+│   ├── data/lessons_glosario.js# Definición de lecciones y glosario LSM
 │   ├── lib/supabaseClient.ts   # Cliente Supabase
-│   ├── services/progressService.js # Servicio de progreso (Supabase)
-│   └── styles/styles.css       # Estilos globales
+│   ├── pages/                  # Páginas de ML/entrenamiento
+│   │   ├── model_test_page.jsx     # Probar modelo ONNX
+│   │   ├── train_page.jsx          # Entrenar nuevas señas (cámara → /api/train-sign)
+│   │   ├── retrain_page.jsx        # Re-extraer landmarks desde videos
+│   │   └── training_viewer_page.jsx# Visualizar datos de entrenamiento
+│   ├── services/progressService.js # Servicio de progreso y logros (Supabase)
+│   ├── styles/styles.css       # Estilos globales
+│   └── utils/                  # Lógica de detección e inferencia
+│       ├── lsm_detector.js         # Detector de letras estáticas (finger states + scoring)
+│       ├── dynamic_sign_detector.js# Detector de señas dinámicas (DTW sobre secuencias)
+│       ├── onnx_classifier.js      # Wrapper de ONNX Runtime Web (clasificador LSTM)
+│       └── npy_parser.js           # Parser de archivos .npy en el navegador
 │
 ├── public/                     # Assets estáticos servidos al navegador
 │   ├── sign_model.onnx         # Modelo LSTM exportado (inferencia en navegador)
 │   ├── sign_labels.json        # Mapa idx → nombre de seña
 │   ├── favicon.png
+│   ├── isotipo b.png           # Isotipo para favicons
 │   ├── logo-senas-a-voces*.png
 │   ├── ort-wasm-simd-threaded*.wasm  # WASM de ONNX Runtime Web
 │   ├── videos/signs/           # Videos de referencia por seña (228 .mp4)
@@ -105,9 +110,15 @@ SAVb/                           # Raíz del proyecto (git repo + workspace)
 │                    └─ FaceLandmarker  (468 landmarks)       │
 │                                                             │
 │  Detección:                                                 │
-│   ├─ Letras estáticas  → lsm_detector.js (finger states)    │
-│   ├─ Señas dinámicas   → dynamic_sign_detector.js (DTW)     │
-│   └─ Clasificador LSTM → onnx_classifier.js (ONNX Web)      │
+│   ├─ Letras estáticas  → utils/lsm_detector.js              │
+│   ├─ Señas dinámicas   → utils/dynamic_sign_detector.js     │
+│   └─ Clasificador LSTM → utils/onnx_classifier.js (ONNX)    │
+│                                                             │
+│  Páginas:                                                   │
+│   ├─ Academia: Dashboard, Learn, Lesson, Practice,          │
+│   │           Profile, Achievements, Help, About            │
+│   └─ ML/Dev:  ModelTest, Train, Retrain, TrainingViewer,    │
+│               Debug                                         │
 │                                                             │
 │  Progreso/Auth: Supabase (progressService.js, AuthContext)  │
 │                                                             │
@@ -162,6 +173,30 @@ python python_scripts/export_onnx.py
 
 ---
 
+## Rutas de la app
+
+| Ruta              | Auth | Descripción                                  |
+|-------------------|------|----------------------------------------------|
+| `/` `/login`      | No   | Página de acceso (login)                     |
+| `/signup`         | No   | Registro de cuenta                           |
+| `/confirm-email`  | No   | Confirmación de email tras registro          |
+| `/dashboard`      | Sí   | Dashboard con progreso y racha               |
+| `/learn`          | Sí   | Ruta de aprendizaje (módulos y niveles)      |
+| `/lesson`         | Sí   | Lección activa con práctica de señas         |
+| `/practice`       | Sí   | Práctica inmersiva con cámara                |
+| `/profile`        | Sí   | Perfil del usuario                           |
+| `/achievements`   | Sí   | Logros y badges                              |
+| `/help`           | Sí   | Ayuda y soporte                              |
+| `/about`          | Sí   | Acerca de la academia                        |
+| `/model-test`     | No   | Probar modelo ONNX (dev)                     |
+| `/train`          | No   | Entrenar nuevas señas (dev)                  |
+| `/retrain`        | No   | Re-extraer landmarks (dev)                   |
+| `/training-viewer`| No   | Visualizar datos de entrenamiento (dev)      |
+| `/debug`          | No   | Debug de detección (dev)                     |
+| `/video-test`     | No   | Test de video (dev)                          |
+
+---
+
 ## Notas
 
 - `_archive/` contiene código legacy y de hardware (guante ESP32, app Flutter,
@@ -172,3 +207,6 @@ python python_scripts/export_onnx.py
   estáticos (ya generados en `public/training_data/`).
 - Los modelos MediaPipe se cargan desde CDN de Google Storage en tiempo de
   ejecución; `mediapipe_models/` es solo una copia local de referencia.
+- El frontend está alineado con el repo de referencia
+  (https://github.com/rodrmilano00/senas-a-voces) y se le agregaron las
+  funcionalidades de ML/entrenamiento propias de este proyecto.

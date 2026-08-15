@@ -72,6 +72,30 @@ export async function fetchModuleProgress(userId) {
   }
 }
 
+// Fetch the set of sign names a user has practiced (for per-sign progress indicators)
+export async function fetchPracticedSigns(userId, moduleId) {
+  if (!hasSupabase()) return new Set();
+
+  try {
+    let query = supabase
+      .from('sign_practice')
+      .select('sign_name, module')
+      .eq('user_id', userId);
+
+    if (moduleId) {
+      query = query.eq('module', moduleId);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    return new Set((data || []).map((r) => r.sign_name));
+  } catch (error) {
+    console.error('Error fetching practiced signs:', error);
+    return new Set();
+  }
+}
+
 // Update user progress after completing a sign
 export async function updateSignProgress(userId, signName, module, accuracy, timeSpent) {
   if (!hasSupabase()) return { success: false, error: new Error('Supabase is not configured') };
@@ -570,5 +594,102 @@ export async function updatePracticeDays(userId) {
   } catch (error) {
     console.error('Error updating practice days:', error);
     return { success: false, error };
+  }
+}
+
+// ─── Achievements / Badges system ───────────────────────────────────────────
+
+// Badge definitions — each has an id, title, description, icon, tier, and an
+// `evaluate` function that receives a stats object and returns true/false.
+export const ACHIEVEMENT_DEFS = [
+  // ── Racha (Streak) ──
+  { id: 'streak_3',   title: 'Llama encendida',  desc: 'Mantén una racha de 3 días seguidos',         icon: 'flame',  tier: 'bronze',   evaluate: s => s.streakDays >= 3 },
+  { id: 'streak_7',   title: 'Fuego grupal',      desc: 'Mantén una racha de 7 días seguidos',         icon: 'flame',  tier: 'silver',   evaluate: s => s.streakDays >= 7 },
+  { id: 'streak_30',  title: 'Incombustible',     desc: 'Mantén una racha de 30 días seguidos',        icon: 'flame',  tier: 'gold',     evaluate: s => s.streakDays >= 30 },
+
+  // ── Señas aprendidas ──
+  { id: 'signs_10',   title: 'Primeros pasos',    desc: 'Aprende 10 señas en total',                   icon: 'book',   tier: 'bronze',   evaluate: s => s.totalSigns >= 10 },
+  { id: 'signs_50',   title: 'Vocabulario creciente', desc: 'Aprende 50 señas en total',               icon: 'book',   tier: 'silver',   evaluate: s => s.totalSigns >= 50 },
+  { id: 'signs_100',  title: 'Centenario',        desc: 'Aprende 100 señas en total',                  icon: 'book',   tier: 'gold',     evaluate: s => s.totalSigns >= 100 },
+
+  // ── Módulos completados ──
+  { id: 'module_1',   title: 'Primer módulo',     desc: 'Completa tu primer módulo',                   icon: 'trophy', tier: 'bronze',   evaluate: s => s.modulesCompleted >= 1 },
+  { id: 'module_3',   title: 'Estudiante dedicado', desc: 'Completa 3 módulos',                        icon: 'trophy', tier: 'silver',   evaluate: s => s.modulesCompleted >= 3 },
+  { id: 'module_all', title: 'Maestro del lenguaje', desc: 'Completa todos los módulos disponibles',    icon: 'trophy', tier: 'gold',     evaluate: s => s.modulesCompleted >= s.totalModules },
+
+  // ── Precisión ──
+  { id: 'acc_80',     title: 'Manos precisas',    desc: 'Alcanza un 80% de precisión promedio',        icon: 'target', tier: 'bronze',   evaluate: s => s.avgAccuracy >= 0.80 },
+  { id: 'acc_90',     title: 'Quirúrgico',        desc: 'Alcanza un 90% de precisión promedio',        icon: 'target', tier: 'silver',   evaluate: s => s.avgAccuracy >= 0.90 },
+  { id: 'acc_95',     title: 'Perfeccionista',    desc: 'Alcanza un 95% de precisión promedio',        icon: 'target', tier: 'gold',     evaluate: s => s.avgAccuracy >= 0.95 },
+
+  // ── Días de práctica ──
+  { id: 'days_5',     title: 'Constancia',        desc: 'Practica durante 5 días diferentes',          icon: 'check',  tier: 'bronze',   evaluate: s => s.practiceDays >= 5 },
+  { id: 'days_25',    title: 'Hábito formado',    desc: 'Practica durante 25 días diferentes',         icon: 'check',  tier: 'silver',   evaluate: s => s.practiceDays >= 25 },
+  { id: 'days_100',   title: 'Disciplina absoluta', desc: 'Practica durante 100 días diferentes',      icon: 'check',  tier: 'gold',     evaluate: s => s.practiceDays >= 100 },
+
+  // ── Tiempo de práctica ──
+  { id: 'time_60',    title: 'Minuto a minuto',   desc: 'Acumula 60 minutos de práctica',              icon: 'chart',  tier: 'bronze',   evaluate: s => s.totalPracticeTime >= 3600 },
+  { id: 'time_300',   title: 'Inmersión total',   desc: 'Acumula 5 horas de práctica',                 icon: 'chart',  tier: 'silver',   evaluate: s => s.totalPracticeTime >= 18000 },
+  { id: 'time_600',   title: 'Maratonista',       desc: 'Acumula 10 horas de práctica',                icon: 'chart',  tier: 'gold',     evaluate: s => s.totalPracticeTime >= 36000 },
+];
+
+// Evaluate all achievements against real user stats.
+// Returns an array of { ...def, unlocked: boolean, progress: number, target: number }
+export function evaluateAchievements(stats) {
+  return ACHIEVEMENT_DEFS.map((def) => {
+    const unlocked = def.evaluate(stats);
+    return { ...def, unlocked };
+  });
+}
+
+// Gather all stats needed for achievement evaluation from Supabase + context data
+export async function getAchievementStats(userId, userProgress, moduleProgress, totalModules) {
+  if (!hasSupabase()) {
+    return {
+      streakDays: 0, totalSigns: 0, modulesCompleted: 0, totalModules: totalModules || 0,
+      avgAccuracy: 0, practiceDays: 0, totalPracticeTime: 0,
+    };
+  }
+
+  try {
+    // Count unique practiced signs
+    const { data: signData, error: signError } = await supabase
+      .from('sign_practice')
+      .select('sign_name, practice_date, accuracy, time_spent')
+      .eq('user_id', userId);
+
+    if (signError) throw signError;
+
+    const uniqueSigns = new Set(signData?.map(s => s.sign_name) || []).size;
+    const uniqueDays = new Set(signData?.map(s => new Date(s.practice_date).toDateString()) || []).size;
+    const totalTime = signData?.reduce((sum, s) => sum + (s.time_spent || 0), 0) || 0;
+    const avgAcc = signData && signData.length > 0
+      ? signData.reduce((sum, s) => sum + (s.accuracy || 0), 0) / signData.length
+      : 0;
+
+    const modulesCompleted = moduleProgress?.filter(
+      mp => (mp.signs_completed || 0) >= (mp.total_signs || 0)
+    ).length || 0;
+
+    return {
+      streakDays: userProgress?.streak_days || 0,
+      totalSigns: uniqueSigns || userProgress?.total_signs_learned || 0,
+      modulesCompleted,
+      totalModules: totalModules || 0,
+      avgAccuracy: avgAcc || userProgress?.average_accuracy || 0,
+      practiceDays: uniqueDays || userProgress?.practice_days || 0,
+      totalPracticeTime: totalTime || userProgress?.total_practice_time || 0,
+    };
+  } catch (error) {
+    console.error('Error fetching achievement stats:', error);
+    return {
+      streakDays: userProgress?.streak_days || 0,
+      totalSigns: userProgress?.total_signs_learned || 0,
+      modulesCompleted: 0,
+      totalModules: totalModules || 0,
+      avgAccuracy: userProgress?.average_accuracy || 0,
+      practiceDays: userProgress?.practice_days || 0,
+      totalPracticeTime: userProgress?.total_practice_time || 0,
+    };
   }
 }

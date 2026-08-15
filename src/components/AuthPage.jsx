@@ -68,13 +68,12 @@ function WaveBackground({ isDark }) {
 
 export default function AuthPage({ mode, isDark, setIsDark, navigate }) {
   const isSignup = mode === "signup";
-  const { signIn, signUp, signInWithGoogle, resetPassword } = useAuth();
+  const { signIn, signUp, signInWithGoogle } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
-  const [resetSent, setResetSent] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -305,24 +304,8 @@ export default function AuthPage({ mode, isDark, setIsDark, navigate }) {
                     <input type="checkbox" className="h-4 w-4 accent-brand-teal" />
                     Recordarme
                   </label>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      if (!formData.email) {
-                        setError("Ingresa tu correo para restablecer la contraseña");
-                        return;
-                      }
-                      setError("");
-                      setResetSent(true);
-                      const { error } = await resetPassword(formData.email);
-                      if (error) {
-                        setError(error.message || "Error al enviar el correo");
-                        setResetSent(false);
-                      }
-                    }}
-                    className={`text-xs font-semibold ${isDark ? "text-brand-cyan" : "text-brand-teal"}`}
-                  >
-                    {resetSent ? "Correo enviado ✓" : "¿Olvidaste tu contraseña?"}
+                  <button type="button" className={`text-xs font-semibold ${isDark ? "text-brand-cyan" : "text-brand-teal"}`}>
+                    ¿Olvidaste tu contraseña?
                   </button>
                 </div>
               )}

@@ -12,6 +12,7 @@
     "@mediapipe/tasks-vision": "^0.10.35",
     "@supabase/supabase-js": "^2.110.3",
     "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.20",
     "mpegts.js": "^1.8.0",
