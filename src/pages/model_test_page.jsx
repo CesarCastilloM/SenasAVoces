@@ -7,7 +7,7 @@
 // senas entre si, viendo el ranking completo en vivo.
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { dynamicDetector, frameInfo, splitHands } from "./dynamic_sign_detector.js";
+import { dynamicDetector, frameInfo, splitHands } from "../utils/dynamic_sign_detector.js";
 
 function cx(...classes) {
   return classes.filter(Boolean).join(" ");

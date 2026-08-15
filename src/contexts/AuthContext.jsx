@@ -242,19 +242,21 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const resetPassword = async (email) => {
-    if (!supabase) {
-      return { error: new Error(authConfigError) };
-    }
-
+  const updateProfile = async (updates) => {
+    if (!supabase || !user) return { error: 'No user' };
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/`,
-      });
+      const { data, error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', user.id)
+        .select()
+        .single();
       if (error) throw error;
-      return { error: null };
+      setProfile(data);
+      return { data, error: null };
     } catch (error) {
-      return { error };
+      console.error('Error updating profile:', error);
+      return { data: null, error };
     }
   };
 
@@ -270,7 +272,7 @@ export function AuthProvider({ children }) {
     signIn,
     signInWithGoogle,
     signOut,
-    resetPassword,
+    updateProfile,
     refreshPracticeHistory: () => user && fetchPracticeHistory(user.id),
   };
 
