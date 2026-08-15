@@ -56,40 +56,6 @@ function trainSignPlugin() {
         }
       });
 
-      server.middlewares.use("/api/raw-video", (req, res) => {
-        const pathname = decodeURIComponent((req.url || "/").split("?")[0]);
-        const requested = pathname.replace(/^\/+/, "");
-        if (!requested) { sendJson(res, 400, { ok: false, error: "Falta nombre de video" }); return; }
-        const rawDir = path.resolve(__dirname, "python_pipeline", "videos_crudos", "MP4");
-        // Buscar recursivamente el archivo
-        function findFile(dir, name) {
-          const lower = name.toLowerCase();
-          for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-            if (entry.isDirectory()) {
-              const found = findFile(path.join(dir, entry.name), name);
-              if (found) return found;
-            } else if (entry.name.toLowerCase() === lower) {
-              return path.join(dir, entry.name);
-            }
-          }
-          return null;
-        }
-        // Probar con el nombre exacto y con extensión .mov
-        let filePath = findFile(rawDir, requested);
-        if (!filePath && !requested.match(/\.[a-z0-9]+$/i)) {
-          filePath = findFile(rawDir, requested + ".mov");
-        }
-        if (!filePath && !requested.match(/\.[a-z0-9]+$/i)) {
-          filePath = findFile(rawDir, requested + ".mp4");
-        }
-        if (!filePath) { sendJson(res, 404, { ok: false, error: "Video no encontrado" }); return; }
-        const stat = fs.statSync(filePath);
-        res.setHeader("Content-Type", filePath.endsWith(".mov") ? "video/quicktime" : "video/mp4");
-        res.setHeader("Content-Length", stat.size);
-        res.setHeader("Accept-Ranges", "bytes");
-        fs.createReadStream(filePath).pipe(res);
-      });
-
       server.middlewares.use("/api/train-sign", async (req, res) => {
         if (req.method !== "POST") { sendJson(res, 405, { ok: false, error: "Method Not Allowed" }); return; }
         try {
