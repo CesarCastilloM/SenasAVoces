@@ -48,10 +48,9 @@ VIDEO_EXTS = {".mp4", ".mov", ".avi", ".webm", ".mkv", ".m4v"}
 MAX_SAFE_FRAMES = 30
 DEFAULT_TARGET_FRAMES = 24
 
-# Raices donde viven los patrones (web y app Flutter comparten formato).
+# Raiz donde viven los patrones para la web app.
 DEFAULT_OUT_ROOTS = [
     Path(__file__).parent.parent / "public" / "training_data",
-    Path(__file__).parent.parent / "flutter_app" / "assets" / "training_data",
 ]
 
 
@@ -305,7 +304,7 @@ def main() -> int:
     parser.add_argument(
         "--out",
         action="append",
-        help="Raiz de salida (repetible). Default: public/ y flutter_app/assets/",
+        help="Raiz de salida (repetible). Default: public/training_data/",
     )
     parser.add_argument(
         "--target-frames",
@@ -435,8 +434,8 @@ def main() -> int:
         f"{', '.join(sorted(labels_done)) or '-'}"
     )
     if not args.dry_run and total_written:
-        print("\nSiguiente paso: recompila la app para empaquetar los nuevos patrones")
-        print("  cd ../flutter_app && flutter build apk --release")
+        print("\nSiguiente paso: recompila la web app para empaquetar los nuevos patrones")
+        print("  cd .. && npm run build")
     return 0
 
 

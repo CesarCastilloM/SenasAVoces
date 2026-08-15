@@ -1,7 +1,7 @@
 """
 Exporta el modelo entrenado a ONNX para inferencia en el navegador
 con onnxruntime-web. Genera:
-  - ml_classifier/checkpoints/sign_model.onnx
+  - python_scripts/checkpoints/sign_model.onnx
   - public/sign_labels.json  (mapa idx -> nombre de sena)
 """
 import json

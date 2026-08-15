@@ -4368,18 +4368,19 @@ function App() {
     </div>
   );
 
-  // Skip auth for local testing - redirect to model-test
-  if (path === "/" || path === "/login" || path === "/signup") {
-    navigate("/model-test");
-    return null;
-  }
-
   // Auth pages (only if Supabase is configured)
   if (authConfigError) return <ConfigErrorPage isDark={isDark} />;
   if (path === "/confirm-email") return <EmailConfirmationPage isDark={isDark} setIsDark={setIsDark} navigate={navigate} email={state?.email || ""} />;
 
-  // Protected routes - redirect to login if not authenticated
+  // Show auth page for login/signup when not authenticated
   if (!user) {
+    if (path === "/" || path === "/login") {
+      return <AuthPage mode="login" isDark={isDark} setIsDark={setIsDark} navigate={navigate} />;
+    }
+    if (path === "/signup") {
+      return <AuthPage mode="signup" isDark={isDark} setIsDark={setIsDark} navigate={navigate} />;
+    }
+    // Redirect to login for any other protected route
     navigate("/");
     return null;
   }

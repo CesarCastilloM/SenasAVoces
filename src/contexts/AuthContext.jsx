@@ -242,6 +242,22 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const resetPassword = async (email) => {
+    if (!supabase) {
+      return { error: new Error(authConfigError) };
+    }
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/`,
+      });
+      if (error) throw error;
+      return { error: null };
+    } catch (error) {
+      return { error };
+    }
+  };
+
   const value = {
     user,
     profile,
@@ -254,6 +270,7 @@ export function AuthProvider({ children }) {
     signIn,
     signInWithGoogle,
     signOut,
+    resetPassword,
     refreshPracticeHistory: () => user && fetchPracticeHistory(user.id),
   };
 

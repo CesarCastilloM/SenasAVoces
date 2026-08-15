@@ -101,7 +101,7 @@ transformaciones a toda la secuencia (no por mano separada).
 ### `train.py`
 **Qué hace:** Entrena el modelo con CrossEntropy + Supervised Contrastive Loss.
 Usa holdout honesto (excluye un ejemplo por seña para validación). Early
-stopping por top-5. Guarda checkpoint en `ml_classifier/checkpoints/best_model.pt`.
+stopping por top-5. Guarda checkpoint en `python_scripts/checkpoints/best_model.pt`.
 
 **Uso:**
 ```bash

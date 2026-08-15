@@ -1,363 +1,174 @@
 # Señas a Voces
 
-**Sistema de traducción de Lengua de Señas Mexicana (LSM) a voz** con academia web interactiva basada en visión por computadora y un guante traductor hardware.
+**Academia web interactiva para aprender Lengua de Señas Mexicana (LSM)** con
+reconocimiento de señas por cámara directamente en el navegador (MediaPipe +
+ONNX Runtime Web), progreso de usuario y práctica inmersiva.
 
----
-
-## Tabla de contenidos
-
-1. [Arquitectura general](#arquitectura-general)
-2. [Estructura del proyecto](#estructura-del-proyecto)
-3. [Backend — Motor de reconocimiento LSM](#backend--motor-de-reconocimiento-lsm)
-4. [Frontend — Academy Web](#frontend--academy-web)
-5. [Guante traductor (Hardware)](#guante-traductor-hardware)
-6. [Modelos MediaPipe](#modelos-mediapipe)
-7. [Instalación y ejecución](#instalación-y-ejecución)
-8. [API Reference](#api-reference)
-9. [Configuración y umbrales](#configuración-y-umbrales)
-10. [Equipo](#equipo)
-
----
-
-## Arquitectura general
-
-```
-┌──────────────────────┐         HTTP POST (base64 frame)         ┌────────────────────────┐
-│   Academy Frontend   │ ──────────────────────────────────────▶  │   Backend Flask API    │
-│   (HTML/JS/CSS)      │ ◀──────────────────────────────────────  │   lsm_teacher_web.py   │
-│   Puerto 8080        │         JSON {matched, letter, conf}     │   Puerto 5050          │
-└──────────────────────┘                                          └────────────────────────┘
-         │                                                                   │
-         │ WebRTC getUserMedia                                               │ MediaPipe HandLandmarker
-         ▼                                                                   ▼
-┌──────────────────────┐                                          ┌────────────────────────┐
-│   Cámara del usuario │                                          │ hand_landmarker.task   │
-│   (navegador)        │                                          │ 7.5 MB · 21 landmarks  │
-└──────────────────────┘                                          └────────────────────────┘
-
-┌──────────────────────┐         UDP / Serial                     ┌────────────────────────┐
-│   Guante ESP32       │ ──────────────────────────────────────▶  │   PC Voice Receiver    │
-│   (WiFi/BT)         │         Datos de sensores + botones      │   Windows SAPI TTS     │
-└──────────────────────┘                                          └────────────────────────┘
-```
+> El reconocimiento corre 100% en el navegador: no hay backend Flask ni
+> guante hardware en el flujo activo. El pipeline de Python solo se usa
+> offline para generar el modelo ONNX y los datos de entrenamiento.
 
 ---
 
 ## Estructura del proyecto
 
 ```
-SenasAVoces/
-├── README.md                          # Este archivo
+SAVb/                           # Raíz del proyecto (git repo + workspace)
+├── index.html                  # Entry HTML (Vite)
+├── package.json                # Deps: React 19, Vite 7, MediaPipe, ONNX Web, Supabase
+├── vite.config.js              # Config Vite + middleware /api/train-sign (dev)
+├── vercel.json                 # Deploy config
+├── tailwind.config.js
+├── postcss.config.js
+├── PRODUCT.md                  # Definición de producto
+├── brand-spec.md               # Especificación de marca
 │
-├── academy/                           # Frontend web de la academia
-│   ├── index.html                     # SPA principal (23 KB)
-│   ├── app.js                         # Lógica completa: lecciones, cámara, reconocimiento (67 KB, 1353 líneas)
-│   ├── styles.css                     # Diseño dark theme con gradientes (29 KB)
-│   └── README.md                      # Documentación específica del frontend
+├── src/                        # App React (frontend activo)
+│   ├── main.jsx                # App principal + páginas (Dashboard, Learn, Lesson, Practice, Debug)
+│   ├── model_test_page.jsx     # Página: probar modelo ONNX
+│   ├── train_page.jsx          # Página: entrenar nuevas señas (cámara → /api/train-sign)
+│   ├── retrain_page.jsx        # Página: re-extraer landmarks desde videos
+│   ├── training_viewer_page.jsx# Página: visualizar datos de entrenamiento
+│   ├── lessons_glosario.js     # Definición de lecciones y glosario LSM
+│   ├── lsm_detector.js         # Detector de letras estáticas (finger states + scoring)
+│   ├── dynamic_sign_detector.js# Detector de señas dinámicas (DTW sobre secuencias)
+│   ├── onnx_classifier.js      # Wrapper de ONNX Runtime Web (clasificador LSTM)
+│   ├── npy_parser.js           # Parser de archivos .npy en el navegador
+│   ├── components/             # AuthPage, EmailConfirmationPage
+│   ├── contexts/AuthContext.jsx# Contexto de autenticación (Supabase)
+│   ├── lib/supabaseClient.ts   # Cliente Supabase
+│   ├── services/progressService.js # Servicio de progreso (Supabase)
+│   └── styles/styles.css       # Estilos globales
 │
-├── backend/                           # Servidor de reconocimiento LSM
-│   ├── lsm_teacher_web.py            # API Flask — recibe frames, devuelve letra detectada (675 líneas)
-│   ├── lsm_teacher.py                # Motor de reconocimiento — finger states, scoring, 27 letras (1555 líneas)
-│   ├── main.py                        # App desktop con MediaPipe completo (pose + face + hands)
-│   ├── download_models.py            # Script para descargar modelos desde Google Storage
-│   ├── __init__.py                    # Package marker
-│   ├── requirements.txt              # Deps: opencv, mediapipe, numpy, torch, scikit-learn
-│   └── requirements_web.txt          # Deps mínimas para el servidor web: flask, mediapipe, opencv
+├── public/                     # Assets estáticos servidos al navegador
+│   ├── sign_model.onnx         # Modelo LSTM exportado (inferencia en navegador)
+│   ├── sign_labels.json        # Mapa idx → nombre de seña
+│   ├── favicon.png
+│   ├── logo-senas-a-voces*.png
+│   ├── ort-wasm-simd-threaded*.wasm  # WASM de ONNX Runtime Web
+│   ├── videos/signs/           # Videos de referencia por seña (228 .mp4)
+│   └── training_data/          # Datos de entrenamiento (.npy) por categoría
+│       ├── abecedario/ colores/ familia/ numeros/ palabras/
+│       ├── manifest.json
+│       ├── sign_metadata.json
+│       ├── hand_analysis.json
+│       └── extraction_report.json
 │
-├── mediapipe_models/                  # Modelos pre-entrenados MediaPipe Tasks API
-│   ├── hand_landmarker.task           # Detección de manos — 21 landmarks (7.5 MB)
-│   ├── gesture_recognizer.task        # Reconocimiento de gestos genéricos (8.0 MB)
-│   ├── face_landmarker.task           # Detección facial — 468 landmarks (3.6 MB)
-│   └── pose_landmarker.task           # Detección de pose corporal — 33 landmarks (29.2 MB)
+├── python_scripts/             # Pipeline offline (Python) para generar el modelo
+│   ├── extract_two_hands.py    # Extraer landmarks (2 manos) desde videos → .npy
+│   ├── extract_from_videos.py  # Extractor legacy (1 mano)
+│   ├── extract_face_hands.py   # Extractor cara + manos
+│   ├── reextract_landmarks.py  # Re-extraer con parámetros afinados
+│   ├── compress_reference_videos.py  # Comprimir videos fuente → public/videos/signs/
+│   ├── json_to_npy.py / convert_npy_to_json.py  # Conversión de formatos
+│   ├── analyze_hands.py        # Analizar mano en reposo
+│   ├── clean_resting_hand.py   # Limpiar mano inactiva de los .npy
+│   ├── augment_npy.py          # Aumentación de datos (.npy)
+│   ├── dataset.py              # Carga + normalización para entrenamiento
+│   ├── augment.py              # Aumentación on-the-fly (entrenamiento)
+│   ├── model.py                # Arquitectura BiLSTM + Attention + Contrastive Loss
+│   ├── train.py                # Entrenamiento → checkpoints/best_model.pt
+│   ├── evaluate.py             # Evaluación top-1 / top-5
+│   ├── export_onnx.py          # Exportar a ONNX → checkpoints/sign_model.onnx
+│   ├── checkpoints/            # best_model.pt + sign_model.onnx
+│   ├── models/                 # Modelos MediaPipe .task (descargados bajo demanda)
+│   └── README.md               # Documentación detallada del pipeline
 │
-├── glove/                             # Hardware del guante traductor
-│   ├── firmware/                      # Código ESP32 (PlatformIO / Arduino framework)
-│   │   ├── esp32_wifi_glove.cpp       # Guante WiFi — UDP, 8 botones, modo acumulativo
-│   │   ├── esp32_left_glove.cpp       # Guante izquierdo — Raspberry Pi Zero 2W + OLED
-│   │   ├── esp32_serial_glove.cpp     # Versión serial (USB directo)
-│   │   └── platformio.ini            # Configuración PlatformIO (ESP32 DevKit, 115200 baud)
-│   └── receiver/                      # Receptores de voz en PC/RPi
-│       ├── pc_voice_receiver_wifi.py  # Receptor WiFi — Windows SAPI (Microsoft Sabina)
-│       ├── pc_voice_receiver.py       # Receptor serial/Bluetooth
-│       ├── lsm_vocabulary.py          # Vocabulario LSM expandido (300+ señas con variantes)
-│       └── requirements.txt          # Deps RPi: adafruit-ads1x15, mpu6050, luma.oled
+├── mediapipe_models/           # Copia local de modelos MediaPipe .task (referencia)
 │
-└── docs/                              # Documentación técnica y comercial
-    ├── ESTRATEGIA_COMERCIAL_GOBIERNO.md
-    ├── PRESUPUESTO_DIF_SONORA_10_GUANTES.md
-    ├── PRESUPUESTO_PROFESIONAL.md
-    ├── HOJA_COSTOS_PROTOTIPO.md
-    ├── DIAGRAMAS_CONEXION.md
-    ├── GUIA_AUDIO_RASPBERRY_PI.md
-    ├── GUIA_BOTON_ACTIVACION.md
-    ├── GUIA_SISTEMA_INALAMBRICO.md
-    ├── ANALISIS_OPCION4_CONCESION.md
-    ├── README_INSTALACION.md
-    ├── README_LSM_FINAL.md
-    ├── README_SENAS_A_VOCES_ENACTUS.md
-    ├── RESUMEN_NUMEROS_TODOS_MODELOS.md
-    └── presupuestoSAV.md
+└── _archive/                   # Código legacy/hardware (NO usado por la web app)
+    ├── academy/                # Frontend vanilla JS anterior (reemplazado por src/)
+    ├── backend/                # Servidor Flask LSM (reemplazado por inferencia en navegador)
+    ├── ml_classifier/          # Pipeline ML anterior (reemplazado por python_scripts/)
+    ├── models/                 # Modelos antiguos
+    ├── data/                   # Datos antiguos (.npz, embeddings)
+    ├── python_pipeline/        # Pipeline de procesamiento anterior
+    ├── no_se_usan/             # Scripts descartados
+    ├── glove/                  # Firmware ESP32 del guante traductor
+    ├── hardware/               # Colector de datos ESP32 (guante)
+    ├── firmware/               # Firmware PlatformIO legacy
+    ├── flutter_app/            # App Flutter abandonada
+    └── imu_test/               # Pruebas IMU
 ```
 
 ---
 
-## Backend — Motor de reconocimiento LSM
-
-### Tecnología
-- **Framework:** Flask 2.3+ con CORS habilitado
-- **Visión:** MediaPipe Tasks API — `HandLandmarker` en modo `IMAGE` (sincrónico)
-- **Modelo:** `hand_landmarker.task` (7.5 MB) — detecta hasta **2 manos** simultáneamente con 21 landmarks 3D cada una
-
-### Pipeline de reconocimiento
+## Arquitectura
 
 ```
-Frame Base64 → Decodificar JPEG → BGR NumPy array
-    → MediaPipe HandLandmarker (21 landmarks × N manos)
-        → finger_states() — calcula estado de cada dedo:
-            • Extendido (E) / Cerrado (C) / Semi (S)
-            • Distancias tip-to-tip (thumb_touch_index, etc.)
-            • Ángulos interfalángicos
-        → score_all_letters() — evalúa 27 patrones (A-Z + Ñ):
-            • Coincidencia de huella dactilar binaria (EECCC, EEECC, etc.)
-            • Funciones _extra_X() — 26 funciones especializadas para
-              desambiguar letras similares (ej: I vs J, N vs Ñ, X vs Z)
-            • Score final = base_match + extra_score
-        → Selección: letra con score ≥ MATCH_THRESHOLD
-    → JSON response: {matched, letter, confidence, landmarks[]}
+┌─────────────────────────────────────────────────────────────┐
+│  Navegador (React + Vite)                                   │
+│                                                             │
+│  getUserMedia ──► MediaPipe Tasks Vision (WASM)             │
+│   (cámara)         ├─ HandLandmarker  (21 landmarks × 2)    │
+│                    ├─ PoseLandmarker  (33 landmarks)        │
+│                    └─ FaceLandmarker  (468 landmarks)       │
+│                                                             │
+│  Detección:                                                 │
+│   ├─ Letras estáticas  → lsm_detector.js (finger states)    │
+│   ├─ Señas dinámicas   → dynamic_sign_detector.js (DTW)     │
+│   └─ Clasificador LSTM → onnx_classifier.js (ONNX Web)      │
+│                                                             │
+│  Progreso/Auth: Supabase (progressService.js, AuthContext)  │
+│                                                             │
+│  Dev only: POST /api/train-sign → guarda .npy en public/    │
+└─────────────────────────────────────────────────────────────┘
+
+Pipeline offline (Python, python_scripts/):
+  Videos MP4 → extract_two_hands.py → .npy → train.py → .pt
+                                                       → export_onnx.py → .onnx → public/
 ```
-
-### Funciones de scoring especializadas (`_extra_*`)
-
-| Función | Propósito |
-|---------|-----------|
-| `_extra_I` | Verificar solo meñique extendido, penalizar otros dedos |
-| `_extra_N` | N estática: índice y medio cruzados sobre pulgar |
-| `_extra_enye` | Ñ = N + movimiento ondulante (penalizada sin movimiento) |
-| `_extra_O` | Círculo pulgar-índice + dedos cerrados |
-| `_extra_X` | Índice doblado como gancho, penalizar si está recto (≠Z) |
-| `_extra_B` | Cuatro dedos juntos, pulgar cruzado |
-| `_extra_H` | Índice y medio horizontales extendidos |
-| `_extra_Q` | Pulgar e índice apuntando abajo |
-| ... | 26 funciones en total |
-
-### Endpoints
-
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| POST | `/api/recognize` | Recibe frame base64, devuelve letra detectada |
-| GET | `/api/alphabet` | Retorna las 27 letras con descripciones |
-| GET | `/api/health` | Health check |
-| GET | `/api/stats` | Estadísticas de uso (frames procesados, latencia) |
-| POST | `/api/lesson/complete` | Registra lección completada por usuario |
-| GET | `/api/progress/<user_id>` | Progreso del estudiante |
-| GET | `/api/feed` | Feed de actividad reciente |
-| GET | `/api/dashboard` | Métricas generales |
-| POST | `/api/register` | Registro de usuario |
-| GET | `/` | Landing page del servidor |
-
----
-
-## Frontend — Academy Web
-
-### Tecnología
-- **SPA** pura (sin frameworks) — HTML5 + ES6+ JavaScript + CSS3
-- **Cámara:** WebRTC `getUserMedia()` — captura a 30+ FPS
-- **Rendering:** Canvas 2D — dibuja landmarks en tiempo real
-- **Diseño:** Dark theme con gradientes, responsive, 0 dependencias externas
-
-### Currículo: 4 niveles, 20 lecciones
-
-| Nivel | Lecciones | Contenido |
-|-------|-----------|-----------|
-| **1 — Fundamentos** | L1.1–L1.5 | Alfabeto (27 letras), Números (1–20), Saludos, Familia, Colores |
-| **2 — Comunicación diaria** | L2.1–L2.5 | Emociones, Necesidades, Escuela/Trabajo, Salud, Conversación básica |
-| **3 — Comunicación fluida** | L3.1–L3.5 | Vocabulario del guante, Frases completas, Gramática LSM, Expresiones faciales, Práctica conversacional |
-| **4 — Certificación** | L4.1–L4.5 | Conversaciones completas, Simulacros oficiales, Práctica con intérpretes, Certificado QR, Bolsa de empleo |
-
-### Flujo de reconocimiento en frontend
-
-```javascript
-// Cada 40ms (_MIN_INTERVAL):
-canvas.toDataURL('image/jpeg', 0.7)  // Captura frame
-  → fetch('/api/recognize', {body: base64})  // Envía al backend
-  → Respuesta: {matched: true, letter: 'A', confidence: 0.97, landmarks: [...]}
-  → Si matched && target == letter:
-      holdTimer += elapsed
-      Si holdTimer ≥ 1.4s (HOLD_SECONDS):
-        ✅ Avanzar al siguiente target
-  → Dibujar landmarks: líneas azules (#3B82F6) + vértices blancos (#FFFFFF)
-```
-
-### Lógica de matching
-
-- **Letras (A-Z, Ñ):** Matching estricto del backend (`j.matched === true`)
-- **Palabras/frases (L2-L4):** Mano visible + confianza ≥ 0.50 + hold 1.4s
-
-### Progresión de lecciones
-
-Al completar una lección, el sistema automáticamente inicia la siguiente del mismo nivel. Si el nivel está completo, avanza al primer item del siguiente nivel.
-
----
-
-## Guante traductor (Hardware)
-
-### Especificaciones
-
-| Componente | Detalle |
-|------------|---------|
-| **MCU** | ESP32 DevKit V1 (WiFi 802.11 b/g/n + BT 4.2) |
-| **Sensores** | ADS1115 (ADC 16-bit I2C) + MPU6050 (acelerómetro/giroscopio) |
-| **Comunicación** | UDP unicast (WiFi) / Serial 115200 / Bluetooth SPP |
-| **Botones** | 8 GPIO con pull-up interno |
-| **Display** | OLED SSD1306 128×64 (guante izquierdo) |
-| **Alimentación** | LiPo 3.7V 1200mAh vía regulador 3.3V |
-| **Framework** | Arduino sobre PlatformIO |
-
-### Red actual
-- **SSID:** INVITADOS-AMDE (WPA2-PSK)
-- **Password:** 34567890
-- **IP PC:** 10.128.32.23
-- **Puerto UDP:** 5000
-
-### Vocabulario del guante (8 botones)
-
-| Pin | Frase |
-|-----|-------|
-| 4 | "tardes" |
-| 5 | "Negocio A Gobierno" |
-| 18 | "gracias" |
-| 19 | "Buenas" |
-| 21 | "Te quiero" |
-| 22 | "oyentes no entienden nuestras señas" |
-| 23 | "Ahora sí" |
-| 25 | "Compárteme tu sacapuntas" |
-
-### Modo de operación
-1. **Pin 17** activa/desactiva modo escucha
-2. Presionar botones acumula palabras en buffer
-3. Al desactivar modo escucha → envía frase completa por UDP
-4. El receptor (`pc_voice_receiver_wifi.py`) recibe y sintetiza voz con **Microsoft Sabina** (SAPI5, español MX)
-
----
-
-## Modelos MediaPipe
-
-| Modelo | Archivo | Tamaño | Uso |
-|--------|---------|--------|-----|
-| Hand Landmarker | `hand_landmarker.task` | 7.5 MB | Detección de 21 landmarks por mano (principal) |
-| Gesture Recognizer | `gesture_recognizer.task` | 8.0 MB | Reconocimiento de gestos genéricos |
-| Face Landmarker | `face_landmarker.task` | 3.6 MB | 468 landmarks faciales (expresiones) |
-| Pose Landmarker | `pose_landmarker.task` | 29.2 MB | 33 landmarks corporales (postura) |
-
-Descarga automática: `python backend/download_models.py`
 
 ---
 
 ## Instalación y ejecución
 
-### Requisitos previos
-- Python 3.10+
-- Node.js (solo para verificación de sintaxis)
-- Navegador con soporte WebRTC (Chrome/Edge recomendado)
-- Cámara web
-
-### 1. Backend (reconocimiento)
+### Web app (frontend)
 
 ```bash
-cd SenasAVoces/backend
-pip install -r requirements_web.txt
-python lsm_teacher_web.py
+npm install
+npm run dev      # servidor de desarrollo (http://localhost:5173)
+npm run build    # build de producción → dist/
+npm run preview  # previsualizar el build
 ```
 
-Servidor disponible en `http://127.0.0.1:5050`
+> No necesitas hacer `cd` a ningún subdirectorio. El proyecto corre
+> directamente desde la raíz del workspace.
 
-### 2. Frontend (academia)
+Variables de entorno (`.env` en la raíz del proyecto):
+
+```
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
+```
+
+### Pipeline de ML (offline, opcional)
+
+Solo se necesita para regenerar el modelo ONNX o los datos de entrenamiento.
+Ver `python_scripts/README.md` para el flujo completo.
 
 ```bash
-cd SenasAVoces/academy
-python -m http.server 8080
-```
+pip install torch numpy mediapipe onnx onnxruntime
 
-Abrir `http://127.0.0.1:8080` en Chrome/Edge.
+# Extraer landmarks desde videos fuente
+python python_scripts/extract_two_hands.py --input "ruta/a/videos" --output "public/training_data"
 
-### 3. Guante (opcional)
+# Entrenar
+python python_scripts/train.py --epochs 60 --holdout 5
 
-```bash
-# Firmware
-cd SenasAVoces/glove/firmware
-# Abrir con PlatformIO, compilar y subir a ESP32
-
-# Receptor
-cd SenasAVoces/glove/receiver
-pip install pyttsx3
-python pc_voice_receiver_wifi.py
+# Exportar a ONNX (genera public/sign_model.onnx y public/sign_labels.json)
+python python_scripts/export_onnx.py
 ```
 
 ---
 
-## API Reference
+## Notas
 
-### POST `/api/recognize`
-
-**Request:**
-```json
-{
-  "image": "data:image/jpeg;base64,/9j/4AAQ...",
-  "target": "A"
-}
-```
-
-**Response:**
-```json
-{
-  "matched": true,
-  "letter": "A",
-  "confidence": 0.97,
-  "landmarks": [[0.52, 0.83, -0.01], ...],
-  "hand_count": 1,
-  "finger_states": {"thumb": true, "index": false, "middle": false, "ring": false, "pinky": false}
-}
-```
-
-### GET `/api/alphabet`
-
-**Response:**
-```json
-[
-  {"letter": "A", "description": "Puño cerrado, pulgar al costado.", "pattern": "CCCCC"},
-  {"letter": "B", "description": "Cuatro dedos juntos extendidos, pulgar cruzado.", "pattern": "CEEEE"},
-  ...
-]
-```
-
----
-
-## Configuración y umbrales
-
-| Parámetro | Valor | Ubicación | Descripción |
-|-----------|-------|-----------|-------------|
-| `MATCH_THRESHOLD` | 0.95 | backend | Score mínimo para considerar match de letra |
-| `MATCH_THRESHOLD_MOV` | 0.79 | backend | Threshold para letras con movimiento |
-| `HOLD_SECONDS` | 1.4 | backend/frontend | Tiempo que debe mantenerse la seña correcta |
-| `_MIN_INTERVAL` | 40 ms | frontend | Intervalo entre envíos de frame (~25 FPS) |
-| `min_hand_detection_confidence` | 0.65 | backend | Confianza mínima para detectar mano |
-| `min_hand_presence_confidence` | 0.65 | backend | Confianza mínima para presencia de mano |
-| `min_tracking_confidence` | 0.60 | backend | Confianza mínima para tracking entre frames |
-| `num_hands` | 2 | backend | Máximo de manos a detectar simultáneamente |
-
----
-
-## Equipo
-
-| Nombre | Rol |
-|--------|-----|
-| **César** | Fundador · Hardware |
-| **César** | Co-fundador · Estrategia |
-| **Emiliano** | IA / Visión por computadora |
-| **Mario** | Pedagogía LSM · Comunidad |
-
----
-
-## Licencia
-
-Proyecto académico — Señas a Voces © 2024-2026
+- `_archive/` contiene código legacy y de hardware (guante ESP32, app Flutter,
+  backend Flask). No es necesario para la web app y se conserva solo como
+  referencia histórica. Se puede ignorar durante el desarrollo activo.
+- El middleware `/api/train-sign` en `vite.config.js` solo funciona en
+  desarrollo (`npm run dev`). En producción los datos de entrenamiento son
+  estáticos (ya generados en `public/training_data/`).
+- Los modelos MediaPipe se cargan desde CDN de Google Storage en tiempo de
+  ejecución; `mediapipe_models/` es solo una copia local de referencia.

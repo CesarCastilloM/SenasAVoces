@@ -12,23 +12,22 @@ __pycache__/
 .env.*.local
 
 # ── Datos pesados (no subir al repo) ─────────────────────────
-data/training_videos/
-data/templates/
-data/gifs/
-data/recordings/
-data/*.mp4
-data/*.avi
+public/training_data/**/*.mp4
+public/training_data/**/*.avi
+public/videos/raw/
 
-# ── Modelos entrenados (binarios grandes) ─────────────────────
-models/*.keras
-models/*.h5
-models/*.tflite
-models/*.onnx
+# ── Modelos entrenados (binarios grandes) ────────────────────
+# Los .onnx / .pt que sí se distribuyen viven en python_scripts/checkpoints
+# y public/ (modelo de inferencia del navegador).
+*.keras
+*.h5
+*.tflite
+# No ignorar los .onnx que sí se commitean (public/sign_model.onnx,
+# python_scripts/checkpoints/sign_model.onnx).
 
 # ── Archivos temporales / logs ────────────────────────────────
 *.log
 *.tmp
-__pycache__/
 .DS_Store
 Thumbs.db
 test1.mp4
@@ -37,8 +36,6 @@ test1.mp4
 node_modules/
 dist/
 .vite/
-flutter_app/build/
-flutter_app/.dart_tool/
 
 # ── IDEs ──────────────────────────────────────────────────────
 .vscode/
@@ -48,5 +45,16 @@ flutter_app/.dart_tool/
 # ── Jupyter ───────────────────────────────────────────────────
 .ipynb_checkpoints/
 
-*.mp4
-no_se_usan/
+# ── Vite preview / cache ──────────────────────────────────────
+*.local
+
+# ── Archivo: contenido archivado (legacy/hardware) ───────────
+# _archive/ se mantiene en el repo (ya commiteado) pero no se toca
+# durante el desarrollo activo. Sin regla de ignore para que git lo
+# rastree, pero los binarios pesados que pudiera contener sí se ignoran:
+_archive/**/*.pyc
+_archive/**/__pycache__/
+_archive/**/.gradle/
+_archive/**/build/
+_archive/**/.dart_tool/
+_archive/**/.pio/

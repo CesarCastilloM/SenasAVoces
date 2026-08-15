@@ -3,7 +3,7 @@ Entrena SignClassifier con CrossEntropy + Supervised Contrastive Loss.
 Uso:
   python train.py --epochs 60 --holdout 5
 
-Guarda checkpoint en ml_classifier/checkpoints/best_model.pt junto con
+Guarda checkpoint en python_scripts/checkpoints/best_model.pt junto con
 label map (idx -> nombre de sena) para inferencia posterior.
 """
 import argparse
