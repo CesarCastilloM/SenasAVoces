@@ -4012,18 +4012,6 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
                   Precisión: {Math.round(matchScore * 100)}%
                 </div>
               )}
-              {!sign.template && dtwReadyRef.current && dtwRanking.length > 0 && (
-                <div className={cx("rounded-lg px-3 py-2 text-xs font-medium transition-all duration-300", isDark ? "bg-brand-deep/60 text-brand-soft" : "bg-white/60 text-brand-muted")}>
-                  {dtwRanking.map((r, i) => (
-                    <div key={r.name} className="flex items-center justify-between gap-2">
-                      <span className={r.name === (sign.label || sign.name) ? "font-bold text-brand-teal" : ""}>
-                        {i + 1}. {r.name.replace(/_/g, " ")}
-                      </span>
-                      <span>{Math.max(0, Math.round((1 - r.score) * 100))}%</span>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           )}
           {/* Success animation overlay — fixed fullscreen on mobile, over camera on desktop */}
@@ -4524,18 +4512,6 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
                     Precisión: {Math.round(matchScore * 100)}%
                   </div>
                 )}
-                {!sign.template && dtwReadyRef.current && dtwRanking.length > 0 && (
-                  <div className={cx("rounded-lg px-3 py-2 text-xs font-medium transition-all duration-300", isDark ? "bg-brand-deep/60 text-brand-soft" : "bg-white/60 text-brand-muted")}>
-                    {dtwRanking.map((r, i) => (
-                      <div key={r.name} className="flex items-center justify-between gap-2">
-                        <span className={r.name === (sign.label || sign.name) ? "font-bold text-brand-teal" : ""}>
-                          {i + 1}. {r.name.replace(/_/g, " ")}
-                        </span>
-                        <span>{Math.max(0, Math.round((1 - r.score) * 100))}%</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             )}
             {/* Success animation overlay — fixed fullscreen on mobile, over camera on desktop */}
@@ -4633,6 +4609,21 @@ const FACE_KEY_IDXS = [
   159, 145, 386, 374,            // ojos
 ];
 
+// Hand connections (precomputed to avoid DrawingUtils overhead per frame)
+const HAND_CONN = [
+  [0,1],[1,2],[2,3],[3,4],          // thumb
+  [0,5],[5,6],[6,7],[7,8],          // index
+  [5,9],[9,10],[10,11],[11,12],     // middle
+  [9,13],[13,14],[14,15],[15,16],   // ring
+  [13,17],[17,18],[18,19],[19,20],  // pinky
+  [0,17],                            // palm
+];
+
+// Arm connections (subset of POSE_CONNECTIONS for arms only)
+const ARM_CONN = [
+  [11,12],[11,13],[13,15],[12,14],[14,16],
+];
+
 function mirror(lm) { return { ...lm, x: 1 - lm.x }; }
 
 // Simplified camera hook for modal - only hands, faster startup, better FPS
@@ -4652,7 +4643,12 @@ function useSimpleCamera({ onResults }) {
       try {
         // Start camera first for faster feedback
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: 320, height: 240, facingMode: "user" }, // Lower resolution for better performance
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            frameRate: { ideal: 30 },
+            facingMode: "user",
+          },
         });
         if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
         
@@ -4688,8 +4684,8 @@ function useSimpleCamera({ onResults }) {
             return;
           }
 
-          const w = vid.videoWidth || 320;
-          const h = vid.videoHeight || 240;
+          const w = vid.videoWidth || 1280;
+          const h = vid.videoHeight || 720;
           canvas.width = w;
           canvas.height = h;
           const ctx = canvas.getContext("2d");
@@ -4800,7 +4796,12 @@ function useCameraMediaPipe({ onResults }) {
         flRef.current = fl;
 
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: 640, height: 480, facingMode: "user" },
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            frameRate: { ideal: 30 },
+            facingMode: "user",
+          },
         });
         if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
         
@@ -4821,32 +4822,41 @@ function useCameraMediaPipe({ onResults }) {
             return;
           }
 
-          const w = vid.videoWidth || 640;
-          const h = vid.videoHeight || 480;
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext("2d");
+          // Canvas matches video aspect ratio to avoid stretching
+          const vw = vid.videoWidth || 1280;
+          const vh = vid.videoHeight || 720;
+          // Cap canvas size for performance but keep aspect ratio
+          const scale = Math.min(1, 640 / vw);
+          const w = Math.round(vw * scale);
+          const h = Math.round(vh * scale);
+          if (canvas.width !== w) canvas.width = w;
+          if (canvas.height !== h) canvas.height = h;
+          const ctx = canvas.getContext("2d", { alpha: false });
           const now = performance.now();
 
-          // Video espejado
+          // Video espejado — drawImage handles scaling from source to canvas
           ctx.save();
           ctx.scale(-1, 1);
           ctx.translate(-w, 0);
           ctx.drawImage(vid, 0, 0, w, h);
           ctx.restore();
 
-          const draw = new DrawingUtils(ctx);
-
           // --- Manos cada frame (alta prioridad) ---
           const handRes = hlRef.current.detectForVideo(vid, now);
           for (const lms of (handRes.landmarks || [])) {
             const m = lms.map(mirror);
-            draw.drawConnectors(m, HandLandmarker.HAND_CONNECTIONS, { color: "#2AABB8", lineWidth: 2 });
-            draw.drawLandmarks(m, { color: "#EC9960", lineWidth: 1, radius: 3 });
+            ctx.strokeStyle = "#2AABB8";
+            ctx.lineWidth = 2;
+            for (const [s, e] of HAND_CONN) {
+              const a = m[s], b = m[e];
+              if (a && b) { ctx.beginPath(); ctx.moveTo(a.x * w, a.y * h); ctx.lineTo(b.x * w, b.y * h); ctx.stroke(); }
+            }
+            ctx.fillStyle = "#EC9960";
+            for (const p of m) { ctx.beginPath(); ctx.arc(p.x * w, p.y * h, 3, 0, 2 * Math.PI); ctx.fill(); }
           }
 
-          // --- Pose y cara a 8 fps (throttle) para no bloquear el hilo ---
-          const slowFrame = Math.floor(now / 125); // cambia cada 125ms = 8fps
+          // --- Pose y cara a 5 fps (throttle) para no bloquear el hilo ---
+          const slowFrame = Math.floor(now / 200); // cada 200ms = 5fps
           if (slowFrame !== slowFrameRef.current) {
             slowFrameRef.current = slowFrame;
 
@@ -4854,21 +4864,28 @@ function useCameraMediaPipe({ onResults }) {
             lastPoseRef.current = poseRes;
             for (const lms of (poseRes.landmarks || [])) {
               const m = lms.map(mirror);
-              const armConns = PoseLandmarker.POSE_CONNECTIONS.filter(
-                ({ start, end }) => [11,12,13,14,15,16].includes(start) && [11,12,13,14,15,16].includes(end)
-              );
-              draw.drawConnectors(m, armConns, { color: "#A855F7", lineWidth: 3 });
-              [11,12,13,14,15,16].forEach((i) => {
-                if (m[i]) draw.drawLandmarks([m[i]], { color: "#D946EF", lineWidth: 1, radius: 5 });
-              });
+              ctx.strokeStyle = "#A855F7";
+              ctx.lineWidth = 3;
+              for (const [s, e] of ARM_CONN) {
+                const a = m[s], b = m[e];
+                if (a && b) { ctx.beginPath(); ctx.moveTo(a.x * w, a.y * h); ctx.lineTo(b.x * w, b.y * h); ctx.stroke(); }
+              }
+              ctx.fillStyle = "#D946EF";
+              for (const i of [11,12,13,14,15,16]) {
+                const p = m[i];
+                if (p) { ctx.beginPath(); ctx.arc(p.x * w, p.y * h, 5, 0, 2 * Math.PI); ctx.fill(); }
+              }
             }
 
             const faceRes = flRef.current.detectForVideo(vid, now);
             lastFaceRef.current = faceRes;
             for (const lms of (faceRes.landmarks || [])) {
               const m = lms.map(mirror);
-              const keyPts = FACE_KEY_IDXS.filter((i) => m[i]).map((i) => m[i]);
-              draw.drawLandmarks(keyPts, { color: "#22D3EE", lineWidth: 1, radius: 2 });
+              ctx.fillStyle = "#22D3EE";
+              for (const i of FACE_KEY_IDXS) {
+                const p = m[i];
+                if (p) { ctx.beginPath(); ctx.arc(p.x * w, p.y * h, 2, 0, 2 * Math.PI); ctx.fill(); }
+              }
             }
           }
 
