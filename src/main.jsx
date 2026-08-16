@@ -3906,13 +3906,22 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
     setMatchScore(0);
   };
 
-  // Lock body scroll while success overlay is visible
+  // Auto-advance to next sign after showing checkmark
   useEffect(() => {
     if (practiceSuccess) {
-      document.body.style.overflow = 'hidden';
-      return () => { document.body.style.overflow = ''; };
+      console.log('[LessonView] practiceSuccess=true, showing checkmark');
+      const timer = setTimeout(() => {
+        console.log('[LessonView] auto-advancing to next sign');
+        successRef.current = false;
+        setPracticeSuccess(false);
+        holdStartRef.current = null;
+        setGestureState("waiting");
+        setMatchScore(0);
+        if (onNextSign) onNextSign();
+      }, 1500);
+      return () => clearTimeout(timer);
     }
-  }, [practiceSuccess]);
+  }, [practiceSuccess, onNextSign]);
 
   // Safety: restore body scroll on unmount
   useEffect(() => {
@@ -4014,47 +4023,34 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
               )}
             </div>
           )}
-          {/* Success animation overlay — fixed fullscreen on mobile, over camera on desktop */}
+          {/* Success animation overlay — checkmark over camera */}
           {practiceSuccess && createPortal(
-            <div
-              className="flex items-center justify-center transition-opacity duration-300"
-              style={{
-                position: window.innerWidth < 640 ? 'fixed' : 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                width: window.innerWidth < 640 ? '100vw' : '100%',
-                height: window.innerWidth < 640 ? '100vh' : '100%',
-                zIndex: window.innerWidth < 640 ? 99999 : 50,
-                backgroundColor: window.innerWidth < 640 ? 'rgba(0, 0, 0, 0.92)' : 'rgba(0, 0, 0, 0.4)',
-                backdropFilter: 'blur(4px)',
-                WebkitBackdropFilter: 'blur(4px)',
-                overscrollBehavior: 'none',
-              }}
-            >
-              <div className="flex flex-col items-center gap-3 animate-fade px-6 sm:gap-4">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-500/20 shadow-2xl sm:h-32 sm:w-32">
-                  <Icon name="check" className="h-10 w-10 text-green-400 sm:h-16 sm:w-16" />
+            <div style={{
+              position: 'fixed',
+              top: 0, left: 0, right: 0, bottom: 0,
+              zIndex: 99999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              animation: 'fadeIn 0.3s ease-out both',
+              pointerEvents: 'none',
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', opacity: 0, animation: 'fadeIn 0.4s ease-out 0.2s forwards' }}>
+                <div style={{
+                  width: '96px', height: '96px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgb(5,150,105)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 8px 32px rgba(5,150,105,0.5)',
+                }}>
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 13l4 4L19 7" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
-                <div className="text-center">
-                  <div className="text-xl font-extrabold text-white sm:text-3xl">¡Excelente!</div>
-                  <div className="mt-1 text-sm text-green-300 sm:mt-2">Seña aprendida</div>
-                </div>
-                {/* Continue / Keep practicing buttons */}
-                <div className="mt-3 flex w-full max-w-xs flex-col gap-2 sm:mt-4 sm:max-w-none sm:flex-row">
-                  <button
-                    onClick={handleKeepPracticing}
-                    className="btn-press flex-1 rounded-xl border-2 border-white/30 bg-white/10 px-4 py-2.5 text-sm font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20"
-                  >
-                    Seguir practicando
-                  </button>
-                  <button
-                    onClick={handleContinue}
-                    className="btn-press flex-1 rounded-xl bg-brand-orange px-4 py-2.5 text-sm font-bold text-white transition-all hover:bg-brand-orange/90"
-                  >
-                    Continuar →
-                  </button>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '24px', fontWeight: 800, color: 'white', textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>¡Excelente!</div>
+                  <div style={{ fontSize: '14px', fontWeight: 500, color: 'rgb(110,231,183)', marginTop: '4px' }}>Seña aprendida</div>
                 </div>
               </div>
             </div>,
@@ -4390,13 +4386,22 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
     setMatchScore(0);
   };
 
-  // Lock body scroll while success overlay is visible
+  // Auto-advance to next sign after showing checkmark
   useEffect(() => {
     if (practiceSuccess) {
-      document.body.style.overflow = 'hidden';
-      return () => { document.body.style.overflow = ''; };
+      console.log('[LessonView] practiceSuccess=true, showing checkmark');
+      const timer = setTimeout(() => {
+        console.log('[LessonView] auto-advancing to next sign');
+        successRef.current = false;
+        setPracticeSuccess(false);
+        holdStartRef.current = null;
+        setGestureState("waiting");
+        setMatchScore(0);
+        if (onNextSign) onNextSign();
+      }, 1500);
+      return () => clearTimeout(timer);
     }
-  }, [practiceSuccess]);
+  }, [practiceSuccess, onNextSign]);
 
   // Safety: restore body scroll on unmount
   useEffect(() => {
@@ -4514,47 +4519,34 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
                 )}
               </div>
             )}
-            {/* Success animation overlay — fixed fullscreen on mobile, over camera on desktop */}
+            {/* Success checkmark overlay — over camera only */}
             {practiceSuccess && createPortal(
-              <div
-                className="flex items-center justify-center transition-opacity duration-300"
-                style={{
-                  position: window.innerWidth < 640 ? 'fixed' : 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  width: window.innerWidth < 640 ? '100vw' : '100%',
-                  height: window.innerWidth < 640 ? '100vh' : '100%',
-                  zIndex: window.innerWidth < 640 ? 99999 : 50,
-                  backgroundColor: window.innerWidth < 640 ? 'rgba(0, 0, 0, 0.92)' : 'rgba(0, 0, 0, 0.4)',
-                  backdropFilter: 'blur(4px)',
-                  WebkitBackdropFilter: 'blur(4px)',
-                  overscrollBehavior: 'none',
-                }}
-              >
-                <div className="flex flex-col items-center gap-3 animate-fade px-6 sm:gap-4">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-500/20 shadow-2xl sm:h-32 sm:w-32">
-                    <Icon name="check" className="h-10 w-10 text-green-400 sm:h-16 sm:w-16" />
+              <div style={{
+                position: 'fixed',
+                top: 0, left: 0, right: 0, bottom: 0,
+                zIndex: 99999,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                animation: 'fadeIn 0.3s ease-out both',
+                pointerEvents: 'none',
+              }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', opacity: 0, animation: 'fadeIn 0.4s ease-out 0.2s forwards' }}>
+                  <div style={{
+                    width: '96px', height: '96px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgb(5,150,105)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: '0 8px 32px rgba(5,150,105,0.5)',
+                  }}>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                      <path d="M5 13l4 4L19 7" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                   </div>
-                  <div className="text-center">
-                    <div className="text-xl font-extrabold text-white sm:text-3xl">¡Excelente!</div>
-                    <div className="mt-1 text-sm text-green-300 sm:mt-2">Seña aprendida</div>
-                  </div>
-                  {/* Continue / Keep practicing buttons */}
-                  <div className="mt-3 flex w-full max-w-xs flex-col gap-2 sm:mt-4 sm:max-w-none sm:flex-row">
-                    <button
-                      onClick={handleKeepPracticing}
-                      className="btn-press flex-1 rounded-xl border-2 border-white/30 bg-white/10 px-4 py-2.5 text-sm font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20"
-                    >
-                      Seguir practicando
-                    </button>
-                    <button
-                      onClick={handleContinue}
-                      className="btn-press flex-1 rounded-xl bg-brand-orange px-4 py-2.5 text-sm font-bold text-white transition-all hover:bg-brand-orange/90"
-                    >
-                      Continuar →
-                    </button>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '24px', fontWeight: 800, color: 'white', textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>¡Excelente!</div>
+                    <div style={{ fontSize: '14px', fontWeight: 500, color: 'rgb(110,231,183)', marginTop: '4px' }}>Seña aprendida</div>
                   </div>
                 </div>
               </div>,

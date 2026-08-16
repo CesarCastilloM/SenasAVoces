@@ -221,6 +221,29 @@ body {
   }
 }
 
+@keyframes checkDraw {
+  from { strokeDashoffset: var(--dash, 151); }
+  to { strokeDashoffset: 0; }
+}
+
+@keyframes successPop {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes successBounce {
+  0% { transform: scale(0.5) rotate(-10deg); }
+  50% { transform: scale(1.15) rotate(3deg); }
+  75% { transform: scale(0.95) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes successText {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 @keyframes slideInRight {
   from {
     transform: translateX(100%);
