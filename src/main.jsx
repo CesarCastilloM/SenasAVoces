@@ -3619,9 +3619,55 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
   const [gestureState, setGestureState] = useState("waiting");
   const [matchScore, setMatchScore] = useState(0);
   const [practiceSuccess, setPracticeSuccess] = useState(false);
+  const [dtwRanking, setDtwRanking] = useState([]);
   const holdStartRef = useRef(null);
   const successRef = useRef(false); // synchronous guard against double-trigger
   const HOLD_MS = 600;
+
+  // Refs for all mutable values used in handlePracticeResults
+  // This keeps the callback stable so useCameraMediaPipe doesn't reinitialize
+  const signRef = useRef(sign);
+  const userRef = useRef(user);
+  const moduleIdRef = useRef(moduleId);
+  const onSignCompletedRef = useRef(onSignCompleted);
+  const onModuleCompletedRef = useRef(onModuleCompleted);
+  const allItemsRef = useRef(allItems);
+  const practicedSignsRef = useRef(practicedSigns);
+
+  useEffect(() => { signRef.current = sign; }, [sign]);
+  useEffect(() => { userRef.current = user; }, [user]);
+  useEffect(() => { moduleIdRef.current = moduleId; }, [moduleId]);
+  useEffect(() => { onSignCompletedRef.current = onSignCompleted; }, [onSignCompleted]);
+  useEffect(() => { onModuleCompletedRef.current = onModuleCompleted; }, [onModuleCompleted]);
+  useEffect(() => { allItemsRef.current = allItems; }, [allItems]);
+  useEffect(() => { practicedSignsRef.current = practicedSigns; }, [practicedSigns]);
+
+  // Dynamic DTW detection state (for signs without static templates, e.g. months)
+  const dtwReadyRef = useRef(false);
+  const dtwIdleRef = useRef(0);
+  const dtwStableGuessRef = useRef(null);
+  const dtwStableCountRef = useRef(0);
+  const dtwLastDetectedRef = useRef(null);
+  const dtwEvaluatingRef = useRef(false);
+  const DTW_IDLE_RESET = 8;
+  const DTW_MIN_FRAMES = 15;
+  const DTW_EVAL_EVERY = 3;
+  const DTW_SCORE_THRESHOLD = 0.5;
+  const DTW_MARGIN_THRESHOLD = 0.12;
+  const DTW_STABLE_FRAMES = 3;
+  const DTW_MAX_BUFFER = 260;
+  const DTW_FRAME_COUNTER = useRef(0);
+
+  // Load DTW patterns once on mount (for dynamic signs like months)
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const loaded = await reloadDynamicPatterns();
+      console.log(`[SignVideoModal] DTW patterns loaded: ${loaded}`);
+      if (!cancelled) dtwReadyRef.current = Array.isArray(loaded) ? loaded.length > 0 : loaded > 0;
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   // Extract YouTube video ID from URL
   const getYouTubeVideoId = (url) => {
@@ -3648,24 +3694,143 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
     holdStartRef.current = null;
     setGestureState("waiting");
     setMatchScore(0);
+    dynamicDetector.clearBuffer();
+    dtwIdleRef.current = 0;
+    dtwStableGuessRef.current = null;
+    dtwStableCountRef.current = 0;
+    dtwLastDetectedRef.current = null;
+    dtwEvaluatingRef.current = false;
   }, [sign]);
 
-  // Simplified practice handler for lesson view
+  // Practice handler — EXACT copy of model_test_page handleResults + completion logic
+  // Uses refs for all mutable values so callback is stable (deps=[]) and camera never reinitializes
   const handlePracticeResults = useCallback(({ handRes }) => {
-    const lms = handRes?.landmarks?.[0] ?? null;
+    const curSign = signRef.current;
+    const curUser = userRef.current;
+    const curModuleId = moduleIdRef.current;
+    const curOnSignCompleted = onSignCompletedRef.current;
+    const curOnModuleCompleted = onModuleCompletedRef.current;
+    const curAllItems = allItemsRef.current;
+    const curPracticedSigns = practicedSignsRef.current;
+
+    const { right, left } = splitHands(handRes);
+    const lms = right || left;
     setHandDetected(!!lms);
 
-    // Use successRef for synchronous guard — practiceSuccess in closure may be stale
-    if (!lms || successRef.current) {
-      holdStartRef.current = null;
+    // No hand → idle handling (same as model_test_page)
+    if (!lms) {
+      dtwIdleRef.current += 1;
+      if (dtwIdleRef.current >= DTW_IDLE_RESET) {
+        dynamicDetector.clearBuffer();
+        dtwEvaluatingRef.current = false;
+        dtwStableGuessRef.current = null;
+        dtwStableCountRef.current = 0;
+      }
       if (!successRef.current) setGestureState("waiting");
       setMatchScore(0);
       return;
     }
 
+    // Hand back: reset if there was a long pause (same as model_test_page)
+    if (dtwIdleRef.current >= DTW_IDLE_RESET) {
+      dtwEvaluatingRef.current = false;
+      dynamicDetector.clearBuffer();
+      dtwStableGuessRef.current = null;
+      dtwStableCountRef.current = 0;
+    }
+    dtwIdleRef.current = 0;
+
+    const useDynamic = !curSign?.template && dtwReadyRef.current;
+
+    // Debug: log once per ~60 frames which path we're on
+    if (DTW_FRAME_COUNTER.current % 60 === 0) {
+      console.log(`[LessonView] sign=${curSign?.label} template=${!!curSign?.template} dtwReady=${dtwReadyRef.current} patternsLoaded=${dynamicDetector.patterns?.length || 0} useDynamic=${useDynamic}`);
+    }
+
+    if (useDynamic) {
+      // ── DTW path: exact copy of model_test_page handleResults ──
+      const info = frameInfo(right, left);
+      dynamicDetector.pushFrameInfo(info);
+      const bufLen = dynamicDetector.buffer.length;
+
+      DTW_FRAME_COUNTER.current++;
+
+      // Debug: log every 60 frames to confirm we're in the DTW path
+      if (DTW_FRAME_COUNTER.current % 60 === 0) {
+        console.log(`[DTW] active buf=${bufLen} patterns=${dynamicDetector.patterns?.length || 0}`);
+      }
+
+      if (bufLen >= DTW_MIN_FRAMES && DTW_FRAME_COUNTER.current % DTW_EVAL_EVERY === 0) {
+        const ranking = dynamicDetector.detectRanking();
+        if (ranking.length > 0) {
+          const guess = ranking[0];
+          const targetName = curSign?.label || curSign?.name || "";
+          setDtwRanking(ranking.slice(0, 3));
+
+          if (bufLen % 15 === 0) {
+            const top5names = ranking.slice(0, 5).map(r => `${r.name}:${r.score.toFixed(2)}`);
+            console.log(`[DTW] target=${targetName} buf=${bufLen} top5=[${top5names}]`);
+          }
+
+          // Score too high = no match at all, reset buffer
+          if (guess.score > 2.5) {
+            dynamicDetector.clearBuffer();
+            setMatchScore(0);
+            setGestureState("waiting");
+            return;
+          }
+
+          const top5 = ranking.slice(0, 5);
+          const targetEntry = top5.find(r => r.name === targetName);
+          const isTargetInTop5 = !!targetEntry;
+
+          // Show precision based on target's position in ranking
+          const sc = isTargetInTop5
+            ? Math.max(0, Math.min(1, 1 - targetEntry.score))
+            : Math.max(0, Math.min(1, 1 - guess.score));
+          setMatchScore(isTargetInTop5 ? sc : 0);
+
+          // ── Detection: if target is in top 5, mark as correct immediately ──
+          if (isTargetInTop5 && !successRef.current && !dtwEvaluatingRef.current) {
+            successRef.current = true;
+            setPracticeSuccess(true);
+            setGestureState("confirmed");
+            dtwEvaluatingRef.current = true;
+            dynamicDetector.clearBuffer();
+
+            if (curUser) {
+              updateSignProgress(curUser.id, targetName, curModuleId, sc, 0);
+              updateStreak(curUser.id);
+            }
+            if (curOnSignCompleted) curOnSignCompleted(targetName);
+            if (curAllItems && curAllItems.length > 0 && curOnModuleCompleted) {
+              const allDone = curAllItems.every((item) => {
+                const itemLabel = item.label || item.name;
+                return itemLabel === targetName || curPracticedSigns?.has(itemLabel);
+              });
+              if (allDone) curOnModuleCompleted(curModuleId, curAllItems.length);
+            }
+          } else if (!isTargetInTop5) {
+            setGestureState(guess.score < 1.0 ? "partial" : "waiting");
+          }
+
+          // Buffer full — reset to keep detecting
+          if (bufLen >= DTW_MAX_BUFFER) {
+            dynamicDetector.clearBuffer();
+            dtwStableGuessRef.current = null;
+            dtwStableCountRef.current = 0;
+          }
+        }
+      }
+      return;
+    }
+
+    // ── Static template path (original) ──
+    if (successRef.current) return;
+
     const states = fingerStates(lms);
-    const sc = sign.template
-      ? scoreTarget(states, sign.label || sign.name, sign.template)
+    const sc = curSign?.template
+      ? scoreTarget(states, curSign?.label || curSign?.name, curSign.template)
       : 0;
 
     setMatchScore(sc);
@@ -3677,40 +3842,34 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
       setGestureState(pct >= 1 ? "match" : "partial");
 
       if (held >= HOLD_MS) {
-        // Synchronous guard — prevents double-trigger across frames
         if (successRef.current) return;
         successRef.current = true;
         setPracticeSuccess(true);
         setGestureState("confirmed");
 
-        // Save progress
-        if (user) {
-          updateSignProgress(user.id, sign.label || sign.name, moduleId, sc, 0);
-          updateStreak(user.id);
+        if (curUser) {
+          updateSignProgress(curUser.id, curSign?.label || curSign?.name, curModuleId, sc, 0);
+          updateStreak(curUser.id);
         }
 
-        // Notify parent so the snake indicator updates
-        if (onSignCompleted) onSignCompleted(sign.label || sign.name);
+        if (curOnSignCompleted) curOnSignCompleted(curSign?.label || curSign?.name);
 
-        // Check if this was the last sign in the module
-        if (allItems && allItems.length > 0 && onModuleCompleted) {
-          const signLabel = sign.label || sign.name;
-          const allDone = allItems.every((item) => {
+        if (curAllItems && curAllItems.length > 0 && curOnModuleCompleted) {
+          const signLabel = curSign?.label || curSign?.name;
+          const allDone = curAllItems.every((item) => {
             const itemLabel = item.label || item.name;
-            return itemLabel === signLabel || practicedSigns.has(itemLabel);
+            return itemLabel === signLabel || curPracticedSigns?.has(itemLabel);
           });
           if (allDone) {
-            onModuleCompleted(moduleId, allItems.length);
+            curOnModuleCompleted(curModuleId, curAllItems.length);
           }
         }
-
-        // Stay on the same sign — user taps "Continuar" to advance
       }
     } else {
       holdStartRef.current = null;
       setGestureState(sc > 0.45 ? "partial" : "waiting");
     }
-  }, [sign, user, moduleId, practiceSuccess, onSignCompleted, onModuleCompleted, allItems, practicedSigns]);
+  }, []); // stable — uses refs internally
 
   // Handler for the "Continuar" button — advances to next sign and resets state
   const handleContinue = () => {
@@ -3760,7 +3919,7 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
     return () => { document.body.style.overflow = ''; };
   }, []);
 
-  const { videoRef, canvasRef, camReady, camError } = useSimpleCamera({
+  const { videoRef, canvasRef, camReady, camError } = useCameraMediaPipe({
     onResults: handlePracticeResults
   });
 
@@ -3816,12 +3975,10 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
             className="absolute inset-0 h-full w-full object-cover"
             playsInline
             muted
-            style={{ transform: "scaleX(-1)" }}
           />
           <canvas
             ref={canvasRef}
             className="absolute inset-0 h-full w-full object-cover"
-            style={{ transform: "scaleX(-1)" }}
           />
           {!camReady && !camError && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50">
@@ -3850,9 +4007,21 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
                  gestureState === "partial" ? "Casi..." :
                  handDetected ? "Detectando..." : "Muestra tu mano"}
               </div>
-              {sign.template && (
+              {(sign.template || (!sign.template && dtwReadyRef.current)) && (
                 <div className={cx("rounded-lg px-3 py-2 text-sm font-bold transition-all duration-300", isDark ? "bg-brand-deep/80 text-brand-cyan" : "bg-white/80 text-brand-teal")}>
                   Precisión: {Math.round(matchScore * 100)}%
+                </div>
+              )}
+              {!sign.template && dtwReadyRef.current && dtwRanking.length > 0 && (
+                <div className={cx("rounded-lg px-3 py-2 text-xs font-medium transition-all duration-300", isDark ? "bg-brand-deep/60 text-brand-soft" : "bg-white/60 text-brand-muted")}>
+                  {dtwRanking.map((r, i) => (
+                    <div key={r.name} className="flex items-center justify-between gap-2">
+                      <span className={r.name === (sign.label || sign.name) ? "font-bold text-brand-teal" : ""}>
+                        {i + 1}. {r.name.replace(/_/g, " ")}
+                      </span>
+                      <span>{Math.max(0, Math.round((1 - r.score) * 100))}%</span>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -3949,9 +4118,45 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
   const [gestureState, setGestureState] = useState("waiting");
   const [matchScore, setMatchScore] = useState(0);
   const [practiceSuccess, setPracticeSuccess] = useState(false);
+  const [dtwRanking, setDtwRanking] = useState([]);
   const holdStartRef = useRef(null);
   const successRef = useRef(false); // synchronous guard against double-trigger
   const HOLD_MS = 600;
+
+  // Refs for mutable values to keep handlePracticeResults stable
+  const signRef = useRef(sign);
+  const userRef = useRef(user);
+  const moduleIdRef = useRef(moduleId);
+  useEffect(() => { signRef.current = sign; }, [sign]);
+  useEffect(() => { userRef.current = user; }, [user]);
+  useEffect(() => { moduleIdRef.current = moduleId; }, [moduleId]);
+
+  // Dynamic DTW detection state
+  const dtwReadyRef = useRef(false);
+  const dtwIdleRef = useRef(0);
+  const dtwStableGuessRef = useRef(null);
+  const dtwStableCountRef = useRef(0);
+  const dtwLastDetectedRef = useRef(null);
+  const dtwEvaluatingRef = useRef(false);
+  const DTW_IDLE_RESET = 8;
+  const DTW_MIN_FRAMES = 15;
+  const DTW_EVAL_EVERY = 3;
+  const DTW_SCORE_THRESHOLD = 0.5;
+  const DTW_MARGIN_THRESHOLD = 0.12;
+  const DTW_STABLE_FRAMES = 3;
+  const DTW_MAX_BUFFER = 260;
+  const DTW_FRAME_COUNTER = useRef(0);
+
+  // Load DTW patterns once on mount
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const loaded = await reloadDynamicPatterns();
+      console.log(`[SignVideoModal] DTW patterns loaded: ${loaded}`);
+      if (!cancelled) dtwReadyRef.current = Array.isArray(loaded) ? loaded.length > 0 : loaded > 0;
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   // Extract YouTube video ID from URL
   const getYouTubeVideoId = (url) => {
@@ -3978,6 +4183,12 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
     holdStartRef.current = null;
     setGestureState("waiting");
     setMatchScore(0);
+    dynamicDetector.clearBuffer();
+    dtwIdleRef.current = 0;
+    dtwStableGuessRef.current = null;
+    dtwStableCountRef.current = 0;
+    dtwLastDetectedRef.current = null;
+    dtwEvaluatingRef.current = false;
   }, [sign]);
 
   // Block body scroll when modal is open
@@ -4039,22 +4250,107 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
     }
   };
 
-  // Simplified practice handler for modal
+  // Practice handler — uses refs for all mutable values so callback is stable
   const handlePracticeResults = useCallback(({ handRes }) => {
-    const lms = handRes?.landmarks?.[0] ?? null;
+    const curSign = signRef.current;
+    const curUser = userRef.current;
+    const curModuleId = moduleIdRef.current;
+
+    const { right, left } = splitHands(handRes);
+    const lms = right || left || handRes?.landmarks?.[0] || null;
     setHandDetected(!!lms);
 
-    // Use successRef for synchronous guard — practiceSuccess in closure may be stale
     if (!lms || successRef.current) {
       holdStartRef.current = null;
       if (!successRef.current) setGestureState("waiting");
       setMatchScore(0);
+      if (!lms) {
+        dtwIdleRef.current += 1;
+        if (dtwIdleRef.current >= DTW_IDLE_RESET) {
+          dynamicDetector.clearBuffer();
+          dtwStableGuessRef.current = null;
+          dtwStableCountRef.current = 0;
+          dtwEvaluatingRef.current = false;
+        }
+      }
       return;
     }
 
+    if (dtwIdleRef.current >= DTW_IDLE_RESET) {
+      dtwEvaluatingRef.current = false;
+      dtwStableGuessRef.current = null;
+      dtwStableCountRef.current = 0;
+    }
+    dtwIdleRef.current = 0;
+
+    const useDynamic = !curSign?.template && dtwReadyRef.current;
+
+    if (useDynamic) {
+      const info = frameInfo(right, left);
+      dynamicDetector.pushFrameInfo(info);
+      const bufLen = dynamicDetector.buffer.length;
+
+      DTW_FRAME_COUNTER.current++;
+
+      if (bufLen >= DTW_MIN_FRAMES && DTW_FRAME_COUNTER.current % DTW_EVAL_EVERY === 0) {
+        const ranking = dynamicDetector.detectRanking();
+        if (ranking.length > 0) {
+          const guess = ranking[0];
+          const targetName = curSign?.label || curSign?.name || "";
+          setDtwRanking(ranking.slice(0, 3));
+
+          if (bufLen % 15 === 0) {
+            const top5names = ranking.slice(0, 5).map(r => `${r.name}:${r.score.toFixed(2)}`);
+            console.log(`[DTW-Modal] target=${targetName} buf=${bufLen} top5=[${top5names}]`);
+          }
+
+          if (guess.score > 2.5) {
+            dynamicDetector.clearBuffer();
+            setMatchScore(0);
+            setGestureState("waiting");
+            return;
+          }
+
+          const top5 = ranking.slice(0, 5);
+          const targetEntry = top5.find(r => r.name === targetName);
+          const isTargetInTop5 = !!targetEntry;
+
+          const sc = isTargetInTop5
+            ? Math.max(0, Math.min(1, 1 - targetEntry.score))
+            : Math.max(0, Math.min(1, 1 - guess.score));
+          setMatchScore(isTargetInTop5 ? sc : 0);
+
+          if (isTargetInTop5 && !successRef.current && !dtwEvaluatingRef.current) {
+            successRef.current = true;
+            setPracticeSuccess(true);
+            setGestureState("confirmed");
+            dtwEvaluatingRef.current = true;
+            dynamicDetector.clearBuffer();
+
+            if (curUser) {
+              updateSignProgress(curUser.id, targetName, curModuleId, sc, 0);
+              updateStreak(curUser.id);
+            }
+          } else if (!isTargetInTop5) {
+            setGestureState(guess.score < 1.0 ? "partial" : "waiting");
+          }
+
+          if (bufLen >= DTW_MAX_BUFFER) {
+            dynamicDetector.clearBuffer();
+            dtwStableGuessRef.current = null;
+            dtwStableCountRef.current = 0;
+          }
+        }
+      }
+      return;
+    }
+
+    // ── Static template path (original) ──
+    if (successRef.current) return;
+
     const states = fingerStates(lms);
-    const sc = sign.template
-      ? scoreTarget(states, sign.label || sign.name, sign.template)
+    const sc = curSign?.template
+      ? scoreTarget(states, curSign?.label || curSign?.name, curSign.template)
       : 0;
 
     setMatchScore(sc);
@@ -4066,25 +4362,21 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
       setGestureState(pct >= 1 ? "match" : "partial");
 
       if (held >= HOLD_MS) {
-        // Synchronous guard — prevents double-trigger across frames
         if (successRef.current) return;
         successRef.current = true;
         setPracticeSuccess(true);
         setGestureState("confirmed");
 
-        // Save progress
-        if (user) {
-          updateSignProgress(user.id, sign.label || sign.name, moduleId, sc, 0);
-          updateStreak(user.id);
+        if (curUser) {
+          updateSignProgress(curUser.id, curSign?.label || curSign?.name, curModuleId, sc, 0);
+          updateStreak(curUser.id);
         }
-
-        // Stay on the same sign — user taps "Continuar" to advance
       }
     } else {
       holdStartRef.current = null;
       setGestureState(sc > 0.45 ? "partial" : "waiting");
     }
-  }, [sign, user, moduleId, practiceSuccess]);
+  }, []); // stable — uses refs internally
 
   // Handler for the "Continuar" button — advances to next sign and resets state
   const handleContinue = () => {
@@ -4123,7 +4415,7 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
     return () => { document.body.style.overflow = ''; };
   }, []);
 
-  const { videoRef, canvasRef, camReady, camError } = useSimpleCamera({
+  const { videoRef, canvasRef, camReady, camError } = useCameraMediaPipe({
     onResults: handlePracticeResults
   });
 
@@ -4195,12 +4487,10 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
               className="absolute inset-0 h-full w-full object-cover"
               playsInline
               muted
-              style={{ transform: "scaleX(-1)" }}
             />
             <canvas
               ref={canvasRef}
               className="absolute inset-0 h-full w-full object-cover"
-              style={{ transform: "scaleX(-1)" }}
             />
             {!camReady && !camError && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/50">
@@ -4229,9 +4519,21 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
                    gestureState === "partial" ? "Casi..." :
                    handDetected ? "Detectando..." : "Muestra tu mano"}
                 </div>
-                {sign.template && (
+                {(sign.template || (!sign.template && dtwReadyRef.current)) && (
                   <div className={cx("rounded-lg px-3 py-2 text-sm font-bold transition-all duration-300", isDark ? "bg-brand-deep/80 text-brand-cyan" : "bg-white/80 text-brand-teal")}>
                     Precisión: {Math.round(matchScore * 100)}%
+                  </div>
+                )}
+                {!sign.template && dtwReadyRef.current && dtwRanking.length > 0 && (
+                  <div className={cx("rounded-lg px-3 py-2 text-xs font-medium transition-all duration-300", isDark ? "bg-brand-deep/60 text-brand-soft" : "bg-white/60 text-brand-muted")}>
+                    {dtwRanking.map((r, i) => (
+                      <div key={r.name} className="flex items-center justify-between gap-2">
+                        <span className={r.name === (sign.label || sign.name) ? "font-bold text-brand-teal" : ""}>
+                          {i + 1}. {r.name.replace(/_/g, " ")}
+                        </span>
+                        <span>{Math.max(0, Math.round((1 - r.score) * 100))}%</span>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -5315,11 +5617,20 @@ function pathToPublicUrl(absPath) {
   return null;
 }
 
+let _dynamicPatternsPromise = null;
 async function reloadDynamicPatterns() {
-  dynamicDetector.clearPatterns();
-  const bust = `?t=${Date.now()}`;
-  try {
-    const manifestRes = await fetch('/api/training-data/manifest' + bust);
+  // If patterns are already loaded, return them without reloading
+  if (dynamicDetector.patterns && dynamicDetector.patterns.length > 0) {
+    return dynamicDetector.getStatus().patternsLoaded;
+  }
+  // If a reload is already in progress, wait for it instead of clearing
+  if (_dynamicPatternsPromise) return _dynamicPatternsPromise;
+
+  _dynamicPatternsPromise = (async () => {
+    dynamicDetector.clearPatterns();
+    const bust = `?t=${Date.now()}`;
+    try {
+      const manifestRes = await fetch('/api/training-data/manifest' + bust);
     if (!manifestRes.ok) throw new Error(`No se pudo cargar manifest (${manifestRes.status})`);
     const man = await manifestRes.json();
 
@@ -5355,7 +5666,11 @@ async function reloadDynamicPatterns() {
     }
     console.log(`[DYNAMIC] ${loaded} secuencias cargadas`);
   } catch (e) { console.warn('[DYNAMIC] reload error:', e); }
-  return dynamicDetector.getStatus().patternsLoaded;
+    return dynamicDetector.getStatus().patternsLoaded;
+  })();
+
+  _dynamicPatternsPromise.finally(() => { _dynamicPatternsPromise = null; });
+  return _dynamicPatternsPromise;
 }
 
 // ╬ô├╢├ç╬ô├╢├ç DebugPage: diagnΓö£Γöéstico visual de fingerStates + scores ╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç
