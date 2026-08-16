@@ -35,6 +35,20 @@ export const ALPHABET_LESSON = {
 };
 
 export const GLOSARIO_LESSONS = [
+ { id:"G0M", level:1, title:"Meses del año", items:[
+ {"glyph": "ENERO", "label": "ENERO", "desc": "Seña LSM: Enero", "video_ref": "/videos/signs/ENERO.mp4", "thumbnail": "/videos/signs/ENERO.mp4"},
+ {"glyph": "FEBRERO", "label": "FEBRERO", "desc": "Seña LSM: Febrero", "video_ref": "/videos/signs/FEBRERO.mp4", "thumbnail": "/videos/signs/FEBRERO.mp4"},
+ {"glyph": "MARZO", "label": "MARZO", "desc": "Seña LSM: Marzo", "video_ref": "/videos/signs/MARZO.mp4", "thumbnail": "/videos/signs/MARZO.mp4"},
+ {"glyph": "ABRIL", "label": "ABRIL", "desc": "Seña LSM: Abril", "video_ref": "/videos/signs/ABRIL.mp4", "thumbnail": "/videos/signs/ABRIL.mp4"},
+ {"glyph": "MAYO", "label": "MAYO", "desc": "Seña LSM: Mayo", "video_ref": "/videos/signs/MAYO.mp4", "thumbnail": "/videos/signs/MAYO.mp4"},
+ {"glyph": "JUNIO", "label": "JUNIO", "desc": "Seña LSM: Junio", "video_ref": "/videos/signs/JUNIO.mp4", "thumbnail": "/videos/signs/JUNIO.mp4"},
+ {"glyph": "JULIO", "label": "JULIO", "desc": "Seña LSM: Julio", "video_ref": "/videos/signs/JULIO.mp4", "thumbnail": "/videos/signs/JULIO.mp4"},
+ {"glyph": "AGOSTO", "label": "AGOSTO", "desc": "Seña LSM: Agosto", "video_ref": "/videos/signs/AGOSTO.mp4", "thumbnail": "/videos/signs/AGOSTO.mp4"},
+ {"glyph": "SEPTIEMBRE", "label": "SEPTIEMBRE", "desc": "Seña LSM: Septiembre", "video_ref": "/videos/signs/SEPTIEMBRE.mp4", "thumbnail": "/videos/signs/SEPTIEMBRE.mp4"},
+ {"glyph": "OCTUBRE", "label": "OCTUBRE", "desc": "Seña LSM: Octubre", "video_ref": "/videos/signs/OCTUBRE.mp4", "thumbnail": "/videos/signs/OCTUBRE.mp4"},
+ {"glyph": "NOVIEMBRE", "label": "NOVIEMBRE", "desc": "Seña LSM: Noviembre", "video_ref": "/videos/signs/NOVIEMBRE.mp4", "thumbnail": "/videos/signs/NOVIEMBRE.mp4"},
+ {"glyph": "DICIEMBRE", "label": "DICIEMBRE", "desc": "Seña LSM: Diciembre", "video_ref": "/videos/signs/DICIEMBRE.mp4", "thumbnail": "/videos/signs/DICIEMBRE.mp4"},
+ ]},
  { id:"G1", level:1, title:"Números (todos)", items:[
  {"glyph": "1", "label": "1", "desc": "Seña LSM oficial: 1", "video_ref": "https://www.youtube.com/embed/zcd4GfYz-fA", "thumbnail": "https://img.youtube.com/vi/zcd4GfYz-fA/mqdefault.jpg"},
  {"glyph": "2", "label": "2", "desc": "Seña LSM oficial: 2", "video_ref": "https://www.youtube.com/embed/1Fau1Nh7rPY", "thumbnail": "https://img.youtube.com/vi/1Fau1Nh7rPY/mqdefault.jpg"},

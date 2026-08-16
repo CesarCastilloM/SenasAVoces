@@ -55,6 +55,7 @@ const modules = [ALPHABET_LESSON, ...GLOSARIO_LESSONS].map((lesson, i) => ({
 function getModuleIcon(title) {
   const iconMap = {
     "Abecedario LSM (A–Z + Ñ)": "abc",
+    "Meses del año": "calendar",
     "Números (todos)": "numbers",
     "Expresiones cotidianas": "expressions",
     "Colores (todos)": "colors",
@@ -294,6 +295,7 @@ function Icon({ name, className = "h-5 w-5" }) {
     health: <svg {...common}><path d="M9 2v6H3v8h6v6h6v-6h6V8h-6V2H9z" fill="currentColor" fillOpacity="0.85" /><path d="M9 2v6H3v8h6v6h6v-6h6V8h-6V2H9z" /></svg>,
     education: <svg {...common}><path d="M3 9l9-4 9 4-9 4-9-4z" fill="currentColor" fillOpacity="0.2" /><path d="M3 9l9-4 9 4-9 4-9-4z" /><path d="M7 11v5c0 1 2 2 5 2s5-1 5-2v-5" /><path d="M21 9v5" strokeLinecap="round" /></svg>,
     technology: <svg {...common}><rect x="2" y="4" width="20" height="13" rx="2" /><path d="M2 17h20M9 21h6M12 17v4" strokeLinecap="round" /></svg>,
+    calendar: <svg {...common}><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" strokeLinecap="round" /></svg>,
     chevron: <svg {...common}><polyline points="6 9 12 15 18 9" /></svg>,
     // Iconos específicos para señas individuales
     "number-1": <svg {...common}><text x="12" y="17" textAnchor="middle" fontSize="16" fontWeight="bold" fill="currentColor">1</text></svg>,
@@ -2659,7 +2661,9 @@ function DashboardPage({ isDark, navigate }) {
 }
 
 function LearnPage({ isDark, navigate }) {
-  const { userProgress, moduleProgress } = useAuth();
+  const { userProgress, moduleProgress, user } = useAuth();
+  const DEV_USER_EMAIL = import.meta.env.VITE_DEV_USER_EMAIL;
+  const isDevUser = user?.email === DEV_USER_EMAIL;
 
   // Merge module data with progress from database
   const modulesWithProgress = useMemo(() => {
@@ -2667,28 +2671,26 @@ function LearnPage({ isDark, navigate }) {
       const progressData = moduleProgress?.find(mp => mp.module_id === module.id);
       const signsCompleted = progressData?.signs_completed || 0;
       const isCompleted = signsCompleted >= module.signs;
-      
+
       // Lógica de desbloqueo progresivo
       let status = 'locked';
       if (index === 0) {
-        // Primer módulo siempre desbloqueado
         status = isCompleted ? 'completed' : 'current';
       } else {
-        // Verificar si el módulo anterior está completado
         const prevModule = modules[index - 1];
         const prevProgressData = moduleProgress?.find(mp => mp.module_id === prevModule.id);
         const prevCompleted = (prevProgressData?.signs_completed || 0) >= prevModule.signs;
-        
-        if (prevCompleted) {
-          status = isCompleted ? 'completed' : 'current';
-        } else {
-          status = 'locked';
-        }
+        status = prevCompleted ? (isCompleted ? 'completed' : 'current') : 'locked';
       }
-      
+
+      // Dev user: todos los módulos desbloqueados
+      if (isDevUser) {
+        status = isCompleted ? 'completed' : 'current';
+      }
+
       return {
         ...module,
-        status: progressData?.status || status,
+        status: isDevUser ? status : (progressData?.status || status),
         signs_completed: signsCompleted,
       };
     });
@@ -2831,13 +2833,13 @@ function LearnPage({ isDark, navigate }) {
 
                 <div className="roadmap-label">
                   <span className={cx(
-                    "block text-xs font-bold leading-tight sm:text-sm",
+                    "block break-words text-xs font-bold leading-tight sm:text-sm",
                     locked ? (isDark ? "text-[#5A7A82]" : "text-[#B0A89A]") : (isDark ? "text-white" : "text-[#1A2E3B]")
                   )}>
                     {module.title}
                   </span>
                   <span className={cx(
-                    "mt-0.5 block text-[10px] font-medium",
+                    "mt-0.5 block text-[9px] font-medium leading-tight sm:text-[10px]",
                     isDark ? "text-brand-soft" : "text-[#607274]"
                   )}>
                     {module.signs_completed || 0}/{module.signs} señas
@@ -3066,7 +3068,7 @@ function SignProgressSnake({ items, practicedSigns, activeSignLabel, isDark, onS
                 </div>
                 {/* Label tooltip on hover */}
                 <span className={cx(
-                  "pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded px-1.5 py-0.5 text-[9px] font-bold opacity-0 transition-opacity group-hover:opacity-100 z-20",
+                  "pointer-events-none absolute top-full mt-1 max-w-[90px] text-center leading-tight rounded px-1.5 py-0.5 text-[9px] font-bold opacity-0 transition-opacity group-hover:opacity-100 z-20",
                   isDark ? "bg-brand-card text-white" : "bg-white text-gray-700 shadow"
                 )}>
                   {label}
@@ -3220,11 +3222,13 @@ function LessonPage({ isDark, navigate }) {
 
   // Merge module data with progress from database
   const modulesWithProgress = useMemo(() => {
+    const DEV_USER_EMAIL = import.meta.env.VITE_DEV_USER_EMAIL;
+    const isDevUser = user?.email === DEV_USER_EMAIL;
     return modules.map((module, index) => {
       const progressData = moduleProgress?.find(mp => mp.module_id === module.id);
       const signsCompleted = progressData?.signs_completed || 0;
       const isCompleted = signsCompleted >= module.signs;
-      
+
       let status = 'locked';
       if (index === 0) {
         status = isCompleted ? 'completed' : 'current';
@@ -3232,21 +3236,26 @@ function LessonPage({ isDark, navigate }) {
         const prevModule = modules[index - 1];
         const prevProgressData = moduleProgress?.find(mp => mp.module_id === prevModule.id);
         const prevCompleted = (prevProgressData?.signs_completed || 0) >= prevModule.signs;
-        
+
         if (prevCompleted) {
           status = isCompleted ? 'completed' : 'current';
         } else {
           status = 'locked';
         }
       }
-      
+
+      // Dev user: todos los módulos desbloqueados
+      if (isDevUser) {
+        status = isCompleted ? 'completed' : 'current';
+      }
+
       return {
         ...module,
-        status: progressData?.status || status,
+        status: isDevUser ? status : (progressData?.status || status),
         signs_completed: signsCompleted,
       };
     });
-  }, [moduleProgress]);
+  }, [moduleProgress, user]);
 
   const filteredItems = useMemo(() => {
     if (!selected) return [];
@@ -3369,12 +3378,23 @@ function LessonPage({ isDark, navigate }) {
                         style={{ animationDelay: `${index * 30}ms` }}
                       >
                         <div className="relative h-24 w-full overflow-hidden rounded-xl shadow-md">
-                          <img 
-                            src={item.thumbnail} 
-                            alt={item.label} 
-                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" 
-                            loading="lazy" 
-                          />
+                          {item.thumbnail?.endsWith(".mp4") ? (
+                            <video
+                              src={item.thumbnail}
+                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                              muted
+                              loop
+                              playsInline
+                              preload="metadata"
+                            />
+                          ) : (
+                            <img
+                              src={item.thumbnail}
+                              alt={item.label}
+                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                              loading="lazy"
+                            />
+                          )}
                           <div className="absolute inset-0 bg-black/10" />
                           {/* Icon overlay */}
                           <div className="absolute top-2 right-2 h-6 w-6 rounded-full bg-white/90 flex items-center justify-center shadow-sm">
@@ -3454,13 +3474,25 @@ function SignVideoPanel({ sign, isDark, onClose, moduleId }) {
         </button>
       </div>
       <div className="overflow-hidden rounded-xl" style={{ paddingBottom: "56.25%", position: "relative" }}>
-        <iframe
-          src={sign.video_ref}
-          title={sign.label}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="absolute inset-0 h-full w-full rounded-xl border-0"
-        />
+        {sign.video_ref?.startsWith("/") ? (
+          <video
+            src={sign.video_ref}
+            title={sign.label}
+            className="absolute inset-0 h-full w-full object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        ) : (
+          <iframe
+            src={sign.video_ref}
+            title={sign.label}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute inset-0 h-full w-full rounded-xl border-0"
+          />
+        )}
       </div>
     </Card>
   );
@@ -3591,6 +3623,7 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
   };
 
   const videoId = getYouTubeVideoId(sign?.video_ref || sign?.video_ref);
+  const isLocalVideo = sign?.video_ref?.startsWith("/");
 
   // Record video view once on open
   useEffect(() => {
@@ -3707,11 +3740,11 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
     onResults: handlePracticeResults
   });
 
-  if (!sign || !videoId) return null;
+  if (!sign || (!videoId && !isLocalVideo)) return null;
 
   // Use autoplay with mute to prevent freezing, loop enabled for continuous playback
   // Added showinfo=0 and iv_load_policy=3 to minimize YouTube title/annotations
-  const iframeSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3`;
+  const iframeSrc = videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3` : null;
 
   return (
     <div className="space-y-4">
@@ -3842,21 +3875,33 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
           )}
         </div>
 
-        {/* YouTube Video - 1 column wide (smaller), cropped to fill container */}
+        {/* Reference Video - 1 column wide (smaller), cropped to fill container */}
         <div className="relative overflow-hidden rounded-2xl bg-black" style={{ paddingBottom: "56.25%" }}>
-          <div
-            className="absolute top-1/2 left-0 w-full"
-            style={{ transform: 'translateY(-50%)', height: '177.78%' }}
-          >
-            <iframe
-              key={videoId}
-              src={iframeSrc}
+          {isLocalVideo ? (
+            <video
+              src={sign.video_ref}
               title={sign.label || sign.name}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="absolute inset-0 h-full w-full border-0"
+              className="absolute inset-0 h-full w-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
             />
-          </div>
+          ) : (
+            <div
+              className="absolute top-1/2 left-0 w-full"
+              style={{ transform: 'translateY(-50%)', height: '177.78%' }}
+            >
+              <iframe
+                key={videoId}
+                src={iframeSrc}
+                title={sign.label || sign.name}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full border-0"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -3886,6 +3931,7 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
   };
 
   const videoId = getYouTubeVideoId(sign?.video_ref || sign?.video_ref);
+  const isLocalVideo = sign?.video_ref?.startsWith("/");
 
   // Record video view once on open
   useEffect(() => {
@@ -4046,11 +4092,11 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
     onResults: handlePracticeResults
   });
 
-  if (!sign || !videoId) return null;
+  if (!sign || (!videoId && !isLocalVideo)) return null;
 
   // Use autoplay with mute to prevent freezing, loop enabled for continuous playback
   // Added showinfo=0 and iv_load_policy=3 to minimize YouTube title/annotations
-  const iframeSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3`;
+  const iframeSrc = videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3` : null;
 
   return (
     <div
@@ -4191,21 +4237,33 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
             )}
           </div>
 
-          {/* YouTube Video - 1 column wide (smaller), cropped to fill container */}
+          {/* Reference Video - 1 column wide (smaller), cropped to fill container */}
           <div className="relative overflow-hidden rounded-2xl bg-black" style={{ paddingBottom: "56.25%" }}>
-            <div
-              className="absolute top-1/2 left-0 w-full"
-              style={{ transform: 'translateY(-50%)', height: '177.78%' }}
-            >
-              <iframe
-                key={videoId}
-                src={iframeSrc}
+            {isLocalVideo ? (
+              <video
+                src={sign.video_ref}
                 title={sign.label || sign.name}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0 h-full w-full border-0"
+                className="absolute inset-0 h-full w-full object-cover"
+                autoPlay
+                loop
+                muted
+                playsInline
               />
-            </div>
+            ) : (
+              <div
+                className="absolute top-1/2 left-0 w-full"
+                style={{ transform: 'translateY(-50%)', height: '177.78%' }}
+              >
+                <iframe
+                  key={videoId}
+                  src={iframeSrc}
+                  title={sign.label || sign.name}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 h-full w-full border-0"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
