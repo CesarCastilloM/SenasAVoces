@@ -2673,8 +2673,12 @@ function LearnPage({ isDark, navigate }) {
       const isCompleted = signsCompleted >= module.signs;
 
       // Lógica de desbloqueo progresivo
+      // Módulos siempre desbloqueados para todos: Abecedario (G0) y Meses (G0M)
+      const ALWAYS_UNLOCKED = ["G0", "G0M"];
       let status = 'locked';
-      if (index === 0) {
+      if (ALWAYS_UNLOCKED.includes(module.id)) {
+        status = isCompleted ? 'completed' : 'current';
+      } else if (index === 0) {
         status = isCompleted ? 'completed' : 'current';
       } else {
         const prevModule = modules[index - 1];
@@ -3229,8 +3233,12 @@ function LessonPage({ isDark, navigate }) {
       const signsCompleted = progressData?.signs_completed || 0;
       const isCompleted = signsCompleted >= module.signs;
 
+      // Módulos siempre desbloqueados para todos: Abecedario (G0) y Meses (G0M)
+      const ALWAYS_UNLOCKED = ["G0", "G0M"];
       let status = 'locked';
-      if (index === 0) {
+      if (ALWAYS_UNLOCKED.includes(module.id)) {
+        status = isCompleted ? 'completed' : 'current';
+      } else if (index === 0) {
         status = isCompleted ? 'completed' : 'current';
       } else {
         const prevModule = modules[index - 1];
@@ -3714,6 +3722,22 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
     if (onNextSign) onNextSign();
   };
 
+  // Handler to skip the current sign without practicing
+  const handleSkip = () => {
+    if (successRef.current) return;
+    successRef.current = true;
+    if (onSignCompleted) onSignCompleted(sign.label || sign.name);
+    if (allItems && allItems.length > 0 && onModuleCompleted) {
+      const signLabel = sign.label || sign.name;
+      const allDone = allItems.every((item) => {
+        const itemLabel = item.label || item.name;
+        return itemLabel === signLabel || practicedSigns.has(itemLabel);
+      });
+      if (allDone) onModuleCompleted(moduleId, allItems.length);
+    }
+    handleContinue();
+  };
+
   // Handler to let user keep practicing the same sign
   const handleKeepPracticing = () => {
     successRef.current = false;
@@ -3764,7 +3788,13 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
             {sign.hint || sign.desc}
           </p>
         </div>
-        <div className="w-24" />
+        <button
+          onClick={handleSkip}
+          className={cx("btn-press flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition-all", isDark ? "bg-brand-deep text-brand-soft hover:text-white" : "bg-brand-cream text-brand-muted hover:text-brand-ink")}
+        >
+          Saltar
+          <Icon name="arrow" className="h-3.5 w-3.5" />
+        </button>
       </div>
 
       {/* Compact sign progress bar — shows position in the module while practicing */}
@@ -4066,6 +4096,11 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
     if (onNextSign) onNextSign();
   };
 
+  // Handler to skip the current sign without practicing
+  const handleSkip = () => {
+    handleContinue();
+  };
+
   // Handler to let user keep practicing the same sign
   const handleKeepPracticing = () => {
     successRef.current = false;
@@ -4126,17 +4161,29 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
               {sign.hint || sign.desc}
             </p>
           </div>
-          <button
-            ref={closeButtonRef}
-            onClick={onClose}
-            className={cx(
-              "btn-press rounded-lg p-2 transition",
-              isDark ? "bg-brand-deep text-brand-soft hover:text-white" : "bg-brand-cream text-brand-muted hover:text-brand-ink"
-            )}
-            aria-label="Cerrar video"
-          >
-            <Icon name="x" className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleSkip}
+              className={cx(
+                "btn-press flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition",
+                isDark ? "bg-brand-deep text-brand-soft hover:text-white" : "bg-brand-cream text-brand-muted hover:text-brand-ink"
+              )}
+            >
+              Saltar
+              <Icon name="arrow" className="h-3.5 w-3.5" />
+            </button>
+            <button
+              ref={closeButtonRef}
+              onClick={onClose}
+              className={cx(
+                "btn-press rounded-lg p-2 transition",
+                isDark ? "bg-brand-deep text-brand-soft hover:text-white" : "bg-brand-cream text-brand-muted hover:text-brand-ink"
+              )}
+              aria-label="Cerrar video"
+            >
+              <Icon name="x" className="h-5 w-5" />
+            </button>
+          </div>
         </div>
         
         {/* Split view: Camera on left (larger), Video on right (smaller) */}
