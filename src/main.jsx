@@ -16,7 +16,8 @@ import TrainPage from "./pages/train_page.jsx";
 import TrainingViewerPage from "./pages/training_viewer_page.jsx";
 import RetrainPage from "./pages/retrain_page.jsx";
 import AdminLessonsPage from "./pages/admin_lessons_page.jsx";
-import { fetchPublishedModules } from "./services/lessonService.js";
+import { fetchPublishedModules, fetchLessonUnlocks } from "./services/lessonService.js";
+import { useIsAdmin } from "./hooks/useIsAdmin.js";
 import { updateSignProgress, updateModuleProgress, updateStreak, recordVideoView, updateWeeklyActivity, updatePracticeDays, getRecommendations, fetchPracticedSigns, evaluateAchievements, getAchievementStats, ACHIEVEMENT_DEFS } from "./services/progressService";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
@@ -67,6 +68,24 @@ function useModules() {
     return () => { cancelled = true; };
   }, []);
   return mods;
+}
+
+// Server-computed unlock state per lesson slug (lesson_prerequisites graph,
+// see supabase/migrations/002). Returns null until loaded or on error —
+// callers fall back to the old sequential-unlock logic in that case.
+// Refetches when moduleProgress changes so completing a module unlocks live.
+function useLessonUnlocks() {
+  const { user, moduleProgress } = useAuth();
+  const [unlocks, setUnlocks] = useState(null);
+  useEffect(() => {
+    if (!user?.id) { setUnlocks(null); return undefined; }
+    let cancelled = false;
+    fetchLessonUnlocks()
+      .then((map) => { if (!cancelled && map) setUnlocks(map); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [user?.id, moduleProgress]);
+  return unlocks;
 }
 
 function getModuleIcon(title) {
@@ -497,6 +516,10 @@ function AppHeader({ isDark, setIsDark, navigate, path, fontScale = 'md', setFon
   const menuRef = useRef(null);
   const mobileNavRef = useRef(null);
   const { profile, signOut } = useAuth();
+  const isAdmin = useIsAdmin();
+  const visibleNavItems = isAdmin
+    ? [...navItems.slice(1), { path: "/admin/lessons", label: "Admin", icon: "settings" }]
+    : navItems.slice(1);
 
   useEffect(() => {
     if (!menuOpen) return undefined;
@@ -548,7 +571,7 @@ function AppHeader({ isDark, setIsDark, navigate, path, fontScale = 'md', setFon
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1 md:flex">
-            {navItems.slice(1).map((item, index) => (
+            {visibleNavItems.map((item, index) => (
               <button
                 key={item.path}
                 onClick={() => navigate(item.path)}
@@ -736,7 +759,7 @@ function AppHeader({ isDark, setIsDark, navigate, path, fontScale = 'md', setFon
                 Navegación
               </span>
               <div className="mb-6 space-y-1">
-                {navItems.slice(1).map((item) => {
+                {visibleNavItems.map((item) => {
                   const active = path === item.path;
                   return (
                     <button
@@ -2678,6 +2701,7 @@ function DashboardPage({ isDark, navigate }) {
 function LearnPage({ isDark, navigate }) {
   const { userProgress, moduleProgress } = useAuth();
   const modules = useModules();
+  const unlocks = useLessonUnlocks();
 
   // Merge module data with progress from database
   const modulesWithProgress = useMemo(() => {
@@ -2685,10 +2709,14 @@ function LearnPage({ isDark, navigate }) {
       const progressData = moduleProgress?.find(mp => mp.module_id === module.id);
       const signsCompleted = progressData?.signs_completed || 0;
       const isCompleted = signsCompleted >= module.signs;
-      
-      // Lógica de desbloqueo progresivo
+
+      // Lógica de desbloqueo progresivo: si el servidor responde, el grafo de
+      // prerequisitos manda; si no, fallback al desbloqueo secuencial anterior.
       let status = 'locked';
-      if (index === 0) {
+      if (unlocks) {
+        const u = unlocks[module.id];
+        status = isCompleted ? 'completed' : (u && u.unlocked === false ? 'locked' : 'current');
+      } else if (index === 0) {
         // Primer módulo siempre desbloqueado
         status = isCompleted ? 'completed' : 'current';
       } else {
@@ -2696,21 +2724,21 @@ function LearnPage({ isDark, navigate }) {
         const prevModule = modules[index - 1];
         const prevProgressData = moduleProgress?.find(mp => mp.module_id === prevModule.id);
         const prevCompleted = (prevProgressData?.signs_completed || 0) >= prevModule.signs;
-        
+
         if (prevCompleted) {
           status = isCompleted ? 'completed' : 'current';
         } else {
           status = 'locked';
         }
       }
-      
+
       return {
         ...module,
         status: progressData?.status || status,
         signs_completed: signsCompleted,
       };
     });
-  }, [moduleProgress, modules]);
+  }, [moduleProgress, modules, unlocks]);
 
   const completedSigns = modulesWithProgress.reduce((sum, m) => sum + (m.signs_completed || 0), 0);
   const totalSigns = modulesWithProgress.reduce((sum, m) => sum + m.signs, 0);
@@ -3179,6 +3207,7 @@ function ModuleCompleteScreen({ module, nextModule, isDark, onContinue, onBackTo
 function LessonPage({ isDark, navigate }) {
   const { userProgress, moduleProgress, user } = useAuth();
   const modules = useModules();
+  const unlocks = useLessonUnlocks();
   const [selected, setSelected] = useState(modules[0]);
 
   // When the module list swaps from bundled to Supabase data, keep `selected`
@@ -3250,29 +3279,32 @@ function LessonPage({ isDark, navigate }) {
       const progressData = moduleProgress?.find(mp => mp.module_id === module.id);
       const signsCompleted = progressData?.signs_completed || 0;
       const isCompleted = signsCompleted >= module.signs;
-      
+
       let status = 'locked';
-      if (index === 0) {
+      if (unlocks) {
+        const u = unlocks[module.id];
+        status = isCompleted ? 'completed' : (u && u.unlocked === false ? 'locked' : 'current');
+      } else if (index === 0) {
         status = isCompleted ? 'completed' : 'current';
       } else {
         const prevModule = modules[index - 1];
         const prevProgressData = moduleProgress?.find(mp => mp.module_id === prevModule.id);
         const prevCompleted = (prevProgressData?.signs_completed || 0) >= prevModule.signs;
-        
+
         if (prevCompleted) {
           status = isCompleted ? 'completed' : 'current';
         } else {
           status = 'locked';
         }
       }
-      
+
       return {
         ...module,
         status: progressData?.status || status,
         signs_completed: signsCompleted,
       };
     });
-  }, [moduleProgress, modules]);
+  }, [moduleProgress, modules, unlocks]);
 
   const filteredItems = useMemo(() => {
     if (!selected) return [];

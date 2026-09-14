@@ -114,6 +114,27 @@ export async function fetchPublishedModules({ iconForTitle } = {}) {
   });
 }
 
+// ─── Unlock state (server-side via get_my_lesson_unlocks RPC) ─────
+// Returns { [slug]: { unlocked: boolean, missing: string[] } } or null
+// on error / not configured — callers fall back to sequential logic.
+export async function fetchLessonUnlocks() {
+  if (!supabase) return null;
+  const { data, error } = await supabase.rpc('get_my_lesson_unlocks');
+  if (error) { console.error('fetchLessonUnlocks:', error); return null; }
+  const map = {};
+  (data || []).forEach((r) => {
+    map[r.slug] = { unlocked: r.is_unlocked, missing: r.missing_prereq_slugs || [] };
+  });
+  return map;
+}
+
+// ─── Prerequisites (admin) ──────────────────────────────────────
+
+export async function adminListPrerequisites() {
+  if (!supabase) return { data: [], error: new Error('Supabase no configurado') };
+  return supabase.from('lesson_prerequisites').select('lesson_id, requires_lesson_id');
+}
+
 // ─── Word bank ──────────────────────────────────────────────────
 
 export async function listWords() {
@@ -153,7 +174,20 @@ export async function adminGetLesson(id) {
     .order('position', { ascending: true });
   if (stepsErr) return { data: null, error: stepsErr };
 
-  return { data: { ...lesson, steps: steps || [] }, error: null };
+  const { data: prereqs, error: prereqErr } = await supabase
+    .from('lesson_prerequisites')
+    .select('requires_lesson_id')
+    .eq('lesson_id', id);
+  if (prereqErr) return { data: null, error: prereqErr };
+
+  return {
+    data: {
+      ...lesson,
+      steps: steps || [],
+      requires: (prereqs || []).map((p) => p.requires_lesson_id),
+    },
+    error: null,
+  };
 }
 
 // Upserts the lesson row, then replaces its steps in-order.
@@ -204,6 +238,23 @@ export async function adminSaveLesson(lesson) {
   if (steps.length) {
     const { error: insErr } = await supabase.from('lesson_steps').insert(steps);
     if (insErr) return { data: null, error: insErr };
+  }
+
+  // Replace prerequisites if the caller provided the list (requires = [lesson_id])
+  if (Array.isArray(lesson.requires)) {
+    const { error: pDelErr } = await supabase
+      .from('lesson_prerequisites')
+      .delete()
+      .eq('lesson_id', saved.id);
+    if (pDelErr) return { data: null, error: pDelErr };
+
+    const rows = lesson.requires
+      .filter((rid) => rid && rid !== saved.id)
+      .map((rid) => ({ lesson_id: saved.id, requires_lesson_id: rid }));
+    if (rows.length) {
+      const { error: pInsErr } = await supabase.from('lesson_prerequisites').insert(rows);
+      if (pInsErr) return { data: null, error: pInsErr };
+    }
   }
 
   return { data: saved, error: null };

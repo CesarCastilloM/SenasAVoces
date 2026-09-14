@@ -72,9 +72,38 @@ alumno reproduce todos los pasos como "ver seña + practicar"; los tipos
 quiz/emparejar ya se guardan y se previsualizan en el builder — el motor de
 ejercicios del lado del alumno es la siguiente fase.
 
+## Sistema de desbloqueo (prerequisitos)
+
+Modelo: tabla `lesson_prerequisites (lesson_id, requires_lesson_id)` — un
+grafo, no una cadena (una lección puede requerir varias). Una lección **sin
+filas siempre está desbloqueada**. Migración: `002_lesson_prerequisites.sql`,
+que además siembra la cadena lineal por defecto `G0→G1→…→G7` (idéntica al
+comportamiento secuencial que la app ya tenía implícito).
+
+**Cómo se decide locked/unlocked:** la función RPC
+`get_my_lesson_unlocks()` (security definer) devuelve por lección publicada
+`is_unlocked` + `missing_prereq_slugs` para el usuario actual. "Completada"
+usa el mismo criterio de siempre sobre `module_progress`:
+`status='completed'` o `signs_completed >= total_signs` (cuando total > 0).
+
+**Frontend:** `useLessonUnlocks()` en `main.jsx` consulta el RPC y se
+refresca cuando cambia `moduleProgress` (completar un módulo desbloquea el
+siguiente en vivo). `LearnPage` y `LessonPage` mezclan ese estado con el
+candado/opacidad que ya existía; si el RPC falla o no hay sesión, caen al
+desbloqueo secuencial anterior — nada se rompe.
+
+**Builder:** el editor tiene "Requiere completar" con chips multi-select de
+las demás lecciones, validación anti-ciclos en vivo y al guardar
+(`createsCycle` hace DFS sobre el grafo con la edición aplicada).
+
+**Navbar:** el hook `useIsAdmin()` (`src/hooks/useIsAdmin.js`) es la fuente
+única del chequeo de admin — lo usan `AppHeader` (link "Admin" ⚙ solo para
+admins) y el guard de `/admin/lessons`.
+
 ## RLS (resumen)
 
 - `words`: lectura pública; escritura solo admins.
 - `lessons`: `published` lectura pública; `draft` solo admins; escritura admins.
 - `lesson_steps`: lectura si la lección padre está publicada; escritura admins.
+- `lesson_prerequisites`: lectura pública; escritura admins.
 - `is_admin()` es `security definer` y consulta `public.admins`.

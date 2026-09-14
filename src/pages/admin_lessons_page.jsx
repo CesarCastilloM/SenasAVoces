@@ -4,11 +4,12 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { useIsAdmin } from "../hooks/useIsAdmin.js";
 import {
   STEP_TYPES,
   MULTI_WORD_TYPES,
-  isAdminUser,
   adminListLessons,
+  adminListPrerequisites,
   adminGetLesson,
   adminSaveLesson,
   adminSetLessonStatus,
@@ -50,8 +51,23 @@ const newLessonDraft = (position) => ({
   position,
   status: "draft",
   intro_md: "",
+  requires: [],
   steps: [newStep(0)],
 });
+
+// Would `requires` create a cycle? Edges go lesson -> its prereqs; a cycle
+// exists iff some selected prereq can reach back to this lesson.
+function createsCycle(lessonId, requires, prereqMap) {
+  if (!lessonId || !requires?.length) return false;
+  const adj = { ...prereqMap, [lessonId]: requires };
+  const reaches = (from, target, seen) => {
+    if (from === target) return true;
+    if (seen.has(from)) return false;
+    seen.add(from);
+    return (adj[from] || []).some((n) => reaches(n, target, seen));
+  };
+  return requires.some((r) => reaches(r, lessonId, new Set()));
+}
 
 function slugify(text) {
   return (text || "")
@@ -406,9 +422,10 @@ function StepCard({ step, index, isDark, wordsById, dragProps, onChange, onRemov
 
 export default function AdminLessonsPage({ isDark, navigate }) {
   const { user } = useAuth();
-  const [admin, setAdmin] = useState(null); // null=checking, false=denied
+  const admin = useIsAdmin(); // null=checking, false=denied
   const [view, setView] = useState("list"); // list | edit
   const [lessons, setLessons] = useState([]);
+  const [prereqMap, setPrereqMap] = useState({}); // lesson_id -> [requires_lesson_id]
   const [words, setWords] = useState([]);
   const [draft, setDraft] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -419,18 +436,18 @@ export default function AdminLessonsPage({ isDark, navigate }) {
 
   const wordsById = useMemo(() => Object.fromEntries(words.map((w) => [w.id, w])), [words]);
 
-  useEffect(() => {
-    let cancelled = false;
-    if (!user?.id) return;
-    isAdminUser(user.id).then((ok) => { if (!cancelled) setAdmin(ok); });
-    return () => { cancelled = true; };
-  }, [user?.id]);
-
   const reload = async () => {
-    const [lRes, wRes] = await Promise.all([adminListLessons(), listWords()]);
+    const [lRes, wRes, pRes] = await Promise.all([adminListLessons(), listWords(), adminListPrerequisites()]);
     if (lRes.error) setLoadErr(lRes.error.message);
     setLessons(lRes.data || []);
     setWords(wRes.data || []);
+    if (!pRes.error) {
+      const map = {};
+      (pRes.data || []).forEach((r) => {
+        (map[r.lesson_id] ||= []).push(r.requires_lesson_id);
+      });
+      setPrereqMap(map);
+    }
   };
 
   useEffect(() => { if (admin) reload(); }, [admin]);
@@ -484,6 +501,7 @@ export default function AdminLessonsPage({ isDark, navigate }) {
 
   const validate = (d) => {
     if (!d.title.trim()) return "El título es obligatorio";
+    if (createsCycle(d.id, d.requires, prereqMap)) return "Los prerequisitos crean un ciclo (A requiere B requiere A)";
     if (!d.steps.length) return "Agrega al menos un paso";
     for (const [i, s] of d.steps.entries()) {
       if (!STEP_TYPES.includes(s.type)) return `Paso ${i + 1}: tipo inválido`;
@@ -658,6 +676,46 @@ export default function AdminLessonsPage({ isDark, navigate }) {
                 <Field label="Intro (markdown)" isDark={isDark}>
                   <textarea rows={3} className={inputCls(isDark)} value={draft.intro_md || ""} onChange={(e) => setDraft({ ...draft, intro_md: e.target.value })} placeholder="Texto introductorio de la lección…" />
                 </Field>
+              </div>
+              <div className="sm:col-span-2">
+                <Field label="Requiere completar (prerequisitos)" isDark={isDark}>
+                  <div className="flex flex-wrap gap-2">
+                    {lessons.filter((l) => l.id !== draft.id).map((l) => {
+                      const sel = (draft.requires || []).includes(l.id);
+                      return (
+                        <button
+                          key={l.id}
+                          type="button"
+                          onClick={() => setDraft((d) => ({
+                            ...d,
+                            requires: (d.requires || []).includes(l.id)
+                              ? d.requires.filter((x) => x !== l.id)
+                              : [...(d.requires || []), l.id],
+                          }))}
+                          className={cx(
+                            "btn-press rounded-xl border px-3 py-1.5 text-xs font-bold transition",
+                            sel
+                              ? "border-[#D97736] bg-[#D97736]/15 text-[#D97736]"
+                              : isDark
+                                ? "border-brand-line/40 text-brand-soft hover:border-brand-cyan/50"
+                                : "border-gray-300 text-gray-600 hover:border-brand-teal"
+                          )}
+                        >
+                          {sel ? "✓ " : ""}{l.title}
+                        </button>
+                      );
+                    })}
+                    {!lessons.filter((l) => l.id !== draft.id).length && (
+                      <span className={cx("text-xs", isDark ? "text-brand-soft" : "text-gray-400")}>No hay otras lecciones todavía</span>
+                    )}
+                  </div>
+                </Field>
+                {createsCycle(draft.id, draft.requires, prereqMap) && (
+                  <p className="mt-1.5 text-xs font-semibold text-red-400">⚠ Esta selección crearía un ciclo de prerequisitos</p>
+                )}
+                <p className={cx("mt-1.5 text-[10px]", isDark ? "text-brand-soft" : "text-gray-400")}>
+                  Sin prerequisitos la lección está siempre desbloqueada. El alumno debe completar todas las seleccionadas para desbloquearla.
+                </p>
               </div>
             </div>
           </div>
