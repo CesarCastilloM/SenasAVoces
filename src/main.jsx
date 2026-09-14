@@ -15,6 +15,8 @@ import ModelTestPage from "./pages/model_test_page.jsx";
 import TrainPage from "./pages/train_page.jsx";
 import TrainingViewerPage from "./pages/training_viewer_page.jsx";
 import RetrainPage from "./pages/retrain_page.jsx";
+import AdminLessonsPage from "./pages/admin_lessons_page.jsx";
+import { fetchPublishedModules } from "./services/lessonService.js";
 import { updateSignProgress, updateModuleProgress, updateStreak, recordVideoView, updateWeeklyActivity, updatePracticeDays, getRecommendations, fetchPracticedSigns, evaluateAchievements, getAchievementStats, ACHIEVEMENT_DEFS } from "./services/progressService";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
@@ -51,6 +53,21 @@ const modules = [ALPHABET_LESSON, ...GLOSARIO_LESSONS].map((lesson, i) => ({
   level: lesson.level,
   icon: getModuleIcon(lesson.title),
 }));
+
+// Lessons now live in Supabase (see docs/lesson-builder.md). This hook serves
+// the bundled curriculum immediately, then swaps in published Supabase lessons
+// if any exist — so the app keeps working offline / pre-migration.
+function useModules() {
+  const [mods, setMods] = useState(modules);
+  useEffect(() => {
+    let cancelled = false;
+    fetchPublishedModules({ iconForTitle: getModuleIcon })
+      .then((remote) => { if (!cancelled && remote?.length) setMods(remote); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+  return mods;
+}
 
 function getModuleIcon(title) {
   const iconMap = {
@@ -2660,6 +2677,7 @@ function DashboardPage({ isDark, navigate }) {
 
 function LearnPage({ isDark, navigate }) {
   const { userProgress, moduleProgress } = useAuth();
+  const modules = useModules();
 
   // Merge module data with progress from database
   const modulesWithProgress = useMemo(() => {
@@ -2692,7 +2710,7 @@ function LearnPage({ isDark, navigate }) {
         signs_completed: signsCompleted,
       };
     });
-  }, [moduleProgress]);
+  }, [moduleProgress, modules]);
 
   const completedSigns = modulesWithProgress.reduce((sum, m) => sum + (m.signs_completed || 0), 0);
   const totalSigns = modulesWithProgress.reduce((sum, m) => sum + m.signs, 0);
@@ -3160,7 +3178,15 @@ function ModuleCompleteScreen({ module, nextModule, isDark, onContinue, onBackTo
 
 function LessonPage({ isDark, navigate }) {
   const { userProgress, moduleProgress, user } = useAuth();
+  const modules = useModules();
   const [selected, setSelected] = useState(modules[0]);
+
+  // When the module list swaps from bundled to Supabase data, keep `selected`
+  // pointing at the fresh module object (or fall back to the first one).
+  useEffect(() => {
+    if (!modules.length) return;
+    setSelected((prev) => (prev && modules.find((m) => m.id === prev.id)) || modules[0]);
+  }, [modules]);
   const [activeSign, setActiveSign] = useState(null);
   const [search, setSearch] = useState("");
   const [practicedSigns, setPracticedSigns] = useState(new Set());
@@ -3246,7 +3272,7 @@ function LessonPage({ isDark, navigate }) {
         signs_completed: signsCompleted,
       };
     });
-  }, [moduleProgress]);
+  }, [moduleProgress, modules]);
 
   const filteredItems = useMemo(() => {
     if (!selected) return [];
@@ -6286,6 +6312,15 @@ function App() {
   
   if (path === "/lesson") {
     return <LessonPage isDark={isDark} navigate={navigate} />;
+  }
+
+  if (path === "/admin" || path === "/admin/lessons") {
+    return (
+      <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-[#F8F5EE]")}>
+        <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
+        <AdminLessonsPage isDark={isDark} navigate={navigate} />
+      </div>
+    );
   }
 
   if (path === "/profile") {
