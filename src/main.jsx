@@ -282,6 +282,12 @@ function cx(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+// Local sign videos live in public/videos/signs/<PALABRA>.mp4 — anything
+// ending in .mp4 is rendered with <video> instead of the YouTube iframe.
+function isMp4Ref(url) {
+  return /\.mp4(\?|#|$)/i.test(url || "");
+}
+
 function useRoute() {
   const [path, setPath] = useState(() => window.location.pathname);
   const [state, setState] = useState(null);
@@ -3427,12 +3433,26 @@ function LessonPage({ isDark, navigate }) {
                         style={{ animationDelay: `${index * 30}ms` }}
                       >
                         <div className="relative h-24 w-full overflow-hidden rounded-xl shadow-md">
-                          <img 
-                            src={item.thumbnail} 
-                            alt={item.label} 
-                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" 
-                            loading="lazy" 
-                          />
+                          {item.thumbnail ? (
+                            <img
+                              src={item.thumbnail}
+                              alt={item.label}
+                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                              loading="lazy"
+                            />
+                          ) : isMp4Ref(item.video_ref) ? (
+                            <video
+                              src={item.video_ref}
+                              muted
+                              playsInline
+                              preload="metadata"
+                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                            />
+                          ) : (
+                            <div className={cx("flex h-full w-full items-center justify-center text-2xl font-extrabold", isDark ? "bg-brand-deep text-brand-soft" : "bg-gray-200 text-gray-400")}>
+                              {(item.label || "?")[0]}
+                            </div>
+                          )}
                           <div className="absolute inset-0 bg-black/10" />
                           {/* Icon overlay */}
                           <div className="absolute top-2 right-2 h-6 w-6 rounded-full bg-white/90 flex items-center justify-center shadow-sm">
@@ -3512,13 +3532,22 @@ function SignVideoPanel({ sign, isDark, onClose, moduleId }) {
         </button>
       </div>
       <div className="overflow-hidden rounded-xl" style={{ paddingBottom: "56.25%", position: "relative" }}>
-        <iframe
-          src={sign.video_ref}
-          title={sign.label}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="absolute inset-0 h-full w-full rounded-xl border-0"
-        />
+        {isMp4Ref(sign.video_ref) ? (
+          <video
+            src={sign.video_ref}
+            title={sign.label}
+            autoPlay muted loop playsInline controls
+            className="absolute inset-0 h-full w-full rounded-xl object-cover"
+          />
+        ) : (
+          <iframe
+            src={sign.video_ref}
+            title={sign.label}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute inset-0 h-full w-full rounded-xl border-0"
+          />
+        )}
       </div>
     </Card>
   );
@@ -3765,7 +3794,8 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
     onResults: handlePracticeResults
   });
 
-  if (!sign || !videoId) return null;
+  const localVideo = !videoId && isMp4Ref(sign?.video_ref);
+  if (!sign || (!videoId && !localVideo)) return null;
 
   // Use autoplay with mute to prevent freezing, loop enabled for continuous playback
   // Added showinfo=0 and iv_load_policy=3 to minimize YouTube title/annotations
@@ -3900,21 +3930,32 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
           )}
         </div>
 
-        {/* YouTube Video - 1 column wide (smaller), cropped to fill container */}
+        {/* Sign video - 1 column wide (smaller). YouTube iframe is cropped to
+            fill; local mp4s render directly with object-cover. */}
         <div className="relative overflow-hidden rounded-2xl bg-black" style={{ paddingBottom: "56.25%" }}>
-          <div
-            className="absolute top-1/2 left-0 w-full"
-            style={{ transform: 'translateY(-50%)', height: '177.78%' }}
-          >
-            <iframe
-              key={videoId}
-              src={iframeSrc}
+          {localVideo ? (
+            <video
+              key={sign.video_ref}
+              src={sign.video_ref}
               title={sign.label || sign.name}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="absolute inset-0 h-full w-full border-0"
+              autoPlay muted loop playsInline controls
+              className="absolute inset-0 h-full w-full object-cover"
             />
-          </div>
+          ) : (
+            <div
+              className="absolute top-1/2 left-0 w-full"
+              style={{ transform: 'translateY(-50%)', height: '177.78%' }}
+            >
+              <iframe
+                key={videoId}
+                src={iframeSrc}
+                title={sign.label || sign.name}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full border-0"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -4104,7 +4145,8 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
     onResults: handlePracticeResults
   });
 
-  if (!sign || !videoId) return null;
+  const localVideo = !videoId && isMp4Ref(sign?.video_ref);
+  if (!sign || (!videoId && !localVideo)) return null;
 
   // Use autoplay with mute to prevent freezing, loop enabled for continuous playback
   // Added showinfo=0 and iv_load_policy=3 to minimize YouTube title/annotations
@@ -4249,21 +4291,31 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
             )}
           </div>
 
-          {/* YouTube Video - 1 column wide (smaller), cropped to fill container */}
+          {/* Sign video - YouTube iframe cropped to fill; local mp4 renders directly */}
           <div className="relative overflow-hidden rounded-2xl bg-black" style={{ paddingBottom: "56.25%" }}>
-            <div
-              className="absolute top-1/2 left-0 w-full"
-              style={{ transform: 'translateY(-50%)', height: '177.78%' }}
-            >
-              <iframe
-                key={videoId}
-                src={iframeSrc}
+            {localVideo ? (
+              <video
+                key={sign.video_ref}
+                src={sign.video_ref}
                 title={sign.label || sign.name}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0 h-full w-full border-0"
+                autoPlay muted loop playsInline controls
+                className="absolute inset-0 h-full w-full object-cover"
               />
-            </div>
+            ) : (
+              <div
+                className="absolute top-1/2 left-0 w-full"
+                style={{ transform: 'translateY(-50%)', height: '177.78%' }}
+              >
+                <iframe
+                  key={videoId}
+                  src={iframeSrc}
+                  title={sign.label || sign.name}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 h-full w-full border-0"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -221,9 +221,14 @@ function WordPickerModal({ isDark, words, multi, initialSelection, onClose, onSe
                       : isDark ? "border-brand-line/30 bg-brand-deep/40 hover:border-brand-cyan/50" : "border-gray-200 bg-gray-50 hover:border-brand-teal/50"
                   )}
                 >
-                  {w.thumbnail
-                    ? <img src={w.thumbnail} alt={w.label} className="h-14 w-full rounded-lg object-cover" loading="lazy" />
-                    : <div className={cx("flex h-14 w-full items-center justify-center rounded-lg text-lg font-bold", isDark ? "bg-brand-deep text-brand-soft" : "bg-gray-200 text-gray-500")}>{(w.glyph || w.label || "?")[0]}</div>}
+                  <div className="relative w-full">
+                    {w.thumbnail
+                      ? <img src={w.thumbnail} alt={w.label} className="h-14 w-full rounded-lg object-cover" loading="lazy" />
+                      : <div className={cx("flex h-14 w-full items-center justify-center rounded-lg text-lg font-bold", isDark ? "bg-brand-deep text-brand-soft" : "bg-gray-200 text-gray-500")}>{(w.glyph || w.label || "?")[0]}</div>}
+                    {isYouTube(w.video_ref) && (
+                      <span className="absolute left-1 top-1 rounded bg-amber-500/90 px-1 text-[8px] font-extrabold text-white" title="Sin video local — apunta a YouTube (glosario CDMX)">YT</span>
+                    )}
+                  </div>
                   <span className={cx("line-clamp-2 text-[10px] font-semibold leading-tight", isDark ? "text-brand-soft" : "text-gray-700")}>{w.label}</span>
                 </button>
               );

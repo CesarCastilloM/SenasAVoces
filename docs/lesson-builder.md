@@ -72,6 +72,28 @@ alumno reproduce todos los pasos como "ver seña + practicar"; los tipos
 quiz/emparejar ya se guardan y se previsualizan en el builder — el motor de
 ejercicios del lado del alumno es la siguiente fase.
 
+## Videos: locales primero, YouTube como placeholder
+
+`words.video_ref` **prioriza archivos propios** en `public/videos/signs/<PALABRA>.mp4`
+sobre los embeds de YouTube del glosario CDMX. `scripts/fix_word_videos.mjs`
+(dry-run por defecto, `--apply` para escribir) normaliza label↔nombre de
+archivo (mayúsculas, sin acentos, solo `[A-Z0-9]`) y reporta:
+
+- **matched** → `video_ref = /videos/signs/X.mp4`, `thumbnail = null`
+  (la UI muestra el primer frame del mp4 como póster — no hay thumbnail
+  para video local).
+- **unmatched** → conservan YouTube como placeholder; en el builder el
+  word-picker las marca con badge `YT`. Para despublicar lecciones con
+  cobertura local 0: `--apply --unpublish-missing`.
+- **ambiguous** → labels variante `"X (n)"` donde existe `X.mp4` pero no
+  label `X` exacto — nunca se mapean solas, requieren decisión manual.
+- **orphan mp4s** → reporte en `scripts/out/word_video_report.json` con
+  `suggested_label`; se dan de alta como words nuevas desde el builder
+  ("+ Nueva palabra") confirmando naming primero.
+
+El mismo rewrite se aplica a `src/data/lessons_glosario.js` para que el
+fallback bundle coincida con producción.
+
 ## Sistema de desbloqueo (prerequisitos)
 
 Modelo: tabla `lesson_prerequisites (lesson_id, requires_lesson_id)` — un
