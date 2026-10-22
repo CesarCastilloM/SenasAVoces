@@ -43,6 +43,8 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
   const [signMeta, setSignMeta] = useState({});
   const [loadError, setLoadError] = useState(null);
   const [loadingMsg, setLoadingMsg] = useState("Cargando patrones entrenados…");
+  const [patternStats, setPatternStats] = useState(null); // { totalSequences, signsTotal, missing, patternsLoaded }
+  const [showMissing, setShowMissing] = useState(false);
 
   const [activeCats, setActiveCats] = useState(() => new Set(["numeros", "palabras", "familia", "colores"]));
   const [targetIndex, setTargetIndex] = useState(0);
@@ -77,23 +79,26 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
     let cancelled = false;
     (async () => {
       try {
+        // Rutas estáticas de public/: funcionan en dev y en producción
+        // (el middleware /api/training-data solo existe en el dev server).
         const [manRes, metaRes] = await Promise.all([
-          fetch(`/api/training-data/manifest?t=${Date.now()}`),
-          fetch(`/api/training-data/sign_metadata.json?t=${Date.now()}`),
+          fetch(`/training_data/manifest.json?t=${Date.now()}`),
+          fetch(`/training_data/sign_metadata.json?t=${Date.now()}`),
         ]);
         if (!manRes.ok) throw new Error(`manifest HTTP ${manRes.status}`);
         const man = await manRes.json();
-        if (metaRes.ok) {
+        if (metaRes.ok && (metaRes.headers.get("content-type") || "").includes("json")) {
           const meta = await metaRes.json();
           if (!cancelled) setSignMeta(meta);
         }
         if (cancelled) return;
         setManifest(man);
         setLoadingMsg("Cargando secuencias DTW…");
-        const loaded = await reloadDynamicPatterns();
+        const stats = await reloadDynamicPatterns();
         if (cancelled) return;
         setLoadingMsg(null);
-        if (!loaded || loaded.length === 0) {
+        setPatternStats(stats);
+        if (!stats.patternsLoaded || stats.patternsLoaded.length === 0) {
           setLoadError("No se cargó ningún patrón. Revisa public/training_data/.");
         }
       } catch (e) {
@@ -366,6 +371,32 @@ export default function ModelTestPage({ isDark, navigate, useCameraMediaPipe, re
       {loadError && (
         <div className="mx-6 mt-4 rounded-lg bg-[#3A1B1B] px-4 py-3 text-sm font-semibold text-[#F5C9C9]">
           Error cargando el modelo: {loadError}
+        </div>
+      )}
+
+      {/* Estado de carga de patrones: cuántas clases tiene realmente el DTW */}
+      {patternStats && (
+        <div className={cx(
+          "mx-6 mt-4 rounded-lg px-4 py-2.5 text-xs font-semibold",
+          patternStats.missing.length > 0
+            ? "bg-yellow-500/15 text-yellow-600"
+            : "bg-green-500/15 text-green-600"
+        )}>
+          Patrones DTW: {patternStats.totalSequences} secuencias ·{" "}
+          {patternStats.patternsLoaded.length}/{patternStats.signsTotal} señas cargadas
+          {patternStats.missing.length > 0 && (
+            <>
+              {" · "}
+              <button onClick={() => setShowMissing(v => !v)} className="underline">
+                {patternStats.missing.length} sin ningún patrón {showMissing ? "▲" : "▼"}
+              </button>
+              {showMissing && (
+                <div className="mt-1 max-h-24 overflow-y-auto font-mono text-[10px] font-normal">
+                  {patternStats.missing.join(", ")}
+                </div>
+              )}
+            </>
+          )}
         </div>
       )}
 

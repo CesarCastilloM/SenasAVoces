@@ -5320,47 +5320,71 @@ function pathToPublicUrl(absPath) {
   return null;
 }
 
+// Cuántas señas se cargan a la vez. Lanzar todo junto (238 señas x 20
+// intentos = 4,760 fetches) hacía que Chrome rechazara la mayoría con
+// "Failed to fetch" y ~166 señas quedaran sin ningún patrón.
+const PATTERN_LOAD_CONCURRENCY = 12;
+const MAX_EXAMPLES_PER_SIGN = 60;
+
+// Lee los patrones desde /training_data/ (estático: funciona igual en dev y
+// en producción; /api/training-data solo existe en el dev server de Vite).
+// En Vercel las rutas inexistentes se reescriben a index.html con status 200,
+// así que un "miss" también es una respuesta HTML o un .npy que no parsea.
+async function fetchPatternFile(url) {
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  const type = res.headers.get('content-type') || '';
+  if (type.includes('text/html')) return null;
+  try {
+    return npyToFrames(parseNpy(await res.arrayBuffer()));
+  } catch {
+    return null;
+  }
+}
+
 async function reloadDynamicPatterns() {
   dynamicDetector.clearPatterns();
   const bust = `?t=${Date.now()}`;
+  const stats = { patternsLoaded: [], totalSequences: 0, signsTotal: 0, missing: [] };
   try {
-    const manifestRes = await fetch('/api/training-data/manifest' + bust);
+    const manifestRes = await fetch('/training_data/manifest.json' + bust);
     if (!manifestRes.ok) throw new Error(`No se pudo cargar manifest (${manifestRes.status})`);
     const man = await manifestRes.json();
 
-    // Cargar todas las seΓö£ΓûÆas en paralelo: cada seΓö£ΓûÆa intenta _1.._20
-    // simultaneamente. Formato principal: .npy (binario, mΓö£├¡s eficiente).
-    const tasks = [];
+    const jobs = [];
     for (const [cat, signs] of Object.entries(man)) {
       if (!Array.isArray(signs)) continue;
-      for (const sign of signs) {
-        for (let n = 1; n <= 20; n++) {
-          tasks.push(
-            fetch(`/api/training-data/${cat}/${sign}_${n}.npy${bust}`)
-              .then(res => {
-                if (res.ok) return res.arrayBuffer().then(buf => {
-                  const parsed = parseNpy(buf);
-                  const frames = npyToFrames(parsed);
-                  return { sign, data: frames };
-                });
-                // Fallback: intentar .json si no hay .npy
-                return fetch(`/api/training-data/${cat}/${sign}_${n}.json${bust}`)
-                  .then(r2 => r2.ok ? r2.json().then(data => ({ sign, data })) : null)
-                  .catch(() => null);
-              })
-              .catch(() => null)
-          );
+      for (const sign of signs) jobs.push({ cat, sign });
+    }
+    stats.signsTotal = jobs.length;
+
+    // Pool de workers: cada seña pide sus ejemplos en orden (_1, _2, ...) y
+    // se detiene en el primer faltante — la numeración es contigua desde _1.
+    let next = 0;
+    async function worker() {
+      while (next < jobs.length) {
+        const { cat, sign } = jobs[next++];
+        let examples = 0;
+        for (let n = 1; n <= MAX_EXAMPLES_PER_SIGN; n++) {
+          const frames = await fetchPatternFile(`/training_data/${cat}/${sign}_${n}.npy${bust}`);
+          if (!frames) break;
+          dynamicDetector.loadPattern(sign, frames);
+          examples++;
         }
+        if (examples === 0) stats.missing.push(`${cat}/${sign}`);
       }
     }
-    const results = await Promise.all(tasks);
-    let loaded = 0;
-    for (const r of results) {
-      if (r) { dynamicDetector.loadPattern(r.sign, r.data); loaded++; }
+    await Promise.all(Array.from({ length: PATTERN_LOAD_CONCURRENCY }, worker));
+
+    const status = dynamicDetector.getStatus();
+    stats.patternsLoaded = status.patternsLoaded;
+    stats.totalSequences = status.totalSequences;
+    console.log(`[DYNAMIC] ${stats.totalSequences} secuencias cargadas, ${stats.patternsLoaded.length}/${stats.signsTotal} señas`);
+    if (stats.missing.length > 0) {
+      console.warn(`[DYNAMIC] ${stats.missing.length} señas sin ningún patrón:`, stats.missing.join(', '));
     }
-    console.log(`[DYNAMIC] ${loaded} secuencias cargadas`);
   } catch (e) { console.warn('[DYNAMIC] reload error:', e); }
-  return dynamicDetector.getStatus().patternsLoaded;
+  return stats;
 }
 
 // ╬ô├╢├ç╬ô├╢├ç DebugPage: diagnΓö£Γöéstico visual de fingerStates + scores ╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç
@@ -5570,10 +5594,12 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
   const [trainStatus, setTrainStatus] = useState('idle');
   const [trainMsg, setTrainMsg] = useState('');
   const [patternsLoaded, setPatternsLoaded] = useState([]);
+  const [patternStats, setPatternStats] = useState(null);
   const [dynamicSign, setDynamicSign] = useState(null);
   const [onnxSign, setOnnxSign] = useState(null);
   const [onnxTop5, setOnnxTop5] = useState([]);
   const [onnxReady, setOnnxReady] = useState(false);
+  const [onnxFailed, setOnnxFailed] = useState(false);
   const dynamicCandidateRef = useRef(null);
   const autoFramesRef = useRef([]);
   const autoTrainRef = useRef(true);
@@ -5583,8 +5609,11 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
   autoTrainRef.current = autoTrain;
 
   useEffect(() => {
-    reloadDynamicPatterns().then(setPatternsLoaded);
-    initClassifier().then(setOnnxReady);
+    reloadDynamicPatterns().then(stats => {
+      setPatternsLoaded(stats.patternsLoaded);
+      setPatternStats(stats);
+    });
+    initClassifier().then(ok => { setOnnxReady(ok); setOnnxFailed(!ok); });
   }, []);
 
   const trainInfo = useMemo(() => {
@@ -5706,8 +5735,9 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
       });
       const data = await res.json();
       if (!data.ok) throw new Error(data.error || 'error desconocido');
-      const loaded = await reloadDynamicPatterns();
-      setPatternsLoaded(loaded);
+      const stats = await reloadDynamicPatterns();
+      setPatternsLoaded(stats.patternsLoaded);
+      setPatternStats(stats);
       setTrainStatus('done');
       setTrainMsg(`╬ô┬ú├á "${info.sign}" entrenada Γö¼Γòû ${data.saved} ejemplo(s) Γö¼Γòû categorΓö£┬ía ${info.category}`);
     } catch (e) {
@@ -6040,7 +6070,16 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                         <div className='text-lg font-extrabold text-white leading-none'>{dynamicSign || (videoOnly ? 'Analizando video╬ô├ç┬¬' : 'Esperando gesto╬ô├ç┬¬')}</div>
 
-                        <div className='mt-1 text-[9px] text-[#D4EEF4]'>{patternsLoaded.length} seΓö£ΓûÆa(s) entrenada(s) cargada(s)</div>
+                        <div className='mt-1 text-[9px] text-[#D4EEF4]'>
+                          {patternStats
+                            ? `${patternStats.totalSequences} secuencias · ${patternsLoaded.length}/${patternStats.signsTotal} señas`
+                            : `${patternsLoaded.length} seña(s) cargada(s)`}
+                        </div>
+                        {patternStats && patternStats.missing.length > 0 && (
+                          <div className='mt-0.5 text-[9px] font-bold text-yellow-300' title={patternStats.missing.join(', ')}>
+                            ⚠ {patternStats.missing.length} señas sin patrones (ver consola)
+                          </div>
+                        )}
 
                       </div>
 
@@ -6050,7 +6089,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
                       <div className={cx('absolute top-20 right-3 rounded-xl px-4 py-1.5 text-center backdrop-blur', onnxSign ? 'bg-purple-600/90' : 'bg-black/60')}>
                         <div className={cx('text-[9px] font-bold uppercase tracking-widest', onnxSign ? 'text-purple-200' : 'text-[#A8CDD6]')}>LSTM+Attention</div>
                         <div className='text-lg font-extrabold text-white leading-none'>
-                          {onnxReady ? (onnxSign || 'Esperando gesto╬ô├ç┬¬') : 'Cargando modelo╬ô├ç┬¬'}
+                          {onnxReady ? (onnxSign || 'Esperando gesto…') : (onnxFailed ? '⚠ Modelo no disponible' : 'Cargando modelo…')}
                         </div>
                         {onnxTop5.length > 0 && (
                           <div className='mt-1 space-y-0.5'>

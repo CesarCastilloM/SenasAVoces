@@ -70,9 +70,14 @@ function normalizeSequence(frames) {
     if (hasR) { cx += right[0].x; cy += right[0].y; cz += right[0].z ?? 0; nWrists++; }
     if (hasL) { cx += left[0].x; cy += left[0].y; cz += left[0].z ?? 0; nWrists++; }
     if (nWrists > 0) { cx /= nWrists; cy /= nWrists; cz /= nWrists; }
-    else if (hasF && face[168]) { cx = face[168].x; cy = face[168].y; cz = face[168].z ?? 0; }
+    else if (hasF) {
+      // Mismo fallback que dataset.py: el landmark 6 del subconjunto facial
+      // (antes se usaba face[168], que no coincide con el entrenamiento).
+      const nose = face[FACE_LM_INDICES[6]];
+      if (nose) { cx = nose.x; cy = nose.y; cz = nose.z ?? 0; }
+    }
 
-    let scale = 1.0, nScales = 0;
+    let scale = 0.0, nScales = 0;
     if (hasR) {
       const dx = right[9].x - right[0].x;
       const dy = right[9].y - right[0].y;
