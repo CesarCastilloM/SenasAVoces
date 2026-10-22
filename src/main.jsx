@@ -15,6 +15,9 @@ import ModelTestPage from "./pages/model_test_page.jsx";
 import TrainPage from "./pages/train_page.jsx";
 import TrainingViewerPage from "./pages/training_viewer_page.jsx";
 import RetrainPage from "./pages/retrain_page.jsx";
+import AdminLessonsPage from "./pages/admin_lessons_page.jsx";
+import { fetchPublishedModules, fetchLessonUnlocks } from "./services/lessonService.js";
+import { useIsAdmin } from "./hooks/useIsAdmin.js";
 import { updateSignProgress, updateModuleProgress, updateStreak, recordVideoView, updateWeeklyActivity, updatePracticeDays, getRecommendations, fetchPracticedSigns, evaluateAchievements, getAchievementStats, ACHIEVEMENT_DEFS } from "./services/progressService";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
@@ -51,6 +54,39 @@ const modules = [ALPHABET_LESSON, ...GLOSARIO_LESSONS].map((lesson, i) => ({
   level: lesson.level,
   icon: getModuleIcon(lesson.title),
 }));
+
+// Lessons now live in Supabase (see docs/lesson-builder.md). This hook serves
+// the bundled curriculum immediately, then swaps in published Supabase lessons
+// if any exist — so the app keeps working offline / pre-migration.
+function useModules() {
+  const [mods, setMods] = useState(modules);
+  useEffect(() => {
+    let cancelled = false;
+    fetchPublishedModules({ iconForTitle: getModuleIcon })
+      .then((remote) => { if (!cancelled && remote?.length) setMods(remote); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+  return mods;
+}
+
+// Server-computed unlock state per lesson slug (lesson_prerequisites graph,
+// see supabase/migrations/002). Returns null until loaded or on error —
+// callers fall back to the old sequential-unlock logic in that case.
+// Refetches when moduleProgress changes so completing a module unlocks live.
+function useLessonUnlocks() {
+  const { user, moduleProgress } = useAuth();
+  const [unlocks, setUnlocks] = useState(null);
+  useEffect(() => {
+    if (!user?.id) { setUnlocks(null); return undefined; }
+    let cancelled = false;
+    fetchLessonUnlocks()
+      .then((map) => { if (!cancelled && map) setUnlocks(map); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [user?.id, moduleProgress]);
+  return unlocks;
+}
 
 function getModuleIcon(title) {
   const iconMap = {
@@ -244,6 +280,12 @@ const LOGO_SRC = "/logo-senas-a-voces-crop.png";
 
 function cx(...classes) {
   return classes.filter(Boolean).join(" ");
+}
+
+// Local sign videos live in public/videos/signs/<PALABRA>.mp4 — anything
+// ending in .mp4 is rendered with <video> instead of the YouTube iframe.
+function isMp4Ref(url) {
+  return /\.mp4(\?|#|$)/i.test(url || "");
 }
 
 function useRoute() {
@@ -480,6 +522,10 @@ function AppHeader({ isDark, setIsDark, navigate, path, fontScale = 'md', setFon
   const menuRef = useRef(null);
   const mobileNavRef = useRef(null);
   const { profile, signOut } = useAuth();
+  const isAdmin = useIsAdmin();
+  const visibleNavItems = isAdmin
+    ? [...navItems.slice(1), { path: "/admin/lessons", label: "Admin", icon: "settings" }]
+    : navItems.slice(1);
 
   useEffect(() => {
     if (!menuOpen) return undefined;
@@ -531,7 +577,7 @@ function AppHeader({ isDark, setIsDark, navigate, path, fontScale = 'md', setFon
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1 md:flex">
-            {navItems.slice(1).map((item, index) => (
+            {visibleNavItems.map((item, index) => (
               <button
                 key={item.path}
                 onClick={() => navigate(item.path)}
@@ -719,7 +765,7 @@ function AppHeader({ isDark, setIsDark, navigate, path, fontScale = 'md', setFon
                 Navegación
               </span>
               <div className="mb-6 space-y-1">
-                {navItems.slice(1).map((item) => {
+                {visibleNavItems.map((item) => {
                   const active = path === item.path;
                   return (
                     <button
@@ -2660,6 +2706,8 @@ function DashboardPage({ isDark, navigate }) {
 
 function LearnPage({ isDark, navigate }) {
   const { userProgress, moduleProgress } = useAuth();
+  const modules = useModules();
+  const unlocks = useLessonUnlocks();
 
   // Merge module data with progress from database
   const modulesWithProgress = useMemo(() => {
@@ -2667,10 +2715,14 @@ function LearnPage({ isDark, navigate }) {
       const progressData = moduleProgress?.find(mp => mp.module_id === module.id);
       const signsCompleted = progressData?.signs_completed || 0;
       const isCompleted = signsCompleted >= module.signs;
-      
-      // Lógica de desbloqueo progresivo
+
+      // Lógica de desbloqueo progresivo: si el servidor responde, el grafo de
+      // prerequisitos manda; si no, fallback al desbloqueo secuencial anterior.
       let status = 'locked';
-      if (index === 0) {
+      if (unlocks) {
+        const u = unlocks[module.id];
+        status = isCompleted ? 'completed' : (u && u.unlocked === false ? 'locked' : 'current');
+      } else if (index === 0) {
         // Primer módulo siempre desbloqueado
         status = isCompleted ? 'completed' : 'current';
       } else {
@@ -2678,21 +2730,21 @@ function LearnPage({ isDark, navigate }) {
         const prevModule = modules[index - 1];
         const prevProgressData = moduleProgress?.find(mp => mp.module_id === prevModule.id);
         const prevCompleted = (prevProgressData?.signs_completed || 0) >= prevModule.signs;
-        
+
         if (prevCompleted) {
           status = isCompleted ? 'completed' : 'current';
         } else {
           status = 'locked';
         }
       }
-      
+
       return {
         ...module,
         status: progressData?.status || status,
         signs_completed: signsCompleted,
       };
     });
-  }, [moduleProgress]);
+  }, [moduleProgress, modules, unlocks]);
 
   const completedSigns = modulesWithProgress.reduce((sum, m) => sum + (m.signs_completed || 0), 0);
   const totalSigns = modulesWithProgress.reduce((sum, m) => sum + m.signs, 0);
@@ -3160,7 +3212,16 @@ function ModuleCompleteScreen({ module, nextModule, isDark, onContinue, onBackTo
 
 function LessonPage({ isDark, navigate }) {
   const { userProgress, moduleProgress, user } = useAuth();
+  const modules = useModules();
+  const unlocks = useLessonUnlocks();
   const [selected, setSelected] = useState(modules[0]);
+
+  // When the module list swaps from bundled to Supabase data, keep `selected`
+  // pointing at the fresh module object (or fall back to the first one).
+  useEffect(() => {
+    if (!modules.length) return;
+    setSelected((prev) => (prev && modules.find((m) => m.id === prev.id)) || modules[0]);
+  }, [modules]);
   const [activeSign, setActiveSign] = useState(null);
   const [search, setSearch] = useState("");
   const [practicedSigns, setPracticedSigns] = useState(new Set());
@@ -3224,29 +3285,32 @@ function LessonPage({ isDark, navigate }) {
       const progressData = moduleProgress?.find(mp => mp.module_id === module.id);
       const signsCompleted = progressData?.signs_completed || 0;
       const isCompleted = signsCompleted >= module.signs;
-      
+
       let status = 'locked';
-      if (index === 0) {
+      if (unlocks) {
+        const u = unlocks[module.id];
+        status = isCompleted ? 'completed' : (u && u.unlocked === false ? 'locked' : 'current');
+      } else if (index === 0) {
         status = isCompleted ? 'completed' : 'current';
       } else {
         const prevModule = modules[index - 1];
         const prevProgressData = moduleProgress?.find(mp => mp.module_id === prevModule.id);
         const prevCompleted = (prevProgressData?.signs_completed || 0) >= prevModule.signs;
-        
+
         if (prevCompleted) {
           status = isCompleted ? 'completed' : 'current';
         } else {
           status = 'locked';
         }
       }
-      
+
       return {
         ...module,
         status: progressData?.status || status,
         signs_completed: signsCompleted,
       };
     });
-  }, [moduleProgress]);
+  }, [moduleProgress, modules, unlocks]);
 
   const filteredItems = useMemo(() => {
     if (!selected) return [];
@@ -3369,12 +3433,26 @@ function LessonPage({ isDark, navigate }) {
                         style={{ animationDelay: `${index * 30}ms` }}
                       >
                         <div className="relative h-24 w-full overflow-hidden rounded-xl shadow-md">
-                          <img 
-                            src={item.thumbnail} 
-                            alt={item.label} 
-                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" 
-                            loading="lazy" 
-                          />
+                          {item.thumbnail ? (
+                            <img
+                              src={item.thumbnail}
+                              alt={item.label}
+                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                              loading="lazy"
+                            />
+                          ) : isMp4Ref(item.video_ref) ? (
+                            <video
+                              src={item.video_ref}
+                              muted
+                              playsInline
+                              preload="metadata"
+                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                            />
+                          ) : (
+                            <div className={cx("flex h-full w-full items-center justify-center text-2xl font-extrabold", isDark ? "bg-brand-deep text-brand-soft" : "bg-gray-200 text-gray-400")}>
+                              {(item.label || "?")[0]}
+                            </div>
+                          )}
                           <div className="absolute inset-0 bg-black/10" />
                           {/* Icon overlay */}
                           <div className="absolute top-2 right-2 h-6 w-6 rounded-full bg-white/90 flex items-center justify-center shadow-sm">
@@ -3454,13 +3532,22 @@ function SignVideoPanel({ sign, isDark, onClose, moduleId }) {
         </button>
       </div>
       <div className="overflow-hidden rounded-xl" style={{ paddingBottom: "56.25%", position: "relative" }}>
-        <iframe
-          src={sign.video_ref}
-          title={sign.label}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="absolute inset-0 h-full w-full rounded-xl border-0"
-        />
+        {isMp4Ref(sign.video_ref) ? (
+          <video
+            src={sign.video_ref}
+            title={sign.label}
+            autoPlay muted loop playsInline controls
+            className="absolute inset-0 h-full w-full rounded-xl object-cover"
+          />
+        ) : (
+          <iframe
+            src={sign.video_ref}
+            title={sign.label}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute inset-0 h-full w-full rounded-xl border-0"
+          />
+        )}
       </div>
     </Card>
   );
@@ -3707,7 +3794,8 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
     onResults: handlePracticeResults
   });
 
-  if (!sign || !videoId) return null;
+  const localVideo = !videoId && isMp4Ref(sign?.video_ref);
+  if (!sign || (!videoId && !localVideo)) return null;
 
   // Use autoplay with mute to prevent freezing, loop enabled for continuous playback
   // Added showinfo=0 and iv_load_policy=3 to minimize YouTube title/annotations
@@ -3842,21 +3930,32 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
           )}
         </div>
 
-        {/* YouTube Video - 1 column wide (smaller), cropped to fill container */}
+        {/* Sign video - 1 column wide (smaller). YouTube iframe is cropped to
+            fill; local mp4s render directly with object-cover. */}
         <div className="relative overflow-hidden rounded-2xl bg-black" style={{ paddingBottom: "56.25%" }}>
-          <div
-            className="absolute top-1/2 left-0 w-full"
-            style={{ transform: 'translateY(-50%)', height: '177.78%' }}
-          >
-            <iframe
-              key={videoId}
-              src={iframeSrc}
+          {localVideo ? (
+            <video
+              key={sign.video_ref}
+              src={sign.video_ref}
               title={sign.label || sign.name}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="absolute inset-0 h-full w-full border-0"
+              autoPlay muted loop playsInline controls
+              className="absolute inset-0 h-full w-full object-cover"
             />
-          </div>
+          ) : (
+            <div
+              className="absolute top-1/2 left-0 w-full"
+              style={{ transform: 'translateY(-50%)', height: '177.78%' }}
+            >
+              <iframe
+                key={videoId}
+                src={iframeSrc}
+                title={sign.label || sign.name}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full border-0"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -4046,7 +4145,8 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
     onResults: handlePracticeResults
   });
 
-  if (!sign || !videoId) return null;
+  const localVideo = !videoId && isMp4Ref(sign?.video_ref);
+  if (!sign || (!videoId && !localVideo)) return null;
 
   // Use autoplay with mute to prevent freezing, loop enabled for continuous playback
   // Added showinfo=0 and iv_load_policy=3 to minimize YouTube title/annotations
@@ -4191,21 +4291,31 @@ function SignVideoModal({ sign, isDark, onClose, moduleId, onNextSign }) {
             )}
           </div>
 
-          {/* YouTube Video - 1 column wide (smaller), cropped to fill container */}
+          {/* Sign video - YouTube iframe cropped to fill; local mp4 renders directly */}
           <div className="relative overflow-hidden rounded-2xl bg-black" style={{ paddingBottom: "56.25%" }}>
-            <div
-              className="absolute top-1/2 left-0 w-full"
-              style={{ transform: 'translateY(-50%)', height: '177.78%' }}
-            >
-              <iframe
-                key={videoId}
-                src={iframeSrc}
+            {localVideo ? (
+              <video
+                key={sign.video_ref}
+                src={sign.video_ref}
                 title={sign.label || sign.name}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0 h-full w-full border-0"
+                autoPlay muted loop playsInline controls
+                className="absolute inset-0 h-full w-full object-cover"
               />
-            </div>
+            ) : (
+              <div
+                className="absolute top-1/2 left-0 w-full"
+                style={{ transform: 'translateY(-50%)', height: '177.78%' }}
+              >
+                <iframe
+                  key={videoId}
+                  src={iframeSrc}
+                  title={sign.label || sign.name}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 h-full w-full border-0"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -6286,6 +6396,15 @@ function App() {
   
   if (path === "/lesson") {
     return <LessonPage isDark={isDark} navigate={navigate} />;
+  }
+
+  if (path === "/admin" || path === "/admin/lessons") {
+    return (
+      <div className={cx("min-h-screen transition-colors", isDark ? "bg-brand-deep" : "bg-[#F8F5EE]")}>
+        <AppHeader isDark={isDark} setIsDark={setIsDark} navigate={navigate} path={path} fontScale={fontScale} setFontScale={setFontScale} />
+        <AdminLessonsPage isDark={isDark} navigate={navigate} />
+      </div>
+    );
   }
 
   if (path === "/profile") {

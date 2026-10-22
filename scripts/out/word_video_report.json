@@ -1,0 +1,2487 @@
+{
+  "matched": [
+    {
+      "id": "9e12aeb8-b584-47ed-8198-85b5cdaa11ba",
+      "label": "1",
+      "file": "1.mp4",
+      "oldRef": "https://www.youtube.com/embed/zcd4GfYz-fA"
+    },
+    {
+      "id": "affd1e5f-3c5c-468e-89eb-6007eca357f7",
+      "label": "10",
+      "file": "10.mp4",
+      "oldRef": "https://www.youtube.com/embed/EabGQcQOTQM"
+    },
+    {
+      "id": "b7396cb3-8187-44cd-a0db-0ee454d0fc0d",
+      "label": "11",
+      "file": "11.mp4",
+      "oldRef": "https://www.youtube.com/embed/zmMrM5V-dE0"
+    },
+    {
+      "id": "470c8884-e6c2-4706-8445-fb8658b23e35",
+      "label": "12",
+      "file": "12.mp4",
+      "oldRef": "https://www.youtube.com/embed/HYKqgBDi9e8"
+    },
+    {
+      "id": "af3cf15a-7477-468a-ba04-0ee729b1f8a9",
+      "label": "13",
+      "file": "13.mp4",
+      "oldRef": "https://www.youtube.com/embed/VTz4qsr_d7A"
+    },
+    {
+      "id": "f9ec3220-aaac-4770-af33-b89ebb867b7d",
+      "label": "14",
+      "file": "14.mp4",
+      "oldRef": "https://www.youtube.com/embed/1AmGEk1mzRE"
+    },
+    {
+      "id": "77c593a1-5467-4227-94d0-b569236ab010",
+      "label": "16",
+      "file": "16.mp4",
+      "oldRef": "https://www.youtube.com/embed/qIuSkQRkElg"
+    },
+    {
+      "id": "75d0afa0-ad30-4100-b84d-f1deffcd71fc",
+      "label": "17",
+      "file": "17.mp4",
+      "oldRef": "https://www.youtube.com/embed/zEJWCoiiA5o"
+    },
+    {
+      "id": "b1c94ddf-a889-47da-a6d1-a8144517095b",
+      "label": "18",
+      "file": "18.mp4",
+      "oldRef": "https://www.youtube.com/embed/tHAWINUWv_I"
+    },
+    {
+      "id": "c705f36f-f830-43cb-9734-5976c6a0073c",
+      "label": "19",
+      "file": "19.mp4",
+      "oldRef": "https://www.youtube.com/embed/R3Yrnd9ryws"
+    },
+    {
+      "id": "cc2ec1eb-7d99-4753-b774-23b71bf777b2",
+      "label": "2",
+      "file": "2.mp4",
+      "oldRef": "https://www.youtube.com/embed/1Fau1Nh7rPY"
+    },
+    {
+      "id": "41b9999c-f545-4707-91a2-9ea2d41a454f",
+      "label": "20",
+      "file": "20.mp4",
+      "oldRef": "https://www.youtube.com/embed/-BIeP8EKzrE"
+    },
+    {
+      "id": "702aacf9-47c9-4dfd-8cd7-3755607e98ca",
+      "label": "25",
+      "file": "25.mp4",
+      "oldRef": "https://www.youtube.com/embed/g3jMkpVsM6Q"
+    },
+    {
+      "id": "54a386e6-e62e-4b0a-9517-73ff62d78dd4",
+      "label": "3",
+      "file": "3.mp4",
+      "oldRef": "https://www.youtube.com/embed/EYEMXK7Eeq0"
+    },
+    {
+      "id": "e4d196db-db2f-4853-9a39-95b4f58d6d80",
+      "label": "30",
+      "file": "30.mp4",
+      "oldRef": "https://www.youtube.com/embed/3tafNB_oN8M"
+    },
+    {
+      "id": "4bdbdc62-7f7c-41c3-904b-8254e2ee2213",
+      "label": "4",
+      "file": "4.mp4",
+      "oldRef": "https://www.youtube.com/embed/wedKjwNQYgw"
+    },
+    {
+      "id": "78c203fb-5b92-4665-acdb-d004aed2ac5c",
+      "label": "5",
+      "file": "5.mp4",
+      "oldRef": "https://www.youtube.com/embed/d3MvmWXK3HE"
+    },
+    {
+      "id": "a71760ba-6594-41e9-8d16-7fe787ad954c",
+      "label": "50",
+      "file": "50.mp4",
+      "oldRef": "https://www.youtube.com/embed/PY1rxsRHhXw"
+    },
+    {
+      "id": "8f2c58ff-be93-49b7-af16-f13c82254a12",
+      "label": "6",
+      "file": "6.mp4",
+      "oldRef": "https://www.youtube.com/embed/yQ5GJzVxUYQ"
+    },
+    {
+      "id": "fe1dc8c2-892d-466a-820a-f0c92985d80a",
+      "label": "60",
+      "file": "60.mp4",
+      "oldRef": "https://www.youtube.com/embed/yiDXO661RAg"
+    },
+    {
+      "id": "40c9fb23-ca5c-40f6-ab03-a9601fc8b665",
+      "label": "7",
+      "file": "7.mp4",
+      "oldRef": "https://www.youtube.com/embed/ynp7TLZIEYc"
+    },
+    {
+      "id": "e870a10c-b244-4648-a8e2-4317fc93502f",
+      "label": "70",
+      "file": "70.mp4",
+      "oldRef": "https://www.youtube.com/embed/keMStoc9dNU"
+    },
+    {
+      "id": "838fdaad-ad71-45c3-a8e3-35a537f6dcac",
+      "label": "8",
+      "file": "8.mp4",
+      "oldRef": "https://www.youtube.com/embed/QzkfbPIdXAI"
+    },
+    {
+      "id": "d101b897-7db4-442d-880b-e47eac1abd2c",
+      "label": "80",
+      "file": "80.mp4",
+      "oldRef": "https://www.youtube.com/embed/LZmmIFqXdDo"
+    },
+    {
+      "id": "cd7da7a8-3893-4206-9237-88d342b1e431",
+      "label": "9",
+      "file": "9.mp4",
+      "oldRef": "https://www.youtube.com/embed/MgnvumQM-cQ"
+    },
+    {
+      "id": "cd0b505e-3388-4533-9ad0-c574d5a577a2",
+      "label": "90",
+      "file": "90.mp4",
+      "oldRef": "https://www.youtube.com/embed/dYANCSgo7XY"
+    },
+    {
+      "id": "fc686d3c-b5ae-4051-8609-bfa3aa114403",
+      "label": "ABUELO",
+      "file": "ABUELO.mp4",
+      "oldRef": "https://www.youtube.com/embed/zvGtewgpJBE"
+    },
+    {
+      "id": "3a54bf72-e250-456a-8439-d6d1e13abeec",
+      "label": "AMARILLO",
+      "file": "AMARILLO.mp4",
+      "oldRef": "https://www.youtube.com/embed/hBrEHqJE3VA"
+    },
+    {
+      "id": "4551e53e-aabd-41c0-8c2a-9c43c4332e86",
+      "label": "AZUL",
+      "file": "AZUL.mp4",
+      "oldRef": "https://www.youtube.com/embed/iFTPg9bwqdM"
+    },
+    {
+      "id": "eb126b5f-c09c-4289-a4ac-e36027df35c5",
+      "label": "BLANCO",
+      "file": "BLANCO.mp4",
+      "oldRef": "https://www.youtube.com/embed/YTXONSSiEDI"
+    },
+    {
+      "id": "596e68ed-e58b-4179-92e6-8c7ef3363d41",
+      "label": "CAFÉ",
+      "file": "CAFE.mp4",
+      "oldRef": "https://www.youtube.com/embed/xUj46hCynTg"
+    },
+    {
+      "id": "d57d12d6-2b5d-4bc9-a1e4-24eae90bc077",
+      "label": "CLARO",
+      "file": "CLARO.mp4",
+      "oldRef": "https://www.youtube.com/embed/Y0jSGb3ZQRw"
+    },
+    {
+      "id": "0a728ad0-b627-40f7-b015-a5122349b239",
+      "label": "CUÑADO",
+      "file": "CUNADO.mp4",
+      "oldRef": "https://www.youtube.com/embed/cFe65ZiwHMM"
+    },
+    {
+      "id": "39fe8a98-902c-439c-b422-731b35178313",
+      "label": "GRIS",
+      "file": "GRIS.mp4",
+      "oldRef": "https://www.youtube.com/embed/XJTGwNGVNgo"
+    },
+    {
+      "id": "33296cf7-240d-4f3b-ab99-8be61d57bd88",
+      "label": "HERMANO",
+      "file": "HERMANO.mp4",
+      "oldRef": "https://www.youtube.com/embed/1gmNcoQ__jY"
+    },
+    {
+      "id": "f1557096-0a43-4b89-8967-2f9dbd24bcbd",
+      "label": "MAMÁ",
+      "file": "MAMA.mp4",
+      "oldRef": "https://www.youtube.com/embed/osNRQD_qxXw"
+    },
+    {
+      "id": "6b0a5201-471d-4a8e-b806-ab18853ef35f",
+      "label": "MORADO",
+      "file": "MORADO.mp4",
+      "oldRef": "https://www.youtube.com/embed/rAS9Y53Qy14"
+    },
+    {
+      "id": "471c6ad8-7599-45b0-b5b9-c9b2bf57cae2",
+      "label": "MUJER",
+      "file": "MUJER.mp4",
+      "oldRef": "https://www.youtube.com/embed/fLKh6lZK3Uw"
+    },
+    {
+      "id": "24eaf84c-f06b-4dd4-91e3-325c150b037a",
+      "label": "NARANJA",
+      "file": "NARANJA.mp4",
+      "oldRef": "https://www.youtube.com/embed/Ylq-DJVuEIY"
+    },
+    {
+      "id": "87e509b1-e9b9-4c61-957b-6e49511a5437",
+      "label": "NEGRO",
+      "file": "NEGRO.mp4",
+      "oldRef": "https://www.youtube.com/embed/k_LxZ0tisls"
+    },
+    {
+      "id": "f4b38359-bc68-4e1f-aa56-f2f779e37819",
+      "label": "PAPÁ",
+      "file": "PAPA.mp4",
+      "oldRef": "https://www.youtube.com/embed/7UHtMAwKXzI"
+    },
+    {
+      "id": "4a12c63c-e4f2-40e7-9603-333e8eb25131",
+      "label": "PRIMO",
+      "file": "PRIMO.mp4",
+      "oldRef": "https://www.youtube.com/embed/-LrIxYgHHWc"
+    },
+    {
+      "id": "f356cd15-a37a-4f4d-acaf-958230abd6a6",
+      "label": "ROJO",
+      "file": "ROJO.mp4",
+      "oldRef": "https://www.youtube.com/embed/FzwIpUdNfSM"
+    },
+    {
+      "id": "826eb3b4-4676-4e6b-a4b8-d0f16629882a",
+      "label": "ROSA",
+      "file": "ROSA.mp4",
+      "oldRef": "https://www.youtube.com/embed/WLC5_hezyhk"
+    },
+    {
+      "id": "530219a7-441c-4905-a1c6-94247ac28f93",
+      "label": "SOBRINO",
+      "file": "SOBRINO.mp4",
+      "oldRef": "https://www.youtube.com/embed/7sRjzxSnKnk"
+    },
+    {
+      "id": "5d8b5051-9609-4494-af54-93b78ffa6305",
+      "label": "SUEGRA",
+      "file": "SUEGRA.mp4",
+      "oldRef": "https://www.youtube.com/embed/upgZQNddlsM"
+    },
+    {
+      "id": "c2f4dc4a-eb82-4399-ab43-b539d5940a31",
+      "label": "SUEGRO",
+      "file": "SUEGRO.mp4",
+      "oldRef": "https://www.youtube.com/embed/PC7dWhmMx1o"
+    },
+    {
+      "id": "f1c46ab3-723f-404d-829c-606aa94685a8",
+      "label": "VERDE",
+      "file": "VERDE.mp4",
+      "oldRef": "https://www.youtube.com/embed/fbnShrBFUFY"
+    }
+  ],
+  "unmatched": [
+    {
+      "id": "dd1aaf1a-7d0a-4dcb-943e-5ada5bf59871",
+      "label": "¡QUÉ MILAGRO!",
+      "video_ref": "https://www.youtube.com/embed/7CtGO4_71qA"
+    },
+    {
+      "id": "2df776a4-af0d-475e-baf9-09a0583fbf90",
+      "label": "¡SORPRESA!",
+      "video_ref": "https://www.youtube.com/embed/Q0OqTBjoIjU"
+    },
+    {
+      "id": "ce2392a6-66fd-4d3a-b2d4-64194597ed27",
+      "label": "¿CÓMO TE LLAMAS?",
+      "video_ref": "https://www.youtube.com/embed/lVeQV6cgUE8"
+    },
+    {
+      "id": "c058dc26-3ef0-4156-9b8e-373117d96bbe",
+      "label": "1,000",
+      "video_ref": "https://www.youtube.com/embed/NwsaMp30r7E"
+    },
+    {
+      "id": "308a762c-5733-4e82-85b3-52cbd3441035",
+      "label": "1,000,000",
+      "video_ref": "https://www.youtube.com/embed/Hw81XkRVe6o"
+    },
+    {
+      "id": "6d685e5b-a59c-41a9-be52-b438fe3801a0",
+      "label": "40",
+      "video_ref": "https://www.youtube.com/embed/AZVHrfjN6lU"
+    },
+    {
+      "id": "31f2d18f-58c9-4729-aad8-0421878d64cc",
+      "label": "600 (1)",
+      "video_ref": "https://www.youtube.com/embed/o8qXaBP-xX0"
+    },
+    {
+      "id": "dbcfef46-27cf-40ae-a1ef-69acf475ca06",
+      "label": "600 (2)",
+      "video_ref": "https://www.youtube.com/embed/jz-ur8CNdok"
+    },
+    {
+      "id": "f93f31a1-7719-4d93-8898-8551637bf829",
+      "label": "700 (1)",
+      "video_ref": "https://www.youtube.com/embed/nx_L1bXWJow"
+    },
+    {
+      "id": "392157b8-13dc-4a49-8e74-c6a8e90a6052",
+      "label": "700 (2)",
+      "video_ref": "https://www.youtube.com/embed/KKwJcd5tJcY"
+    },
+    {
+      "id": "3c12c148-22a8-4180-b07b-a4a079e4c7fc",
+      "label": "800 (1)",
+      "video_ref": "https://www.youtube.com/embed/rfxovdZLBzs"
+    },
+    {
+      "id": "71fb957f-12c6-4b15-9429-3971a8fad8f4",
+      "label": "800 (2)",
+      "video_ref": "https://www.youtube.com/embed/jFpgfl8SVrg"
+    },
+    {
+      "id": "a1ee3218-b3cf-4e01-abaf-bc49b833a506",
+      "label": "900 (1)",
+      "video_ref": "https://www.youtube.com/embed/zYqPRPHgbz8"
+    },
+    {
+      "id": "c01b5fcc-6f24-4e37-b04e-939b71c02d8d",
+      "label": "900 (2)",
+      "video_ref": "https://www.youtube.com/embed/pV8y0Bj22Ho"
+    },
+    {
+      "id": "c0735cfb-12f1-4801-8610-296b7f477db7",
+      "label": "A",
+      "video_ref": "https://www.youtube.com/embed/UIdCFNf_Udc"
+    },
+    {
+      "id": "481e7bec-cd6f-4813-af9c-dca85494f7a0",
+      "label": "ADICCIÓN",
+      "video_ref": "https://www.youtube.com/embed/tl1donTkFG0"
+    },
+    {
+      "id": "77825043-7184-4073-b291-96e76d2dbb3a",
+      "label": "ADOLESCENTE",
+      "video_ref": "https://www.youtube.com/embed/abA8ZTmmxCY"
+    },
+    {
+      "id": "b7fa5da7-e0ca-4ae2-9adf-85d8f1555163",
+      "label": "ADULTO",
+      "video_ref": "https://www.youtube.com/embed/l2nGxQycEp8"
+    },
+    {
+      "id": "110efb85-cf3a-49b0-8069-ad2946999727",
+      "label": "AGRURAS",
+      "video_ref": "https://www.youtube.com/embed/O0iwDwiq8o4"
+    },
+    {
+      "id": "676a8d22-ebe5-4b43-9764-2556915ca395",
+      "label": "ALCOHOL (1)",
+      "video_ref": "https://www.youtube.com/embed/7rcFH43ct-M"
+    },
+    {
+      "id": "deb574fa-cde6-461c-be65-7344162071bd",
+      "label": "ALCOHOL (2)",
+      "video_ref": "https://www.youtube.com/embed/1wlqRnSSnXk"
+    },
+    {
+      "id": "ce4c02b7-301b-44e8-98fd-1ce8991c5cdf",
+      "label": "ALERGIA",
+      "video_ref": "https://www.youtube.com/embed/i3Xcbwg4dls"
+    },
+    {
+      "id": "752e0f77-077e-45eb-bb34-43b8230b9ad0",
+      "label": "AMBULANCIA",
+      "video_ref": "https://www.youtube.com/embed/x6HdMcLyWtY"
+    },
+    {
+      "id": "415764bf-dbe3-4f97-a797-474458ead3bd",
+      "label": "ANESTESIA (1)",
+      "video_ref": "https://www.youtube.com/embed/CzuPy9uDgjA"
+    },
+    {
+      "id": "0bd6e747-c938-4f09-8358-da39c3f4d9f7",
+      "label": "ANESTESIA (2)",
+      "video_ref": "https://www.youtube.com/embed/9k-oV6Qsyy0"
+    },
+    {
+      "id": "8f44057c-4c32-47c0-8627-195b40e34e99",
+      "label": "ANTIVIRUS",
+      "video_ref": "https://www.youtube.com/embed/v7rKDhcNKnI"
+    },
+    {
+      "id": "9726d996-35bc-4343-86ac-f25f23003593",
+      "label": "APLICACIÓN",
+      "video_ref": "https://www.youtube.com/embed/q4pxigOgD9Q"
+    },
+    {
+      "id": "c3c42181-e021-4649-b0b7-99230bcfee49",
+      "label": "ARDOR",
+      "video_ref": "https://www.youtube.com/embed/wSCVl4qhej4"
+    },
+    {
+      "id": "32658040-7493-47cb-a381-4f5798832cb9",
+      "label": "ARTRITIS",
+      "video_ref": "https://www.youtube.com/embed/Nfo5FPcTwFc"
+    },
+    {
+      "id": "c367b039-7425-463a-9fcc-cb07f991baa0",
+      "label": "ASCO (NÁUSEAS)",
+      "video_ref": "https://www.youtube.com/embed/E9a92aqS8GU"
+    },
+    {
+      "id": "e7469f99-ba3b-4e69-9064-7cde339be009",
+      "label": "ASMA",
+      "video_ref": "https://www.youtube.com/embed/OjHwtylg3u4"
+    },
+    {
+      "id": "d3588c9a-2c2e-4106-a710-c1759f05caef",
+      "label": "AURICULARES",
+      "video_ref": "https://www.youtube.com/embed/iGbFzGjj-R0"
+    },
+    {
+      "id": "301bb8cf-d81c-4d52-af0a-70a97944f3f1",
+      "label": "B",
+      "video_ref": "https://www.youtube.com/embed/Ub3BVznewp8"
+    },
+    {
+      "id": "503a5b3b-ec16-4cc3-a18f-d97b24ddd73a",
+      "label": "BACHILLERATO/PREPARATORIA",
+      "video_ref": "https://www.youtube.com/embed/l8JK-WWjlEY"
+    },
+    {
+      "id": "97200c6c-80de-4505-8d92-3a8479b66e57",
+      "label": "BACTERIA",
+      "video_ref": "https://www.youtube.com/embed/W7eBlvekm5o"
+    },
+    {
+      "id": "fdd92b03-5119-4b43-99a3-6982dd802fcf",
+      "label": "BEIGE",
+      "video_ref": "https://www.youtube.com/embed/1QQhgazf5lQ"
+    },
+    {
+      "id": "e05f2a47-b287-435e-a133-2d28cdf2a853",
+      "label": "BIBLIOTECA",
+      "video_ref": "https://www.youtube.com/embed/TBBh5m4uPfA"
+    },
+    {
+      "id": "0dcf6108-9d84-4387-b226-46c8682e7591",
+      "label": "BIPOLARIDAD",
+      "video_ref": "https://www.youtube.com/embed/imvVECm2SU0"
+    },
+    {
+      "id": "c5384a93-10df-464f-bc97-652d972a20b5",
+      "label": "BLOG",
+      "video_ref": "https://www.youtube.com/embed/J7zqMlwFP9k"
+    },
+    {
+      "id": "a918a498-ec39-4cda-949e-6374cb8c89d7",
+      "label": "BLUETOOTH",
+      "video_ref": "https://www.youtube.com/embed/oXYD-YHs0eo"
+    },
+    {
+      "id": "89c9530d-5522-43c9-8aea-f4121eb501f6",
+      "label": "BORRADOR",
+      "video_ref": "https://www.youtube.com/embed/7rcqjaFGZG0"
+    },
+    {
+      "id": "342bfd20-b1af-4492-9db2-0891c3d01cb1",
+      "label": "BOT",
+      "video_ref": "https://www.youtube.com/embed/e1Mo2TlB4bI"
+    },
+    {
+      "id": "c7af698d-fa67-4d10-9e56-35e7401489e7",
+      "label": "BOTIQUÍN MÉDICO",
+      "video_ref": "https://www.youtube.com/embed/FHOcTmMJBr8"
+    },
+    {
+      "id": "33d3f6a4-9acc-4fe4-8259-7f5836b6f181",
+      "label": "BRONCE",
+      "video_ref": "https://www.youtube.com/embed/Y5jb7j3SY7E"
+    },
+    {
+      "id": "f008ceb2-5bd6-414c-8467-c899ee4a519a",
+      "label": "C",
+      "video_ref": "https://www.youtube.com/embed/wxmyvk8yjsQ"
+    },
+    {
+      "id": "aba32d4e-4ea1-4764-9d53-8c9aa0356fb5",
+      "label": "CAFETERÍA",
+      "video_ref": "https://www.youtube.com/embed/rAGqNgkzcOo"
+    },
+    {
+      "id": "b31e02e1-686e-4410-8978-16ef6dd9d0b7",
+      "label": "CÁMARA",
+      "video_ref": "https://www.youtube.com/embed/dDQI6sKIyq4"
+    },
+    {
+      "id": "677ffc66-cd61-437f-8605-bd21ec5b953e",
+      "label": "CÁNCER",
+      "video_ref": "https://www.youtube.com/embed/le2K_k8nKfk"
+    },
+    {
+      "id": "1bef496d-b310-4ae2-8fdf-0d617bdd7f51",
+      "label": "CANSANCIO",
+      "video_ref": "https://www.youtube.com/embed/DVBQ0brVcSo"
+    },
+    {
+      "id": "6ef6eb98-3d4b-4a0f-834e-176ad9a32933",
+      "label": "CARDIÓLOGO",
+      "video_ref": "https://www.youtube.com/embed/6LX50Fov-Ss"
+    },
+    {
+      "id": "8c1e959e-4c80-41bc-85ab-ed91150fc2e2",
+      "label": "CARNET MÉDICO",
+      "video_ref": "https://www.youtube.com/embed/Sn3cirhw0FM"
+    },
+    {
+      "id": "9023ee11-c0ff-431b-92da-0b0b86b187eb",
+      "label": "CENTRO DE SALUD",
+      "video_ref": "https://www.youtube.com/embed/IQaRmJKOTt8"
+    },
+    {
+      "id": "114f963c-b5a5-40a4-beb1-54f6d24ed842",
+      "label": "CIBERACOSO",
+      "video_ref": "https://www.youtube.com/embed/4SFvSlICVN8"
+    },
+    {
+      "id": "e0690cb6-004a-4489-b68f-5b1c7bff6bc2",
+      "label": "CIBERSEGURIDAD",
+      "video_ref": "https://www.youtube.com/embed/LPoOsaAcF4E"
+    },
+    {
+      "id": "62d5ee54-2380-480b-86dc-f4a343745864",
+      "label": "CIRUGÍA",
+      "video_ref": "https://www.youtube.com/embed/s4qTztLbvuM"
+    },
+    {
+      "id": "e01093a1-821f-4ead-a871-0cd4b8d44aaf",
+      "label": "CITA MÉDICA",
+      "video_ref": "https://www.youtube.com/embed/0AGrLEb_jDI"
+    },
+    {
+      "id": "9b7f4c66-ae16-4ff4-aeda-c37370dab39f",
+      "label": "CLASE",
+      "video_ref": "https://www.youtube.com/embed/x67IJU69Fog"
+    },
+    {
+      "id": "4f40b11a-ea2a-4672-a1b7-f62ec6d8296a",
+      "label": "COBRE",
+      "video_ref": "https://www.youtube.com/embed/27LbnZGuL7s"
+    },
+    {
+      "id": "cd658eb4-ef70-4eb8-a20f-780912a86c76",
+      "label": "CÓLICOS",
+      "video_ref": "https://www.youtube.com/embed/3a7A9Q2vVyY"
+    },
+    {
+      "id": "a3fac1ec-cf42-465d-b7f4-f15d80dc1c6e",
+      "label": "COMPUTADORA",
+      "video_ref": "https://www.youtube.com/embed/JU118g0dFoM"
+    },
+    {
+      "id": "8d9cd49e-f44b-4222-bd6a-1823a8b1e290",
+      "label": "CONFERENCIA",
+      "video_ref": "https://www.youtube.com/embed/yz9qXXgrh7E"
+    },
+    {
+      "id": "81794f38-759c-4234-9f92-f59dd74024c9",
+      "label": "CONSTANCIA DE DISCAPACIDAD",
+      "video_ref": "https://www.youtube.com/embed/_gYzxiVBFeM"
+    },
+    {
+      "id": "38067095-4029-4ab6-8ff0-ceeefaa90152",
+      "label": "CONSULTA MÉDICA",
+      "video_ref": "https://www.youtube.com/embed/e9O3KT-_tyU"
+    },
+    {
+      "id": "11bdbaea-d7ce-4220-98b7-2cce551a4a20",
+      "label": "CONTRASEÑA",
+      "video_ref": "https://www.youtube.com/embed/c5RTvc-I-BQ"
+    },
+    {
+      "id": "0d7c7fca-8012-4055-ba40-da3c8159bcc4",
+      "label": "CONVULSIÓN",
+      "video_ref": "https://www.youtube.com/embed/m-0Gou9JJEQ"
+    },
+    {
+      "id": "368f2c93-2920-4b34-828b-6916f0dbb417",
+      "label": "COPA MENSTRUAL",
+      "video_ref": "https://www.youtube.com/embed/U5V0EVrNwXI"
+    },
+    {
+      "id": "b48de913-5c85-43c6-b894-849ec93fc046",
+      "label": "CORONAVIRUS",
+      "video_ref": "https://www.youtube.com/embed/mj_yaeP88XQ"
+    },
+    {
+      "id": "83792e33-0598-4b26-875e-2fd96b595f19",
+      "label": "CORREO ELECTRÓNICO",
+      "video_ref": "https://www.youtube.com/embed/ExNsboeGeE8"
+    },
+    {
+      "id": "4670799b-b798-44f0-8487-47b1d7a00d47",
+      "label": "CUADERNO",
+      "video_ref": "https://www.youtube.com/embed/RQGUB96tU7k"
+    },
+    {
+      "id": "a7caa5d6-d3e6-4399-a377-ed7dad6e14cb",
+      "label": "CUBREBOCAS",
+      "video_ref": "https://www.youtube.com/embed/DsRPiuVqckI"
+    },
+    {
+      "id": "73b2375a-5d67-45b5-95a8-722462494efe",
+      "label": "D",
+      "video_ref": "https://www.youtube.com/embed/w9d8xuTit9k"
+    },
+    {
+      "id": "6ab796ff-188c-493c-9850-2756f2e4e6a1",
+      "label": "DACTILOLOGÍA (ALFABETO)",
+      "video_ref": "https://www.youtube.com/embed/fY81OuLYqQg"
+    },
+    {
+      "id": "5460cee2-c42c-4454-8aae-d7669a7ab3d3",
+      "label": "DATOS PERSONALES",
+      "video_ref": "https://www.youtube.com/embed/_yG0O4tiF7o"
+    },
+    {
+      "id": "626a0566-279c-4c28-978b-e5876d880642",
+      "label": "DATOS PÚBLICOS",
+      "video_ref": "https://www.youtube.com/embed/HGp4XTmuYUw"
+    },
+    {
+      "id": "32b4d5b5-c6f1-4a4b-b1d6-05a84690c757",
+      "label": "DENTISTA",
+      "video_ref": "https://www.youtube.com/embed/wsj-0VCOWok"
+    },
+    {
+      "id": "19b0a0d5-c96b-4b62-896e-06135a7e2284",
+      "label": "DEPRESIÓN",
+      "video_ref": "https://www.youtube.com/embed/AUkqGTnF3lI"
+    },
+    {
+      "id": "bb2b0c43-c30c-4459-88fe-85a239a00cc6",
+      "label": "DESMAYO",
+      "video_ref": "https://www.youtube.com/embed/YhCoWu5e1-k"
+    },
+    {
+      "id": "79c83bb5-9f72-4a1d-8c33-9b63e5dcca1f",
+      "label": "DIABETES",
+      "video_ref": "https://www.youtube.com/embed/Hph2pMPOJIQ"
+    },
+    {
+      "id": "a0fd804e-58c9-4444-ac32-cea6da72e6e6",
+      "label": "DIAGNÓSTICO MEDICO",
+      "video_ref": "https://www.youtube.com/embed/aCSUwaznL4I"
+    },
+    {
+      "id": "173b9055-c75e-44cb-901e-f9a7f1ff47d1",
+      "label": "DIARREA",
+      "video_ref": "https://www.youtube.com/embed/tWhEXxcwqRM"
+    },
+    {
+      "id": "85cd399b-56e6-4e0a-984c-de8a0c7d9e19",
+      "label": "DIPLOMA",
+      "video_ref": "https://www.youtube.com/embed/Vg0qrezQLTw"
+    },
+    {
+      "id": "0552044b-d439-4ca1-af6b-96b1bc236a54",
+      "label": "DIRECCIÓN URL",
+      "video_ref": "https://www.youtube.com/embed/KyvaaFOrGTA"
+    },
+    {
+      "id": "dcf705c5-32cd-4590-a483-8fd696228c61",
+      "label": "DISCO DURO",
+      "video_ref": "https://www.youtube.com/embed/nsFMg5GvOZo"
+    },
+    {
+      "id": "cda01a97-cb5c-4b60-a730-8ead5a0b4496",
+      "label": "DISCULPA",
+      "video_ref": "https://www.youtube.com/embed/bWwIisAtYCI"
+    },
+    {
+      "id": "5af085b4-850b-45f6-bf47-e0c36fc4f04f",
+      "label": "DOLOR",
+      "video_ref": "https://www.youtube.com/embed/61NSOq-fpL8"
+    },
+    {
+      "id": "4b1c6dcf-8d66-4d7d-a77b-fe82e680c208",
+      "label": "E",
+      "video_ref": "https://www.youtube.com/embed/oa3LChbP9p0"
+    },
+    {
+      "id": "0841d9ab-37b5-47c5-9424-c2209bdde520",
+      "label": "ENFERMO/ENFERMEDAD",
+      "video_ref": "https://www.youtube.com/embed/ZdMKJSmK_RY"
+    },
+    {
+      "id": "23b0cc64-fee2-4758-89d8-ca7a0dd7fb52",
+      "label": "ENLACE",
+      "video_ref": "https://www.youtube.com/embed/qHU2VU5I56U"
+    },
+    {
+      "id": "e1e872c6-22e9-493a-8c75-a5a619eeb9dd",
+      "label": "ENYESAR",
+      "video_ref": "https://www.youtube.com/embed/QHue5jlh04o"
+    },
+    {
+      "id": "43c6b6f4-73dd-4a90-90f5-a8bf17417f4e",
+      "label": "EPIDEMIA",
+      "video_ref": "https://www.youtube.com/embed/SBBc-3KAVnQ"
+    },
+    {
+      "id": "17399432-6d92-42ba-a497-0c19617f0d04",
+      "label": "ESCALOFRÍOS",
+      "video_ref": "https://www.youtube.com/embed/mwjUA-z77dw"
+    },
+    {
+      "id": "568048de-33ac-4c9d-87b3-df450d264b1d",
+      "label": "ESCÁNER",
+      "video_ref": "https://www.youtube.com/embed/2IkzU_GlvQE"
+    },
+    {
+      "id": "92d54c46-4c6e-44aa-b54b-a560263c845a",
+      "label": "ESCUELA",
+      "video_ref": "https://www.youtube.com/embed/ThlMtGCgkQE"
+    },
+    {
+      "id": "59e12206-af85-44af-951f-fb7839e46b45",
+      "label": "ESPAÑOL",
+      "video_ref": "https://www.youtube.com/embed/jcq0dhNJCKY"
+    },
+    {
+      "id": "e913f219-daf4-4234-ba07-ff256e9995bd",
+      "label": "ESPECIALISTA",
+      "video_ref": "https://www.youtube.com/embed/rGSQZxOdoaI"
+    },
+    {
+      "id": "65a6b25c-4b40-4c62-a9bb-c9cde0a84b29",
+      "label": "ESPOSA (1)",
+      "video_ref": "https://www.youtube.com/embed/4Gi2ojnObd0"
+    },
+    {
+      "id": "d344a933-95a1-495d-b4fa-3df3ca64ef97",
+      "label": "ESPOSA (2)",
+      "video_ref": "https://www.youtube.com/embed/rIw6sB8vqlk"
+    },
+    {
+      "id": "ce3b2d93-9bbd-43c9-88b1-0cfcd6df2e91",
+      "label": "ESPOSO",
+      "video_ref": "https://www.youtube.com/embed/IbWYlwhtzaQ"
+    },
+    {
+      "id": "48117fa1-ce0a-4c2c-9f85-dcce8f5560d6",
+      "label": "ESTANCIA INFANTIL",
+      "video_ref": "https://www.youtube.com/embed/t5lVNC5HouM"
+    },
+    {
+      "id": "0ac37036-6e40-415e-a2e7-2ad0b22da3b1",
+      "label": "ESTUDIANTE",
+      "video_ref": "https://www.youtube.com/embed/6NCKO_GOlYg"
+    },
+    {
+      "id": "c2cb336c-7d6a-4b59-94f9-81adf272f116",
+      "label": "ESTUDIOS MÉDICOS",
+      "video_ref": "https://www.youtube.com/embed/QtTBwC1ZE9I"
+    },
+    {
+      "id": "8b8c44a1-093a-4c88-9185-32e7e7db95a0",
+      "label": "EXAMEN",
+      "video_ref": "https://www.youtube.com/embed/TIU5xepVWbQ"
+    },
+    {
+      "id": "50ee2c35-41d8-47d7-82f4-35bbd562e912",
+      "label": "EXAMEN MÉDICO",
+      "video_ref": "https://www.youtube.com/embed/MCB93qs_BHY"
+    },
+    {
+      "id": "ac4516e7-398b-471f-87dc-6ef9a8c36e82",
+      "label": "EXCEL",
+      "video_ref": "https://www.youtube.com/embed/B5ZyQSGfQAo"
+    },
+    {
+      "id": "21f05dca-d9d3-432f-954b-ee39977b9b9c",
+      "label": "F",
+      "video_ref": "https://www.youtube.com/embed/ennzzWUul94"
+    },
+    {
+      "id": "0421dcbb-804b-4dba-bdde-5768769dee60",
+      "label": "FACEBOOK",
+      "video_ref": "https://www.youtube.com/embed/n003w8DR--E"
+    },
+    {
+      "id": "4e6a1dac-3704-4eb1-9d9c-d5f82829f896",
+      "label": "FALTA DE APETITO",
+      "video_ref": "https://www.youtube.com/embed/6GloUvSY2qU"
+    },
+    {
+      "id": "f33aab65-2c70-46d1-a51b-5960971fb7fc",
+      "label": "FALTA DE RESPIRACIÓN",
+      "video_ref": "https://www.youtube.com/embed/D8gb_QI05cA"
+    },
+    {
+      "id": "f60c67ea-b9a1-4056-93bf-93906bbfc1e2",
+      "label": "FALTA DE VISIÓN",
+      "video_ref": "https://www.youtube.com/embed/JnJnciFpgMA"
+    },
+    {
+      "id": "f5356a33-c26b-4907-adbb-bbfa8a46d114",
+      "label": "FARMACIA",
+      "video_ref": "https://www.youtube.com/embed/BJIgcJ7Sf2E"
+    },
+    {
+      "id": "bcd9fe25-5129-4fd8-9e1a-659eba653c6f",
+      "label": "FIEBRE",
+      "video_ref": "https://www.youtube.com/embed/xTzmQOiP0Xw"
+    },
+    {
+      "id": "2aecf287-d373-442e-8d6e-570ab913843a",
+      "label": "FÍSICA",
+      "video_ref": "https://www.youtube.com/embed/G6wIadOjUTU"
+    },
+    {
+      "id": "5a25cce2-1b5e-46a8-a6eb-163a415b0a52",
+      "label": "FLEMAS",
+      "video_ref": "https://www.youtube.com/embed/hcnGp027wwc"
+    },
+    {
+      "id": "938f5444-e4a9-4c89-969c-2af8084feeba",
+      "label": "FRACTURA",
+      "video_ref": "https://www.youtube.com/embed/5et184rz_qc"
+    },
+    {
+      "id": "130a38fb-c918-4ece-b3b9-22975a23c749",
+      "label": "FRECUENCIA CARDÍACA",
+      "video_ref": "https://www.youtube.com/embed/En49yhoEa7k"
+    },
+    {
+      "id": "02bb6db5-9d0f-4320-aaad-8b8426948f0a",
+      "label": "FUMAR",
+      "video_ref": "https://www.youtube.com/embed/ysR8x5UNB6Q"
+    },
+    {
+      "id": "41cacd0e-0a93-465e-a4b0-d38ac15c9012",
+      "label": "G",
+      "video_ref": "https://www.youtube.com/embed/e7fblEf7pwY"
+    },
+    {
+      "id": "6dc0944d-c1fe-46c4-ad67-4520af472cd3",
+      "label": "GEL ANTIBACTERIAL",
+      "video_ref": "https://www.youtube.com/embed/r07z4mPYVMU"
+    },
+    {
+      "id": "e79efd93-2459-40ad-bc5a-fd4a40d1f655",
+      "label": "GIMNASIO",
+      "video_ref": "https://www.youtube.com/embed/LOZprbk_dL0"
+    },
+    {
+      "id": "efe89054-560c-4ac0-8b69-ffaa075c3649",
+      "label": "GINECÓLOGO",
+      "video_ref": "https://www.youtube.com/embed/o0xCPJ3U8wE"
+    },
+    {
+      "id": "29b9ead2-fd34-4c53-9ca0-c19e32025e95",
+      "label": "GOOGLE (1)",
+      "video_ref": "https://www.youtube.com/embed/R59IQVstACo"
+    },
+    {
+      "id": "81c6cac8-70d5-44e9-bdb0-7cdcb325b65f",
+      "label": "GOOGLE (2)",
+      "video_ref": "https://www.youtube.com/embed/c0-uMJLt2cQ"
+    },
+    {
+      "id": "41fbcc36-13ef-45ec-a0af-9cccfad00366",
+      "label": "GOOGLE DRIVE",
+      "video_ref": "https://www.youtube.com/embed/CglpaMG1Z3I"
+    },
+    {
+      "id": "01ce8372-bea7-4fc3-82bd-f8b4f1e159c5",
+      "label": "GRADUACIÓN",
+      "video_ref": "https://www.youtube.com/embed/hADmALZl24E"
+    },
+    {
+      "id": "3585168f-301e-4c86-b2a8-93922ea9d231",
+      "label": "GRIPA",
+      "video_ref": "https://www.youtube.com/embed/3_aanz3Rg_U"
+    },
+    {
+      "id": "d0bd4cad-5cac-4f36-8de3-6dae4bba2f30",
+      "label": "H",
+      "video_ref": "https://www.youtube.com/embed/aFXfy0PJLH8"
+    },
+    {
+      "id": "a0ef7442-946c-4604-a43d-44d79994d3e3",
+      "label": "HACKEAR",
+      "video_ref": "https://www.youtube.com/embed/FBKb0DeIPPs"
+    },
+    {
+      "id": "35727dc6-556a-47eb-ac39-82bec86f6bc5",
+      "label": "HECES",
+      "video_ref": "https://www.youtube.com/embed/cFvFDmxg3F0"
+    },
+    {
+      "id": "a31db736-7356-4c3a-8a3a-e5d9a608a184",
+      "label": "HERIDA",
+      "video_ref": "https://www.youtube.com/embed/xOkYIqM4fRQ"
+    },
+    {
+      "id": "82deeb18-63b7-4ae4-9589-cf367dc51344",
+      "label": "HIJA (1)",
+      "video_ref": "https://www.youtube.com/embed/jf1VDcNjq7k"
+    },
+    {
+      "id": "78029194-53b1-4c35-9ee6-8ae04098c21b",
+      "label": "HIJA (2)",
+      "video_ref": "https://www.youtube.com/embed/-e-hKaHMbA4"
+    },
+    {
+      "id": "49e9ff72-8955-48d0-af8f-f88c85b18311",
+      "label": "HIJO",
+      "video_ref": "https://www.youtube.com/embed/fvXmVbyV13g"
+    },
+    {
+      "id": "afe7411f-9e9a-42e0-af3a-9451ec8860f4",
+      "label": "HISTORIA",
+      "video_ref": "https://www.youtube.com/embed/glg0kQ-N-hM"
+    },
+    {
+      "id": "eb15bc6b-3810-4270-9a6a-d4ba9bd57e83",
+      "label": "HOMBRE",
+      "video_ref": "https://www.youtube.com/embed/GJFBgp1bkPk"
+    },
+    {
+      "id": "e99d2302-9bcf-4c6d-9738-32541ab97fe5",
+      "label": "HOSPITAL",
+      "video_ref": "https://www.youtube.com/embed/kC7ZKHXyhfM"
+    },
+    {
+      "id": "34b0daac-af7e-4bed-a8fa-0f014cbf9c1c",
+      "label": "I",
+      "video_ref": "https://www.youtube.com/embed/Gjdzqz5DyK4"
+    },
+    {
+      "id": "6e747c45-6662-4bd7-ae51-86ae6a82c4a1",
+      "label": "IMPRESORA",
+      "video_ref": "https://www.youtube.com/embed/yu_fIZXfRzM"
+    },
+    {
+      "id": "6b492525-e626-4803-a465-2e1cb485cc44",
+      "label": "INBOX",
+      "video_ref": "https://www.youtube.com/embed/soImdQ1tWMM"
+    },
+    {
+      "id": "e48afcfb-cbb3-4eef-a5e9-d434d0657abd",
+      "label": "INFECCIÓN",
+      "video_ref": "https://www.youtube.com/embed/XGBWzOs0B6Y"
+    },
+    {
+      "id": "3bad6de4-ffe9-4046-899c-b102bd742280",
+      "label": "INGLÉS",
+      "video_ref": "https://www.youtube.com/embed/c5Dr_HrNS5E"
+    },
+    {
+      "id": "3a7a26d6-2c01-4053-a9bf-df51a93582fc",
+      "label": "INSOMNIO (1)",
+      "video_ref": "https://www.youtube.com/embed/lD6jDJ3ShMM"
+    },
+    {
+      "id": "87eb9482-061c-4b81-9a3e-117d7fe95466",
+      "label": "INSOMNIO (2)",
+      "video_ref": "https://www.youtube.com/embed/8_AZ6viWx3U"
+    },
+    {
+      "id": "03651073-a817-47a4-bb23-9861474aeb33",
+      "label": "INSTAGRAM",
+      "video_ref": "https://www.youtube.com/embed/dhrCouERBe4"
+    },
+    {
+      "id": "e73e8a55-e698-4ff3-983d-d53919749c8c",
+      "label": "INTELIGENCIA ARTIFICIAL",
+      "video_ref": "https://www.youtube.com/embed/SmbfK-sXCbM"
+    },
+    {
+      "id": "8bb9c8fb-8f62-4a43-bb76-df0d305eb99a",
+      "label": "INTERNET",
+      "video_ref": "https://www.youtube.com/embed/RBruIk0ZYac"
+    },
+    {
+      "id": "d34ab1d7-157c-418d-9ab4-469200eac7a1",
+      "label": "INVESTIGACIÓN",
+      "video_ref": "https://www.youtube.com/embed/eFNXb-wEX1k"
+    },
+    {
+      "id": "3c4e5394-48e1-4dbd-bf0f-99632b1bfeec",
+      "label": "J",
+      "video_ref": "https://www.youtube.com/embed/jFVrrJxdAIM"
+    },
+    {
+      "id": "8109ed80-3fb1-4c72-bfac-71a1cca549e9",
+      "label": "JOVEN",
+      "video_ref": "https://www.youtube.com/embed/v2k6mnxoiBM"
+    },
+    {
+      "id": "b6fff40d-8de0-484d-a483-77e26ad8b2ae",
+      "label": "K",
+      "video_ref": "https://www.youtube.com/embed/gWS2LYvrd5k"
+    },
+    {
+      "id": "c2718583-d9e4-4327-94d2-119a9e6a7d1c",
+      "label": "KÍNDER",
+      "video_ref": "https://www.youtube.com/embed/TQCM1ICVnxA"
+    },
+    {
+      "id": "fedfccef-2601-4778-ad42-3d3e87bafe1e",
+      "label": "L",
+      "video_ref": "https://www.youtube.com/embed/ViQ_CDYqhi8"
+    },
+    {
+      "id": "637fe2d9-d081-4840-acd1-3b285ce48c2e",
+      "label": "LABORATORIO",
+      "video_ref": "https://www.youtube.com/embed/0bjCingxPC8"
+    },
+    {
+      "id": "834b95a9-319c-4644-8afc-68725beac3b0",
+      "label": "LÁPIZ",
+      "video_ref": "https://www.youtube.com/embed/xKN098ZICNo"
+    },
+    {
+      "id": "640ce574-8f2d-4385-97de-18e93b21408a",
+      "label": "LIBRO",
+      "video_ref": "https://www.youtube.com/embed/kDPfbaK7w2M"
+    },
+    {
+      "id": "9a3ba63c-1685-41d6-b2ed-c73db776308f",
+      "label": "LICENCIATURA",
+      "video_ref": "https://www.youtube.com/embed/N247zxcT-KQ"
+    },
+    {
+      "id": "c3b90049-a505-42c7-913c-197471a3f2e3",
+      "label": "M",
+      "video_ref": "https://www.youtube.com/embed/4vDZUmacuDI"
+    },
+    {
+      "id": "16e78cc7-900d-4c91-bd9c-ffb88c83b3d2",
+      "label": "MACOS",
+      "video_ref": "https://www.youtube.com/embed/3VuormS3sjM"
+    },
+    {
+      "id": "83081ffa-15d6-440c-88cd-0b0cb181fbf3",
+      "label": "MADRINA",
+      "video_ref": "https://www.youtube.com/embed/hxanq9y2teI"
+    },
+    {
+      "id": "bf1849c3-3745-4c73-bb8e-2549e0346ac0",
+      "label": "MAREOS",
+      "video_ref": "https://www.youtube.com/embed/RUBKTdIwbP0"
+    },
+    {
+      "id": "53b9d2ee-b81a-42d4-9893-f9ba0deb0297",
+      "label": "MATEMÁTICAS",
+      "video_ref": "https://www.youtube.com/embed/6j9ezgqYuhw"
+    },
+    {
+      "id": "96ffa470-790c-4579-a4ca-4d9c66dab12a",
+      "label": "MATERIA",
+      "video_ref": "https://www.youtube.com/embed/R844hevTEkA"
+    },
+    {
+      "id": "1a8e4214-f16c-4f8e-811d-34525009d35f",
+      "label": "ME GUSTA (LIKE)",
+      "video_ref": "https://www.youtube.com/embed/NnLrtIl_VT8"
+    },
+    {
+      "id": "306502d5-3a7d-4e84-aa9a-8381b285b558",
+      "label": "MEDICAMENTO",
+      "video_ref": "https://www.youtube.com/embed/-na_HejIPyE"
+    },
+    {
+      "id": "5436f9ed-6a0a-45ac-8929-b254dc06dcf9",
+      "label": "MEMORIA USB",
+      "video_ref": "https://www.youtube.com/embed/0b35cjYLmgk"
+    },
+    {
+      "id": "0c77f277-85ee-4a5c-96ab-41492f65d38a",
+      "label": "MENOPAUSIA",
+      "video_ref": "https://www.youtube.com/embed/eAvtdnUrmjM"
+    },
+    {
+      "id": "c72bf25f-b2b4-4af9-8e62-a3a634635810",
+      "label": "MENSTRUACIÓN",
+      "video_ref": "https://www.youtube.com/embed/bjwM5Qh1UJM"
+    },
+    {
+      "id": "b58a7c5a-6ed0-4176-84a1-b66f1e7a63a2",
+      "label": "MESSENGER (1)",
+      "video_ref": "https://www.youtube.com/embed/cMAiPngtpQA"
+    },
+    {
+      "id": "cfa2771e-3ab0-4b1a-903c-f5fc208970fe",
+      "label": "MESSENGER (2)",
+      "video_ref": "https://www.youtube.com/embed/D2RLP6blLig"
+    },
+    {
+      "id": "f9b6c9e6-20f6-43cd-9aee-d0123db2fbd9",
+      "label": "MICRÓFONO",
+      "video_ref": "https://www.youtube.com/embed/w44NZjq6a8U"
+    },
+    {
+      "id": "e11f56a7-057b-4afe-9b44-c3ef2f499f27",
+      "label": "MUCHO",
+      "video_ref": "https://www.youtube.com/embed/aVhLLKcJuTI"
+    },
+    {
+      "id": "eabf7dc6-39cf-415b-8069-7e95ad20996c",
+      "label": "N",
+      "video_ref": "https://www.youtube.com/embed/G-mrv-vays0"
+    },
+    {
+      "id": "ea57326d-a065-4eb8-8a2a-1bc08a70c3d3",
+      "label": "Ñ",
+      "video_ref": "https://www.youtube.com/embed/K3nddBE4iO8"
+    },
+    {
+      "id": "cbe08040-c1c9-4a30-9b5b-30ede16a4768",
+      "label": "NADA",
+      "video_ref": "https://www.youtube.com/embed/I8-tWtJ1fg4"
+    },
+    {
+      "id": "c5feab6d-0276-429d-88ab-b7b519331276",
+      "label": "NIETO",
+      "video_ref": "https://www.youtube.com/embed/Qfcup2-owWw"
+    },
+    {
+      "id": "5b5a88fa-f1cd-47b7-bed9-396bbbfe6e01",
+      "label": "NIÑA (1)",
+      "video_ref": "https://www.youtube.com/embed/b0a06cES46E"
+    },
+    {
+      "id": "6efe8cc8-2729-41a9-9811-3e297a97f1d8",
+      "label": "NIÑA (2)",
+      "video_ref": "https://www.youtube.com/embed/N3ehYITHl8A"
+    },
+    {
+      "id": "476da329-1ffe-4232-aeda-9b7c95cc1594",
+      "label": "NIÑO",
+      "video_ref": "https://www.youtube.com/embed/a7Z8SkTlAjI"
+    },
+    {
+      "id": "6a516ed5-3f15-4c32-94e9-5a8c5129d08e",
+      "label": "NOTICIAS FALSAS",
+      "video_ref": "https://www.youtube.com/embed/R44zRp57vaE"
+    },
+    {
+      "id": "b28132e8-3b64-4029-b9d2-1edbd7879fbf",
+      "label": "NUBE CLOUD COMPUTING",
+      "video_ref": "https://www.youtube.com/embed/Bg9aGCXiQcg"
+    },
+    {
+      "id": "f7103680-e8ba-49ac-bd40-53d6cb46befb",
+      "label": "NUERA",
+      "video_ref": "https://www.youtube.com/embed/z4RQiUTbU8c"
+    },
+    {
+      "id": "c76d55df-72a2-4748-9a18-9cfbac89c306",
+      "label": "O",
+      "video_ref": "https://www.youtube.com/embed/ogZRZyc5ols"
+    },
+    {
+      "id": "322c83f4-164c-4520-b804-26e036598c50",
+      "label": "OBSCURO",
+      "video_ref": "https://www.youtube.com/embed/atV8wS_N750"
+    },
+    {
+      "id": "03f4a0c3-60bd-4686-8929-41622854a0fc",
+      "label": "OFTALMÓLOGO",
+      "video_ref": "https://www.youtube.com/embed/yIvnVEeXr9c"
+    },
+    {
+      "id": "74dfa816-d83d-4cd3-8628-43d0d2534446",
+      "label": "ORINA",
+      "video_ref": "https://www.youtube.com/embed/xNwNOeErHoY"
+    },
+    {
+      "id": "23fa6842-b218-4607-b596-8097bcf1e25b",
+      "label": "ORO",
+      "video_ref": "https://www.youtube.com/embed/xcjZFcQtg8Q"
+    },
+    {
+      "id": "412bff0c-0999-41cb-ab61-ad9e9834488f",
+      "label": "OXÍMETRO",
+      "video_ref": "https://www.youtube.com/embed/VXuRyfAHpaw"
+    },
+    {
+      "id": "6b613e45-cecb-4b3b-b933-99bfa7e876c7",
+      "label": "P",
+      "video_ref": "https://www.youtube.com/embed/PyOS69lWJZ0"
+    },
+    {
+      "id": "23f49a9f-1f7f-4047-8f9a-227da77286a3",
+      "label": "PACIENTE",
+      "video_ref": "https://www.youtube.com/embed/V8XZjyFHUG4"
+    },
+    {
+      "id": "73c706e1-2fdc-4fe3-9ff4-eb15bc251090",
+      "label": "PADRINO",
+      "video_ref": "https://www.youtube.com/embed/PC7dw0dgGrU"
+    },
+    {
+      "id": "484373a7-ac9a-4386-9177-6b440e77e55f",
+      "label": "PÁGINA WEB",
+      "video_ref": "https://www.youtube.com/embed/7y6eh1OT-2g"
+    },
+    {
+      "id": "f22eecc3-775d-447b-be59-f2de37788a38",
+      "label": "PANDEMIA",
+      "video_ref": "https://www.youtube.com/embed/pAuxqNJqYks"
+    },
+    {
+      "id": "749f9758-efaf-4c80-8eb0-544a53161537",
+      "label": "PATIO",
+      "video_ref": "https://www.youtube.com/embed/CVH7ArDj32c"
+    },
+    {
+      "id": "8ffb3a6a-2c9e-47c7-b958-9f5933f868d6",
+      "label": "PEDIATRA",
+      "video_ref": "https://www.youtube.com/embed/LKfkrdQyCLU"
+    },
+    {
+      "id": "ec644269-8b0b-4092-89fd-ae54034fb7e7",
+      "label": "PERFIL",
+      "video_ref": "https://www.youtube.com/embed/Zgn7rRiOwMA"
+    },
+    {
+      "id": "0e4e3963-a815-4005-9ade-2e71de697764",
+      "label": "PERSONA MAYOR (1)",
+      "video_ref": "https://www.youtube.com/embed/zqsutkXy5bA"
+    },
+    {
+      "id": "db1aab6c-7cfb-4d0f-9ae6-ecf84f11bde1",
+      "label": "PERSONA MAYOR (2)",
+      "video_ref": "https://www.youtube.com/embed/KWwL2SV_mks"
+    },
+    {
+      "id": "2e354a28-e72b-4e94-8fcc-9605ed452efb",
+      "label": "PIZARRÓN",
+      "video_ref": "https://www.youtube.com/embed/bWT49edxDUs"
+    },
+    {
+      "id": "7ba4ebf6-956c-4277-a417-b3de3edd328b",
+      "label": "PLATA",
+      "video_ref": "https://www.youtube.com/embed/uTeToDVs3z0"
+    },
+    {
+      "id": "9c46b833-4897-488a-a32f-b3974a42a999",
+      "label": "PLUMA",
+      "video_ref": "https://www.youtube.com/embed/QgGzAFxUato"
+    },
+    {
+      "id": "8cb19699-1a0d-43b7-a8d1-10b25dcb0b46",
+      "label": "POCO (1)",
+      "video_ref": "https://www.youtube.com/embed/-jQz3JjCC_s"
+    },
+    {
+      "id": "603fa0b5-994f-4d1a-bc3b-554f095ffa7c",
+      "label": "POCO (2)",
+      "video_ref": "https://www.youtube.com/embed/kLHFuNYu5-U"
+    },
+    {
+      "id": "8033021f-0bd0-43e7-93e5-411ca47f9f2c",
+      "label": "POR FAVOR",
+      "video_ref": "https://www.youtube.com/embed/M5FowymHDx8"
+    },
+    {
+      "id": "e87674f4-1502-4021-9a18-e7265948839c",
+      "label": "POWER POINT",
+      "video_ref": "https://www.youtube.com/embed/cjOptZJJXRs"
+    },
+    {
+      "id": "c4cece1a-3c19-4f10-98d3-231c2722fc86",
+      "label": "PRESIÓN ARTERIAL",
+      "video_ref": "https://www.youtube.com/embed/n3OGZnjMp_8"
+    },
+    {
+      "id": "56990d87-294e-4f91-b0b9-26ec98e35993",
+      "label": "PRIMARIA",
+      "video_ref": "https://www.youtube.com/embed/ktS7xZYi8Ek"
+    },
+    {
+      "id": "38b1a0e4-28c6-4d8e-87d6-fcd90590bb22",
+      "label": "PROGRAMA",
+      "video_ref": "https://www.youtube.com/embed/-HHB3CmjoMw"
+    },
+    {
+      "id": "e229214c-779e-49f1-964c-31f083265211",
+      "label": "PROYECTOR",
+      "video_ref": "https://www.youtube.com/embed/fY-C5HBRoFw"
+    },
+    {
+      "id": "af890425-5823-4a34-a566-505e213b33ea",
+      "label": "Q",
+      "video_ref": "https://www.youtube.com/embed/Wq75muS-EmY"
+    },
+    {
+      "id": "21787dd6-26d4-47f8-af15-e634d38d2ea3",
+      "label": "QUÍMICA",
+      "video_ref": "https://www.youtube.com/embed/SmfF1pZmFpE"
+    },
+    {
+      "id": "1fb3113a-1c21-4682-934f-2fd55971dca8",
+      "label": "QUIRÓFANO",
+      "video_ref": "https://www.youtube.com/embed/wGjXUeVuAcQ"
+    },
+    {
+      "id": "0de344bd-6ba9-4709-b3f3-1ce020fe5f8c",
+      "label": "R",
+      "video_ref": "https://www.youtube.com/embed/D1omF_CAP7Q"
+    },
+    {
+      "id": "0b5e7ee9-5630-41b8-99c6-a3201db71f83",
+      "label": "RADIOGRAFÍA",
+      "video_ref": "https://www.youtube.com/embed/gBpKPhX5240"
+    },
+    {
+      "id": "efd93858-eeac-47ff-8f5f-570fb4a1aafe",
+      "label": "REALIDAD VIRTUAL (1)",
+      "video_ref": "https://www.youtube.com/embed/AI1odShZ800"
+    },
+    {
+      "id": "38cd0587-f83a-4549-ad97-10fcf88ac1b9",
+      "label": "REALIDAD VIRTUAL (2)",
+      "video_ref": "https://www.youtube.com/embed/83ndvUf433c"
+    },
+    {
+      "id": "4c603dea-8581-44cf-92bb-35733c80febf",
+      "label": "RECETA",
+      "video_ref": "https://www.youtube.com/embed/z_oU2Qj3l7g"
+    },
+    {
+      "id": "4a398e61-9c6b-4de3-bdc1-177b0fc9f714",
+      "label": "RECREO",
+      "video_ref": "https://www.youtube.com/embed/ZU5bfqo5rbM"
+    },
+    {
+      "id": "5c8a7a7b-01ad-4e7f-80e1-fce8718bff63",
+      "label": "RED SOCIAL",
+      "video_ref": "https://www.youtube.com/embed/ykbl8ej-9dk"
+    },
+    {
+      "id": "d3f97a08-e07e-428a-a42f-a0e067685c8e",
+      "label": "REHABILITACIÓN",
+      "video_ref": "https://www.youtube.com/embed/hCb-XLpeEbc"
+    },
+    {
+      "id": "ced992fe-ea9c-4b83-aaea-2b26b32ba4c7",
+      "label": "RELACIONES SEXUALES",
+      "video_ref": "https://www.youtube.com/embed/XJnt6QlXjkM"
+    },
+    {
+      "id": "2734e582-9033-4811-a03c-48d496e038f6",
+      "label": "RESONANCIA",
+      "video_ref": "https://www.youtube.com/embed/VBo4_ToCiVY"
+    },
+    {
+      "id": "4e9ec736-0cca-48fc-ba82-620766c6cd85",
+      "label": "S",
+      "video_ref": "https://www.youtube.com/embed/oPX2obMcpBM"
+    },
+    {
+      "id": "4804e21f-6872-4ae9-bfe4-c5b9976d6759",
+      "label": "SALÓN DE CLASES",
+      "video_ref": "https://www.youtube.com/embed/YQ1lxdzLzJ0"
+    },
+    {
+      "id": "269498b4-4685-457a-8d4e-1effb6ffe8ce",
+      "label": "SANGRE (1)",
+      "video_ref": "https://www.youtube.com/embed/j-ZVPZYY8dc"
+    },
+    {
+      "id": "cecf3776-f467-424e-aa33-f246b5c1ef19",
+      "label": "SANGRE (2)",
+      "video_ref": "https://www.youtube.com/embed/UNXPj08XrRg"
+    },
+    {
+      "id": "a33fa437-2f18-4d34-9f8a-9a72db7aa6cf",
+      "label": "SECUNDARIA",
+      "video_ref": "https://www.youtube.com/embed/G7q0ZuSWyas"
+    },
+    {
+      "id": "c124a1d3-dfe1-46fe-8171-76cd229e9c48",
+      "label": "SEMESTRE",
+      "video_ref": "https://www.youtube.com/embed/pvagP25pMH4"
+    },
+    {
+      "id": "fb3caed9-b22a-49a8-85b5-5fedf6099789",
+      "label": "SÍNTOMAS",
+      "video_ref": "https://www.youtube.com/embed/wlBs2mdwwio"
+    },
+    {
+      "id": "3ce39193-c954-4b92-8155-26021f72ff53",
+      "label": "SISTEMA OPERATIVO",
+      "video_ref": "https://www.youtube.com/embed/JZosPDEb9wA"
+    },
+    {
+      "id": "22b35667-16f6-406e-96fb-1c285c9d5671",
+      "label": "T",
+      "video_ref": "https://www.youtube.com/embed/rSA67P2RzXw"
+    },
+    {
+      "id": "5ee7ad0e-62e1-4bcc-ac7b-c06607301e95",
+      "label": "TABLETA",
+      "video_ref": "https://www.youtube.com/embed/85QlGiGId4c"
+    },
+    {
+      "id": "2f236cbe-b771-45e3-aa2e-203c41dad59e",
+      "label": "TAREA",
+      "video_ref": "https://www.youtube.com/embed/NGTu4DS3v7Q"
+    },
+    {
+      "id": "0f103cc8-6269-4a67-a02b-9de770a2cf90",
+      "label": "TARJETA DE MEMORIA",
+      "video_ref": "https://www.youtube.com/embed/IBKGcEV4_iE"
+    },
+    {
+      "id": "04a7c37c-e53f-44ad-8571-ff15dc261a47",
+      "label": "TELÉFONO",
+      "video_ref": "https://www.youtube.com/embed/pjhwzAjmIBw"
+    },
+    {
+      "id": "d018dea9-afec-46f4-9d8c-a62a5e2fd0b3",
+      "label": "TERAPIA",
+      "video_ref": "https://www.youtube.com/embed/18EHeN5e-s4"
+    },
+    {
+      "id": "a2b45137-09e0-4d40-91fc-96f69f1dfcb0",
+      "label": "TERMÓMETRO",
+      "video_ref": "https://www.youtube.com/embed/5v0LMKD4Ep8"
+    },
+    {
+      "id": "50eb5919-e2cf-4512-b5ed-4e2fae3c50b2",
+      "label": "TÍA (1)",
+      "video_ref": "https://www.youtube.com/embed/EXkWWuHm6ZA"
+    },
+    {
+      "id": "afc0a104-6ebc-4c98-9769-b98580b46ffd",
+      "label": "TÍA (2)",
+      "video_ref": "https://www.youtube.com/embed/6XN3V78RS1w"
+    },
+    {
+      "id": "f6f83b62-8cb0-4c68-ac8a-71d07807d417",
+      "label": "TÍA (3)",
+      "video_ref": "https://www.youtube.com/embed/OJX_dZUkb2k"
+    },
+    {
+      "id": "1abec9c6-6d3b-4b19-b1d9-91557610bac5",
+      "label": "TIC'S (1)",
+      "video_ref": "https://www.youtube.com/embed/9AnzXetIeEA"
+    },
+    {
+      "id": "81dd2ce6-97bb-474e-9c7e-74cc553c4933",
+      "label": "TIC'S (2)",
+      "video_ref": "https://www.youtube.com/embed/ymAckPOZHIc"
+    },
+    {
+      "id": "35504142-1d94-4004-ad1c-ecffa492d86d",
+      "label": "TIK-TOK",
+      "video_ref": "https://www.youtube.com/embed/pGWPIHVqM2c"
+    },
+    {
+      "id": "4cff548a-f97e-448e-b357-ccf2ecbddc19",
+      "label": "TOALLA FEMENINA",
+      "video_ref": "https://www.youtube.com/embed/RkjMdT2Mij4"
+    },
+    {
+      "id": "aa102fb4-0ce5-4124-a0e6-1b0ce1996ad5",
+      "label": "TOS (1)",
+      "video_ref": "https://www.youtube.com/embed/8gJpNlN_0uU"
+    },
+    {
+      "id": "59d9dbbf-a532-4918-a2bf-a9291663c155",
+      "label": "TOS (2)",
+      "video_ref": "https://www.youtube.com/embed/H7KwVeZrP4k"
+    },
+    {
+      "id": "36aa1197-0bd5-4e14-9471-010400845510",
+      "label": "U",
+      "video_ref": "https://www.youtube.com/embed/4MGeUY_LccU"
+    },
+    {
+      "id": "80cb583f-84e5-4177-8c3f-585d21921380",
+      "label": "UNIVERSIDAD",
+      "video_ref": "https://www.youtube.com/embed/ORxxJNM9x2E"
+    },
+    {
+      "id": "d0b03c29-33a5-4416-b673-45577c57a8cf",
+      "label": "URGENCIAS",
+      "video_ref": "https://www.youtube.com/embed/sgui8Nj2_VI"
+    },
+    {
+      "id": "f1378d80-bb23-40c4-96ac-5e2741505b52",
+      "label": "V",
+      "video_ref": "https://www.youtube.com/embed/iTox4wHu58c"
+    },
+    {
+      "id": "f1bbb9f9-7ca2-4721-a3c8-17a5898792e1",
+      "label": "VACUNA",
+      "video_ref": "https://www.youtube.com/embed/uEJKInJMmEc"
+    },
+    {
+      "id": "bb69204b-2ed9-4b7e-a654-78729cba0529",
+      "label": "VENDA",
+      "video_ref": "https://www.youtube.com/embed/zI2XqrGZZ1c"
+    },
+    {
+      "id": "b4d876fa-e98e-46ae-8e61-9279aec9226b",
+      "label": "VIDEOLLAMADA",
+      "video_ref": "https://www.youtube.com/embed/k-510iezYS8"
+    },
+    {
+      "id": "3638479f-b4b0-440a-8e88-5b3695f0e71e",
+      "label": "VIDEOLLAMADA (2)",
+      "video_ref": "https://www.youtube.com/embed/2rIyV-VUsSk"
+    },
+    {
+      "id": "45a03f6e-e08a-431a-b203-324f6663101f",
+      "label": "VIRUS",
+      "video_ref": "https://www.youtube.com/embed/KrqJ9J1Bti4"
+    },
+    {
+      "id": "98b4cd91-c40b-409a-b695-c0ea73886ae1",
+      "label": "VÓMITO",
+      "video_ref": "https://www.youtube.com/embed/Hy5_QZdCH-I"
+    },
+    {
+      "id": "8dad3362-7018-477e-8aa6-85e7bda5ee11",
+      "label": "W",
+      "video_ref": "https://www.youtube.com/embed/ypWGuRNFQRM"
+    },
+    {
+      "id": "16a8b69a-eee6-4ef8-974f-1af5ba400f0b",
+      "label": "WEBINAR",
+      "video_ref": "https://www.youtube.com/embed/FdtSnRGk2Y8"
+    },
+    {
+      "id": "1201d930-0082-4c57-942a-d093a00d404b",
+      "label": "WHASTAPP",
+      "video_ref": "https://www.youtube.com/embed/KQnSTA4u-SI"
+    },
+    {
+      "id": "91b19e09-32cc-4964-8f7b-0f6d5cb5f9d1",
+      "label": "WI - FI",
+      "video_ref": "https://www.youtube.com/embed/YCQjhhQrjNY"
+    },
+    {
+      "id": "a7a2fbc8-6fc5-4ac2-9ad1-76a9b0f2868e",
+      "label": "WINDOWS",
+      "video_ref": "https://www.youtube.com/embed/JOcQc6DfXZ4"
+    },
+    {
+      "id": "53adfc9a-5c10-4aef-8463-162b9fe6383e",
+      "label": "WORD",
+      "video_ref": "https://www.youtube.com/embed/W8M7opgtT4Q"
+    },
+    {
+      "id": "320bab9a-19c1-4173-85fc-624c48889665",
+      "label": "X",
+      "video_ref": "https://www.youtube.com/embed/yNWC9DjTMTU"
+    },
+    {
+      "id": "bc538d15-bc60-45c8-bc0d-fa5154c2be16",
+      "label": "X (TWITTER)",
+      "video_ref": "https://www.youtube.com/embed/x4ydV1uKGsU"
+    },
+    {
+      "id": "6c2bafff-fbe5-455f-86a8-d5ef590459a0",
+      "label": "Y",
+      "video_ref": "https://www.youtube.com/embed/6EfodoGAJAE"
+    },
+    {
+      "id": "655e8204-7246-4bdc-9aef-bb65c747625d",
+      "label": "YERNO",
+      "video_ref": "https://www.youtube.com/embed/twEkRuJie4w"
+    },
+    {
+      "id": "0f9e5888-f191-4979-8dbd-9400da0ec778",
+      "label": "YOUTUBE",
+      "video_ref": "https://www.youtube.com/embed/5WrBYJsckuI"
+    },
+    {
+      "id": "abbfa76f-4473-4c90-894d-a338e38fa109",
+      "label": "Z",
+      "video_ref": "https://www.youtube.com/embed/ipefyBV4iuk"
+    },
+    {
+      "id": "b8ff53d2-5f2e-4a98-9938-1a23cbb11ffe",
+      "label": "ZOOM",
+      "video_ref": "https://www.youtube.com/embed/-9-FuWGXg58"
+    }
+  ],
+  "orphanFiles": [
+    {
+      "file": "21.mp4",
+      "suggested_label": "21"
+    },
+    {
+      "file": "22.mp4",
+      "suggested_label": "22"
+    },
+    {
+      "file": "23.mp4",
+      "suggested_label": "23"
+    },
+    {
+      "file": "24.mp4",
+      "suggested_label": "24"
+    },
+    {
+      "file": "26.mp4",
+      "suggested_label": "26"
+    },
+    {
+      "file": "27.mp4",
+      "suggested_label": "27"
+    },
+    {
+      "file": "28.mp4",
+      "suggested_label": "28"
+    },
+    {
+      "file": "29.mp4",
+      "suggested_label": "29"
+    },
+    {
+      "file": "ABRIL.mp4",
+      "suggested_label": "ABRIL"
+    },
+    {
+      "file": "ABRIR_LIBRO.mp4",
+      "suggested_label": "ABRIR LIBRO"
+    },
+    {
+      "file": "ABRIR_PUERTA.mp4",
+      "suggested_label": "ABRIR PUERTA"
+    },
+    {
+      "file": "ADIOS.mp4",
+      "suggested_label": "ADIOS"
+    },
+    {
+      "file": "ADJETIVO.mp4",
+      "suggested_label": "ADJETIVO"
+    },
+    {
+      "file": "AGOSTO.mp4",
+      "suggested_label": "AGOSTO"
+    },
+    {
+      "file": "AGUA.mp4",
+      "suggested_label": "AGUA"
+    },
+    {
+      "file": "AHORA.mp4",
+      "suggested_label": "AHORA"
+    },
+    {
+      "file": "AHORITA.mp4",
+      "suggested_label": "AHORITA"
+    },
+    {
+      "file": "ALBERCAA.mp4",
+      "suggested_label": "ALBERCAA"
+    },
+    {
+      "file": "ALGUNOS.mp4",
+      "suggested_label": "ALGUNOS"
+    },
+    {
+      "file": "ALTO.mp4",
+      "suggested_label": "ALTO"
+    },
+    {
+      "file": "AMIGO.mp4",
+      "suggested_label": "AMIGO"
+    },
+    {
+      "file": "ARROZ.mp4",
+      "suggested_label": "ARROZ"
+    },
+    {
+      "file": "ASUSTADO.mp4",
+      "suggested_label": "ASUSTADO"
+    },
+    {
+      "file": "AYER.mp4",
+      "suggested_label": "AYER"
+    },
+    {
+      "file": "AYUDAR.mp4",
+      "suggested_label": "AYUDAR"
+    },
+    {
+      "file": "BAILAR.mp4",
+      "suggested_label": "BAILAR"
+    },
+    {
+      "file": "BAJO.mp4",
+      "suggested_label": "BAJO"
+    },
+    {
+      "file": "BAR.mp4",
+      "suggested_label": "BAR"
+    },
+    {
+      "file": "BEBER.mp4",
+      "suggested_label": "BEBER"
+    },
+    {
+      "file": "BIEN.mp4",
+      "suggested_label": "BIEN"
+    },
+    {
+      "file": "BIENVENIDO.mp4",
+      "suggested_label": "BIENVENIDO"
+    },
+    {
+      "file": "BOCA.mp4",
+      "suggested_label": "BOCA"
+    },
+    {
+      "file": "BOMBERO.mp4",
+      "suggested_label": "BOMBERO"
+    },
+    {
+      "file": "BONITO.mp4",
+      "suggested_label": "BONITO"
+    },
+    {
+      "file": "BUENAS_NOCHES.mp4",
+      "suggested_label": "BUENAS NOCHES"
+    },
+    {
+      "file": "BUENOS_DIAS.mp4",
+      "suggested_label": "BUENOS DIAS"
+    },
+    {
+      "file": "CANTAR.mp4",
+      "suggested_label": "CANTAR"
+    },
+    {
+      "file": "CARPINTERIA.mp4",
+      "suggested_label": "CARPINTERIA"
+    },
+    {
+      "file": "CASA.mp4",
+      "suggested_label": "CASA"
+    },
+    {
+      "file": "CERDO_O_COCHINO.mp4",
+      "suggested_label": "CERDO O COCHINO"
+    },
+    {
+      "file": "CINE.mp4",
+      "suggested_label": "CINE"
+    },
+    {
+      "file": "COCINAR.mp4",
+      "suggested_label": "COCINAR"
+    },
+    {
+      "file": "COLOR.mp4",
+      "suggested_label": "COLOR"
+    },
+    {
+      "file": "COMER.mp4",
+      "suggested_label": "COMER"
+    },
+    {
+      "file": "COMO.mp4",
+      "suggested_label": "COMO"
+    },
+    {
+      "file": "COMPLETO.mp4",
+      "suggested_label": "COMPLETO"
+    },
+    {
+      "file": "COMPRAR.mp4",
+      "suggested_label": "COMPRAR"
+    },
+    {
+      "file": "CORRER.mp4",
+      "suggested_label": "CORRER"
+    },
+    {
+      "file": "CUAL.mp4",
+      "suggested_label": "CUAL"
+    },
+    {
+      "file": "CUANDO.mp4",
+      "suggested_label": "CUANDO"
+    },
+    {
+      "file": "CUANTO.mp4",
+      "suggested_label": "CUANTO"
+    },
+    {
+      "file": "CUERPO.mp4",
+      "suggested_label": "CUERPO"
+    },
+    {
+      "file": "CUIDAR.mp4",
+      "suggested_label": "CUIDAR"
+    },
+    {
+      "file": "DEBIL.mp4",
+      "suggested_label": "DEBIL"
+    },
+    {
+      "file": "DESIERTO_ABC.mp4",
+      "suggested_label": "DESIERTO"
+    },
+    {
+      "file": "DIA.mp4",
+      "suggested_label": "DIA"
+    },
+    {
+      "file": "DIABLO.mp4",
+      "suggested_label": "DIABLO"
+    },
+    {
+      "file": "DICIEMBRE.mp4",
+      "suggested_label": "DICIEMBRE"
+    },
+    {
+      "file": "DINOSAURIO_ABC.mp4",
+      "suggested_label": "DINOSAURIO"
+    },
+    {
+      "file": "DOMINGO.mp4",
+      "suggested_label": "DOMINGO"
+    },
+    {
+      "file": "DONDE.mp4",
+      "suggested_label": "DONDE"
+    },
+    {
+      "file": "DORMIR.mp4",
+      "suggested_label": "DORMIR"
+    },
+    {
+      "file": "DURAZNO.mp4",
+      "suggested_label": "DURAZNO"
+    },
+    {
+      "file": "EL.mp4",
+      "suggested_label": "EL"
+    },
+    {
+      "file": "ELLOS.mp4",
+      "suggested_label": "ELLOS"
+    },
+    {
+      "file": "ENCANTADO_DE_CONOCERTE.mp4",
+      "suggested_label": "ENCANTADO DE CONOCERTE"
+    },
+    {
+      "file": "ENERO.mp4",
+      "suggested_label": "ENERO"
+    },
+    {
+      "file": "ENOJADO.mp4",
+      "suggested_label": "ENOJADO"
+    },
+    {
+      "file": "EQUIPO.mp4",
+      "suggested_label": "EQUIPO"
+    },
+    {
+      "file": "FAMILIA.mp4",
+      "suggested_label": "FAMILIA"
+    },
+    {
+      "file": "FEBRERO.mp4",
+      "suggested_label": "FEBRERO"
+    },
+    {
+      "file": "FELIZ.mp4",
+      "suggested_label": "FELIZ"
+    },
+    {
+      "file": "FEO.mp4",
+      "suggested_label": "FEO"
+    },
+    {
+      "file": "FILA.mp4",
+      "suggested_label": "FILA"
+    },
+    {
+      "file": "FLACO_O_DELGADO.mp4",
+      "suggested_label": "FLACO O DELGADO"
+    },
+    {
+      "file": "FRESA.mp4",
+      "suggested_label": "FRESA"
+    },
+    {
+      "file": "FRUTA.mp4",
+      "suggested_label": "FRUTA"
+    },
+    {
+      "file": "FUEGO.mp4",
+      "suggested_label": "FUEGO"
+    },
+    {
+      "file": "FUERTE.mp4",
+      "suggested_label": "FUERTE"
+    },
+    {
+      "file": "FUTURO.mp4",
+      "suggested_label": "FUTURO"
+    },
+    {
+      "file": "GRAMATICA.mp4",
+      "suggested_label": "GRAMATICA"
+    },
+    {
+      "file": "GRANDE.mp4",
+      "suggested_label": "GRANDE"
+    },
+    {
+      "file": "GRUPO.mp4",
+      "suggested_label": "GRUPO"
+    },
+    {
+      "file": "GUAPO.mp4",
+      "suggested_label": "GUAPO"
+    },
+    {
+      "file": "HOY.mp4",
+      "suggested_label": "HOY"
+    },
+    {
+      "file": "IMPRESORA_ABC.mp4",
+      "suggested_label": "IMPRESORA"
+    },
+    {
+      "file": "IR.mp4",
+      "suggested_label": "IR"
+    },
+    {
+      "file": "JUEVES.mp4",
+      "suggested_label": "JUEVES"
+    },
+    {
+      "file": "JUGAR.mp4",
+      "suggested_label": "JUGAR"
+    },
+    {
+      "file": "JULIO.mp4",
+      "suggested_label": "JULIO"
+    },
+    {
+      "file": "JUNIO.mp4",
+      "suggested_label": "JUNIO"
+    },
+    {
+      "file": "LAMPARA_ABC.mp4",
+      "suggested_label": "LAMPARA"
+    },
+    {
+      "file": "LECHUGA.mp4",
+      "suggested_label": "LECHUGA"
+    },
+    {
+      "file": "LEER.mp4",
+      "suggested_label": "LEER"
+    },
+    {
+      "file": "LENTO.mp4",
+      "suggested_label": "LENTO"
+    },
+    {
+      "file": "LISTA.mp4",
+      "suggested_label": "LISTA"
+    },
+    {
+      "file": "LOGRO.mp4",
+      "suggested_label": "LOGRO"
+    },
+    {
+      "file": "LUNES.mp4",
+      "suggested_label": "LUNES"
+    },
+    {
+      "file": "MAL.mp4",
+      "suggested_label": "MAL"
+    },
+    {
+      "file": "MANANA.mp4",
+      "suggested_label": "MANANA"
+    },
+    {
+      "file": "MANGO.mp4",
+      "suggested_label": "MANGO"
+    },
+    {
+      "file": "MANOS.mp4",
+      "suggested_label": "MANOS"
+    },
+    {
+      "file": "MANZANA.mp4",
+      "suggested_label": "MANZANA"
+    },
+    {
+      "file": "MARTES.mp4",
+      "suggested_label": "MARTES"
+    },
+    {
+      "file": "MARZO.mp4",
+      "suggested_label": "MARZO"
+    },
+    {
+      "file": "MAS_O_MENOS.mp4",
+      "suggested_label": "MAS O MENOS"
+    },
+    {
+      "file": "MAYO.mp4",
+      "suggested_label": "MAYO"
+    },
+    {
+      "file": "MERCADO.mp4",
+      "suggested_label": "MERCADO"
+    },
+    {
+      "file": "MIERCOLES.mp4",
+      "suggested_label": "MIERCOLES"
+    },
+    {
+      "file": "MIO.mp4",
+      "suggested_label": "MIO"
+    },
+    {
+      "file": "MUCHO_GUSTO.mp4",
+      "suggested_label": "MUCHO GUSTO"
+    },
+    {
+      "file": "NADAR.mp4",
+      "suggested_label": "NADAR"
+    },
+    {
+      "file": "NERVIOSO.mp4",
+      "suggested_label": "NERVIOSO"
+    },
+    {
+      "file": "NOCHE.mp4",
+      "suggested_label": "NOCHE"
+    },
+    {
+      "file": "NOSOTROS.mp4",
+      "suggested_label": "NOSOTROS"
+    },
+    {
+      "file": "NOS_VEMOS.mp4",
+      "suggested_label": "NOS VEMOS"
+    },
+    {
+      "file": "NOVIEMBRE.mp4",
+      "suggested_label": "NOVIEMBRE"
+    },
+    {
+      "file": "NUESTRO.mp4",
+      "suggested_label": "NUESTRO"
+    },
+    {
+      "file": "OCTUBRE.mp4",
+      "suggested_label": "OCTUBRE"
+    },
+    {
+      "file": "OJOS.mp4",
+      "suggested_label": "OJOS"
+    },
+    {
+      "file": "OSCURO.mp4",
+      "suggested_label": "OSCURO"
+    },
+    {
+      "file": "PAN.mp4",
+      "suggested_label": "PAN"
+    },
+    {
+      "file": "PARQUE.mp4",
+      "suggested_label": "PARQUE"
+    },
+    {
+      "file": "PEQUENO.mp4",
+      "suggested_label": "PEQUENO"
+    },
+    {
+      "file": "PERRO_ABC.mp4",
+      "suggested_label": "PERRO"
+    },
+    {
+      "file": "PEZ_ABC.mp4",
+      "suggested_label": "PEZ"
+    },
+    {
+      "file": "PIE.mp4",
+      "suggested_label": "PIE"
+    },
+    {
+      "file": "PIERNA.mp4",
+      "suggested_label": "PIERNA"
+    },
+    {
+      "file": "PISTA.mp4",
+      "suggested_label": "PISTA"
+    },
+    {
+      "file": "PLATANO.mp4",
+      "suggested_label": "PLATANO"
+    },
+    {
+      "file": "PLAYA.mp4",
+      "suggested_label": "PLAYA"
+    },
+    {
+      "file": "PLOMERO_ABC.mp4",
+      "suggested_label": "PLOMERO"
+    },
+    {
+      "file": "PLURAL.mp4",
+      "suggested_label": "PLURAL"
+    },
+    {
+      "file": "POLICIA.mp4",
+      "suggested_label": "POLICIA"
+    },
+    {
+      "file": "POLLO_ANIMAL.mp4",
+      "suggested_label": "POLLO ANIMAL"
+    },
+    {
+      "file": "POR_QUE.mp4",
+      "suggested_label": "POR QUE"
+    },
+    {
+      "file": "PREGUNTA.mp4",
+      "suggested_label": "PREGUNTA"
+    },
+    {
+      "file": "QUE.mp4",
+      "suggested_label": "QUE"
+    },
+    {
+      "file": "QUIEN.mp4",
+      "suggested_label": "QUIEN"
+    },
+    {
+      "file": "RAPIDO.mp4",
+      "suggested_label": "RAPIDO"
+    },
+    {
+      "file": "SABADO.mp4",
+      "suggested_label": "SABADO"
+    },
+    {
+      "file": "SALUDOS.mp4",
+      "suggested_label": "SALUDOS"
+    },
+    {
+      "file": "SANDIA.mp4",
+      "suggested_label": "SANDIA"
+    },
+    {
+      "file": "SEMANA.mp4",
+      "suggested_label": "SEMANA"
+    },
+    {
+      "file": "SEPTIEMBRE.mp4",
+      "suggested_label": "SEPTIEMBRE"
+    },
+    {
+      "file": "SOLIDARIDAD_ABC.mp4",
+      "suggested_label": "SOLIDARIDAD"
+    },
+    {
+      "file": "SUYO.mp4",
+      "suggested_label": "SUYO"
+    },
+    {
+      "file": "TIEMPO.mp4",
+      "suggested_label": "TIEMPO"
+    },
+    {
+      "file": "TODOS.mp4",
+      "suggested_label": "TODOS"
+    },
+    {
+      "file": "TOMATE.mp4",
+      "suggested_label": "TOMATE"
+    },
+    {
+      "file": "TRABAJAR.mp4",
+      "suggested_label": "TRABAJAR"
+    },
+    {
+      "file": "TRISTE.mp4",
+      "suggested_label": "TRISTE"
+    },
+    {
+      "file": "TU.mp4",
+      "suggested_label": "TU"
+    },
+    {
+      "file": "TUYO.mp4",
+      "suggested_label": "TUYO"
+    },
+    {
+      "file": "USTEDES.mp4",
+      "suggested_label": "USTEDES"
+    },
+    {
+      "file": "VENDER.mp4",
+      "suggested_label": "VENDER"
+    },
+    {
+      "file": "VENTANA.mp4",
+      "suggested_label": "VENTANA"
+    },
+    {
+      "file": "VER.mp4",
+      "suggested_label": "VER"
+    },
+    {
+      "file": "VERBO.mp4",
+      "suggested_label": "VERBO"
+    },
+    {
+      "file": "VERDURAS.mp4",
+      "suggested_label": "VERDURAS"
+    },
+    {
+      "file": "VIERNES.mp4",
+      "suggested_label": "VIERNES"
+    },
+    {
+      "file": "YO.mp4",
+      "suggested_label": "YO"
+    },
+    {
+      "file": "ZANAHORIA.mp4",
+      "suggested_label": "ZANAHORIA"
+    }
+  ],
+  "ambiguous": [
+    {
+      "label": "¿CÓMO ESTÁS? (2)",
+      "baseFile": "COMO_ESTAS.mp4"
+    },
+    {
+      "label": "100 (1)",
+      "baseFile": "100.mp4"
+    },
+    {
+      "label": "100 (2)",
+      "baseFile": "100.mp4"
+    },
+    {
+      "label": "15 (1)",
+      "baseFile": "15.mp4"
+    },
+    {
+      "label": "15 (2)",
+      "baseFile": "15.mp4"
+    },
+    {
+      "label": "200 (1)",
+      "baseFile": "200.mp4"
+    },
+    {
+      "label": "200 (2)",
+      "baseFile": "200.mp4"
+    },
+    {
+      "label": "300 (1)",
+      "baseFile": "300.mp4"
+    },
+    {
+      "label": "300 (2)",
+      "baseFile": "300.mp4"
+    },
+    {
+      "label": "400 (1)",
+      "baseFile": "400.mp4"
+    },
+    {
+      "label": "400 (2)",
+      "baseFile": "400.mp4"
+    },
+    {
+      "label": "500 (1)",
+      "baseFile": "500.mp4"
+    },
+    {
+      "label": "500 (2)",
+      "baseFile": "500.mp4"
+    },
+    {
+      "label": "ABUELA (1)",
+      "baseFile": "ABUELA.mp4"
+    },
+    {
+      "label": "ABUELA (2)",
+      "baseFile": "ABUELA.mp4"
+    },
+    {
+      "label": "BEBÉ (1)",
+      "baseFile": "BEBE.mp4"
+    },
+    {
+      "label": "BEBÉ (2)",
+      "baseFile": "BEBE.mp4"
+    },
+    {
+      "label": "CUÑADA (1)",
+      "baseFile": "CUNADA.mp4"
+    },
+    {
+      "label": "CUÑADA (2)",
+      "baseFile": "CUNADA.mp4"
+    },
+    {
+      "label": "ENFERMERA (1)",
+      "baseFile": "ENFERMERA.mp4"
+    },
+    {
+      "label": "ENFERMERA (2)",
+      "baseFile": "ENFERMERA.mp4"
+    },
+    {
+      "label": "HERMANA (1)",
+      "baseFile": "HERMANA.mp4"
+    },
+    {
+      "label": "HERMANA (2)",
+      "baseFile": "HERMANA.mp4"
+    },
+    {
+      "label": "NIETA (1)",
+      "baseFile": "NIETA.mp4"
+    },
+    {
+      "label": "NIETA (2)",
+      "baseFile": "NIETA.mp4"
+    },
+    {
+      "label": "PRIMA (1)",
+      "baseFile": "PRIMA.mp4"
+    },
+    {
+      "label": "PRIMA (2)",
+      "baseFile": "PRIMA.mp4"
+    },
+    {
+      "label": "SOBRINA (1)",
+      "baseFile": "SOBRINA.mp4"
+    },
+    {
+      "label": "SOBRINA (2)",
+      "baseFile": "SOBRINA.mp4"
+    },
+    {
+      "label": "TÍO (1)",
+      "baseFile": "TIO.mp4"
+    },
+    {
+      "label": "TÍO (2)",
+      "baseFile": "TIO.mp4"
+    },
+    {
+      "label": "TÍO (3)",
+      "baseFile": "TIO.mp4"
+    }
+  ],
+  "coverage": [
+    {
+      "id": "c90ae4d2-0eec-49f0-8a22-acf015ad0307",
+      "slug": "G0",
+      "title": "Abecedario LSM (A–Z + Ñ)",
+      "status": "published",
+      "total": 27,
+      "local": 0
+    },
+    {
+      "id": "81bf5b95-086c-4dfc-ad4c-e0ba65b700d5",
+      "slug": "G2",
+      "title": "Expresiones cotidianas",
+      "status": "published",
+      "total": 6,
+      "local": 0
+    },
+    {
+      "id": "56b64283-1ecd-462e-900c-2e0fa9f0edf7",
+      "slug": "G3",
+      "title": "Colores (todos)",
+      "status": "published",
+      "total": 18,
+      "local": 12
+    },
+    {
+      "id": "ae39978c-71d3-4f70-9318-bab83f2e7fb2",
+      "slug": "G4",
+      "title": "Familia (50 señas)",
+      "status": "published",
+      "total": 50,
+      "local": 10
+    },
+    {
+      "id": "99083a27-0298-4ab4-8e5e-68a1c074c171",
+      "slug": "G5",
+      "title": "Salud y medicina",
+      "status": "published",
+      "total": 98,
+      "local": 0
+    },
+    {
+      "id": "aa9ed4c4-eb4d-4f9e-b512-fda45b35bd73",
+      "slug": "G6",
+      "title": "Educación y escuela",
+      "status": "published",
+      "total": 38,
+      "local": 0
+    },
+    {
+      "id": "8bfb7fb3-95a4-4466-af60-63dec3a670dd",
+      "slug": "G7",
+      "title": "Tecnología y redes",
+      "status": "published",
+      "total": 62,
+      "local": 0
+    },
+    {
+      "id": "3a2fcbc2-0ea0-4216-833b-d43eca213d44",
+      "slug": "G1",
+      "title": "Números (todos)",
+      "status": "published",
+      "total": 49,
+      "local": 26
+    },
+    {
+      "id": "693388ac-ed3f-4d60-8d28-d9c046dee97c",
+      "slug": "prueba-1",
+      "title": "PRUEBA 1",
+      "status": "published",
+      "total": 3,
+      "local": 0
+    }
+  ]
+}
