@@ -8,6 +8,9 @@ Los frames sin cara quedan en ceros para la parte facial.
 
 Uso:
     python extract_face_hands.py --input ../public/videos/signs --manifest ../public/training_data/manifest.json
+
+Un video por sena: escribe siempre <SENA>_1.npy. Para agregar varios videos
+por sena usa add_training_videos.py (ver videos_entrenamiento/README.md).
 """
 
 from __future__ import annotations
@@ -256,6 +259,32 @@ def resample(frames: list[np.ndarray], target: int) -> np.ndarray:
     return out
 
 
+def landmarker_options():
+    """Opciones de HandLandmarker (2 manos) y FaceLandmarker (1 cara).
+    Los modelos se pasan como bytes: MediaPipe no abre rutas con caracteres
+    no ASCII en Windows (p. ej. la "ñ" de "Señas a Voces")."""
+    hand_model = ensure_model(HAND_MODEL_URL, MODELS_DIR / "hand_landmarker.task")
+    face_model = ensure_model(FACE_MODEL_URL, MODELS_DIR / "face_landmarker.task")
+
+    hand_options = mp_vision.HandLandmarkerOptions(
+        base_options=mp_python.BaseOptions(model_asset_buffer=hand_model.read_bytes()),
+        running_mode=mp_vision.RunningMode.IMAGE,
+        num_hands=2,
+        min_hand_detection_confidence=0.5,
+        min_hand_presence_confidence=0.5,
+        min_tracking_confidence=0.5,
+    )
+    face_options = mp_vision.FaceLandmarkerOptions(
+        base_options=mp_python.BaseOptions(model_asset_buffer=face_model.read_bytes()),
+        running_mode=mp_vision.RunningMode.IMAGE,
+        num_faces=1,
+        min_face_detection_confidence=0.3,
+        min_face_presence_confidence=0.3,
+        min_tracking_confidence=0.3,
+    )
+    return hand_options, face_options
+
+
 def hand_stats(arr: np.ndarray) -> tuple[int, int]:
     right = int(np.sum(np.any(arr[:, :LM_COUNT, :2] != 0, axis=(1, 2))))
     left = int(np.sum(np.any(arr[:, LM_COUNT:HAND_LM, :2] != 0, axis=(1, 2))))
@@ -321,25 +350,7 @@ def main() -> int:
     print(f"hand+face, target_frames={args.target_frames}, total_lm={TOTAL_LM}")
     print(f"  hand_lm={HAND_LM}, face_lm={FACE_LM_COUNT}\n")
 
-    hand_model = ensure_model(HAND_MODEL_URL, MODELS_DIR / "hand_landmarker.task")
-    face_model = ensure_model(FACE_MODEL_URL, MODELS_DIR / "face_landmarker.task")
-
-    hand_options = mp_vision.HandLandmarkerOptions(
-        base_options=mp_python.BaseOptions(model_asset_path=str(hand_model)),
-        running_mode=mp_vision.RunningMode.IMAGE,
-        num_hands=2,
-        min_hand_detection_confidence=0.5,
-        min_hand_presence_confidence=0.5,
-        min_tracking_confidence=0.5,
-    )
-    face_options = mp_vision.FaceLandmarkerOptions(
-        base_options=mp_python.BaseOptions(model_asset_path=str(face_model)),
-        running_mode=mp_vision.RunningMode.IMAGE,
-        num_faces=1,
-        min_face_detection_confidence=0.3,
-        min_face_presence_confidence=0.3,
-        min_tracking_confidence=0.3,
-    )
+    hand_options, face_options = landmarker_options()
 
     written = 0
     skipped: list[str] = []

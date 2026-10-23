@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import "./styles/styles.css";
 import { GLOSARIO_LESSONS, ALPHABET_LESSON } from "./data/lessons_glosario.js";
 import { fingerStates, scoreTarget, detectBestLetter, MATCH_THR, scoreLetter, LSM_ALPHABET, NUMBER_TEMPLATES } from "./utils/lsm_detector.js";
-import { dynamicDetector, featureFromFingerStates, frameInfo, buildSequence, splitHands } from "./utils/dynamic_sign_detector.js";
+import { dynamicDetector, featureFromFingerStates, frameInfo, buildSequence, splitHands, preparePatternFrames, selectPatternExamples } from "./utils/dynamic_sign_detector.js";
 import { parseNpy, npyToFrames } from "./utils/npy_parser.js";
 import { initClassifier, classifySequence, isClassifierReady } from "./utils/onnx_classifier.js";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
@@ -4456,6 +4456,7 @@ function useCameraMediaPipe({ onResults }) {
   const flRef        = useRef(null);
   const rafRef       = useRef(null);
   const slowFrameRef = useRef(-1);
+  const lastVideoTimeRef = useRef(-1);
   const lastPoseRef  = useRef({ landmarks: [] });
   const lastFaceRef  = useRef({ landmarks: [] });
   const streamRef    = useRef(null); // Store stream reference for cleanup
@@ -4523,6 +4524,14 @@ function useCameraMediaPipe({ onResults }) {
             rafRef.current = requestAnimationFrame(detect);
             return;
           }
+          // La cámara da ~30 cuadros/s y requestAnimationFrame corre a la
+          // frecuencia de la pantalla (60 Hz o más): procesar solo cuadros
+          // nuevos, o el detector recibe cada cuadro repetido.
+          if (vid.currentTime === lastVideoTimeRef.current) {
+            rafRef.current = requestAnimationFrame(detect);
+            return;
+          }
+          lastVideoTimeRef.current = vid.currentTime;
 
           const w = vid.videoWidth || 640;
           const h = vid.videoHeight || 480;
@@ -4575,7 +4584,8 @@ function useCameraMediaPipe({ onResults }) {
             }
           }
 
-          if (onResults) onResults({ handRes, poseRes: lastPoseRef.current, faceRes: lastFaceRef.current });
+          // aspect = ancho/alto del cuadro, para corregir la proporción de los landmarks.
+          if (onResults) onResults({ handRes, poseRes: lastPoseRef.current, faceRes: lastFaceRef.current, aspect: w / h });
           rafRef.current = requestAnimationFrame(detect);
         }
         rafRef.current = requestAnimationFrame(detect);
@@ -5342,7 +5352,41 @@ async function fetchPatternFile(url) {
   }
 }
 
-async function reloadDynamicPatterns() {
+async function fetchJson(url) {
+  try {
+    const res = await fetch(url);
+    if (res.ok && (res.headers.get('content-type') || '').includes('json')) return await res.json();
+  } catch { /* el llamador decide el respaldo */ }
+  return null;
+}
+
+// Qué ejemplos cargar de cada seña y con qué proporción. Con examples.json
+// (python_scripts/examples_index.py) cada ejemplo trae la proporción de su
+// propio video y se cargan las grabaciones reales primero, hasta
+// MAX_PATTERN_EXAMPLES. Sin él, se recorre _1, _2... hasta el primer faltante
+// con la proporción por seña de video_aspect.json (scripts/build_video_aspect.mjs).
+async function patternPlan(bust, correctAspect) {
+  const index = await fetchJson('/training_data/examples.json' + bust);
+  if (index) {
+    return (sign) => {
+      const entries = index.examples[sign];
+      if (!entries) return [];
+      return selectPatternExamples(entries).map(e => ({ n: e.n, aspect: correctAspect ? (e.aspect ?? index.default_aspect) : null }));
+    };
+  }
+  console.warn('[DYNAMIC] Sin examples.json: se cargan _1, _2... con la proporción por seña');
+  const aspects = correctAspect ? (await fetchJson('/training_data/video_aspect.json' + bust)) || { default: 4 / 3, signs: {} } : null;
+  return (sign) => {
+    const aspect = aspects ? (aspects.signs[sign] ?? aspects.default) : null;
+    return Array.from({ length: MAX_EXAMPLES_PER_SIGN }, (_, i) => ({ n: i + 1, aspect, stopOnMiss: true }));
+  };
+}
+
+// correctAspect: reescala x de cada patrón según la proporción de su video,
+// para compararlo con una cámara corregida igual (ver correctFrameAspect).
+// cleanRestingHand: quita la mano en reposo de cada ejemplo (ver
+// dropRestingHand); el `_1` real todavía la trae y las aumentaciones no.
+async function reloadDynamicPatterns({ correctAspect = false, cleanRestingHand = false } = {}) {
   dynamicDetector.clearPatterns();
   const bust = `?t=${Date.now()}`;
   const stats = { patternsLoaded: [], totalSequences: 0, signsTotal: 0, missing: [] };
@@ -5350,6 +5394,7 @@ async function reloadDynamicPatterns() {
     const manifestRes = await fetch('/training_data/manifest.json' + bust);
     if (!manifestRes.ok) throw new Error(`No se pudo cargar manifest (${manifestRes.status})`);
     const man = await manifestRes.json();
+    const plan = await patternPlan(bust, correctAspect);
 
     const jobs = [];
     for (const [cat, signs] of Object.entries(man)) {
@@ -5358,17 +5403,19 @@ async function reloadDynamicPatterns() {
     }
     stats.signsTotal = jobs.length;
 
-    // Pool de workers: cada seña pide sus ejemplos en orden (_1, _2, ...) y
-    // se detiene en el primer faltante — la numeración es contigua desde _1.
+    // Pool de workers: cada seña pide sus ejemplos en orden.
     let next = 0;
     async function worker() {
       while (next < jobs.length) {
         const { cat, sign } = jobs[next++];
         let examples = 0;
-        for (let n = 1; n <= MAX_EXAMPLES_PER_SIGN; n++) {
+        for (const { n, aspect, stopOnMiss } of plan(sign)) {
           const frames = await fetchPatternFile(`/training_data/${cat}/${sign}_${n}.npy${bust}`);
-          if (!frames) break;
-          dynamicDetector.loadPattern(sign, frames);
+          if (!frames) {
+            if (stopOnMiss) break;
+            continue;
+          }
+          dynamicDetector.loadPattern(sign, preparePatternFrames(frames, { aspect, cleanRestingHand }));
           examples++;
         }
         if (examples === 0) stats.missing.push(`${cat}/${sign}`);
@@ -5623,7 +5670,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
   const trainInfoRef = useRef(null);
   trainInfoRef.current = trainInfo;
 
-  const handleResults = useCallback(({ handRes, faceRes }) => {
+  const handleResults = useCallback(({ handRes, faceRes, aspect }) => {
 
     const { right, left } = splitHands(handRes);
     const lms = right || left;
@@ -5670,6 +5717,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
           landmarksRight: right ? right.map(p => ({ x: p.x, y: p.y, z: p.z })) : null,
           landmarksLeft: left ? left.map(p => ({ x: p.x, y: p.y, z: p.z })) : null,
           landmarksFace: faceLms ? faceLms.map(p => ({ x: p.x, y: p.y, z: p.z })) : null,
+          aspect, // solo lo usa un modelo con aspectCorrected (sign_model_meta.json)
         });
         if (onnxFramesRef.current.length > 60) onnxFramesRef.current.shift();
         onnxFrameCountRef.current++;

@@ -18,6 +18,10 @@ env
 public/training_data/**/*.mp4
 public/training_data/**/*.avi
 public/videos/raw/
+# Videos para entrenar (ver videos_entrenamiento/README.md): se suben solo
+# los .npy que genera add_training_videos.py; respalda los videos aparte.
+videos_entrenamiento/*
+!videos_entrenamiento/README.md
 
 # ── Modelos entrenados (binarios grandes) ────────────────────
 # Los .onnx / .pt que sí se distribuyen viven en python_scripts/checkpoints

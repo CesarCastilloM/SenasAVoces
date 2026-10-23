@@ -33,6 +33,13 @@ const FACE_LM_INDICES = [
 let session = null;
 let labels = null;
 let initialized = false;
+// public/sign_model_meta.json (export_onnx.py). Un modelo entrenado con
+// examples.json espera x y z corregidas por ancho/alto, como en train.py.
+let aspectCorrected = false;
+
+function correctLandmarks(list, aspect) {
+  return list && list.map(p => ({ x: 0.5 + (p.x - 0.5) * aspect, y: p.y, z: (p.z ?? 0) * aspect }));
+}
 
 function handPresent(hand) {
   if (!hand || hand.length < 21) return false;
@@ -160,6 +167,12 @@ export async function initClassifier() {
     const res = await fetch("/sign_labels.json");
     const labelMap = await res.json();
     labels = Object.values(labelMap);
+    // Sin meta (modelos anteriores) la entrada va tal cual. En Vercel una ruta
+    // inexistente devuelve index.html con 200, de ahí el chequeo de tipo.
+    const metaRes = await fetch("/sign_model_meta.json").catch(() => null);
+    if (metaRes?.ok && (metaRes.headers.get("content-type") || "").includes("json")) {
+      aspectCorrected = !!(await metaRes.json()).aspectCorrected;
+    }
     initialized = true;
     console.log(`[ONNX] Modelo cargado: ${labels.length} clases`);
     return true;
@@ -173,8 +186,20 @@ export function isClassifierReady() {
   return initialized;
 }
 
+// frames: [{landmarksRight, landmarksLeft, landmarksFace, aspect?}], aspect =
+// ancho/alto del cuadro de la cámara (4:3 si no viene).
 export function classifySequence(frames) {
   if (!initialized || !frames || frames.length < 2) return null;
+  if (aspectCorrected) {
+    frames = frames.map(f => {
+      const a = f.aspect || 4 / 3;
+      return {
+        landmarksRight: correctLandmarks(f.landmarksRight, a),
+        landmarksLeft: correctLandmarks(f.landmarksLeft, a),
+        landmarksFace: correctLandmarks(f.landmarksFace, a),
+      };
+    });
+  }
   const normalized = normalizeSequence(frames);
   const resampled = resampleToLength(normalized, frames.length, TARGET_FRAMES);
   const input = new ort.Tensor("float32", resampled, [1, TARGET_FRAMES, INPUT_DIM]);

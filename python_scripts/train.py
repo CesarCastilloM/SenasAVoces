@@ -1,10 +1,15 @@
 """
 Entrena SignClassifier con CrossEntropy + Supervised Contrastive Loss.
 Uso:
-  python train.py --epochs 60 --holdout 5
+  python train.py --epochs 60 --holdout-signer ana   # valida con una persona que no entrena
+  python train.py --epochs 60 --holdout 5            # sin examples.json (optimista)
 
 Guarda checkpoint en python_scripts/checkpoints/best_model.pt junto con
 label map (idx -> nombre de sena) para inferencia posterior.
+
+Con examples.json cada ejemplo se corrige por la proporcion de su video
+(--no-aspect lo desactiva); el checkpoint lo anota y export_onnx.py lo pasa
+a public/sign_model_meta.json para que el navegador haga lo mismo.
 """
 import argparse
 import json
@@ -16,7 +21,8 @@ import torch
 from torch.utils.data import DataLoader
 
 sys.path.insert(0, os.path.dirname(__file__))
-from dataset import SignSequenceDataset, load_manifest, INPUT_DIM
+import dataset
+from dataset import SignSequenceDataset, load_manifest, load_index, INPUT_DIM
 from augment import AugmentedDataset
 from model import SignClassifier, supervised_contrastive_loss
 
@@ -45,7 +51,11 @@ def main():
     ap.add_argument("--epochs", type=int, default=60)
     ap.add_argument("--batch_size", type=int, default=32)
     ap.add_argument("--lr", type=float, default=1e-3)
-    ap.add_argument("--holdout", type=int, default=5, help="indice de ejemplo excluido del train, usado para validacion honesta")
+    ap.add_argument("--holdout", type=int, default=5, help="sin --holdout-signer: numero de ejemplo excluido del train (optimista)")
+    ap.add_argument("--holdout-signer", default=None, help="persona de examples.json que no entrena y valida")
+    ap.add_argument("--no-aspect", action="store_true", help="no corregir la proporcion de cada video")
+    ap.add_argument("--data", default=None, help="carpeta training_data (por defecto public/training_data)")
+    ap.add_argument("--checkpoint", default=os.path.join(CKPT_DIR, "best_model.pt"), help="donde guardar el mejor modelo")
     ap.add_argument("--hidden_dim", type=int, default=128)
     ap.add_argument("--embed_dim", type=int, default=64)
     ap.add_argument("--contrastive_weight", type=float, default=0.5)
@@ -55,16 +65,28 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Device: {device}")
 
+    if args.data:
+        dataset.TRAINING_DATA_DIR = os.path.abspath(args.data)
     manifest = load_manifest()
-    train_base = SignSequenceDataset(manifest, holdout_index=args.holdout, only_holdout=False)
-    val_base = SignSequenceDataset(manifest, holdout_index=args.holdout, only_holdout=True)
+    aspect_correct = load_index() is not None and not args.no_aspect
+    split = (
+        {"holdout_signer": args.holdout_signer} if args.holdout_signer
+        else {"holdout_index": args.holdout}
+    )
+    if not args.holdout_signer:
+        print("! Validando con el ejemplo n de cada sena (copias del mismo video): el resultado es optimista."
+              " Usa --holdout-signer <persona> cuando haya varias personas.")
+    train_base = SignSequenceDataset(manifest, only_holdout=False, aspect_correct=aspect_correct, **split)
+    val_base = SignSequenceDataset(manifest, only_holdout=True, aspect_correct=aspect_correct, **split)
 
-    # Asegurar mismo label_to_idx en train/val (val puede tener menos clases visibles pero usa el mapa de train)
-    val_base.label_to_idx = train_base.label_to_idx
-    val_base.labels = train_base.labels
+    # Mismo label_to_idx en train/val; val pierde las senas que train no conoce
+    val_base.restrict_to_labels(train_base.label_to_idx)
+    if len(val_base) == 0:
+        raise SystemExit("No hay ejemplos de validacion: revisa --holdout-signer (nombre como en examples.json)")
 
     num_classes = train_base.num_classes()
-    print(f"Clases: {num_classes} | Train examples: {len(train_base)} | Val (holdout) examples: {len(val_base)}")
+    print(f"Clases: {num_classes} | Train examples: {len(train_base)} | Val (holdout) examples: {len(val_base)}"
+          f" | proporcion corregida: {'si' if aspect_correct else 'no'}")
 
     train_ds = AugmentedDataset(train_base, augment_prob=0.8)
     val_ds = val_base  # sin augment en validacion
@@ -83,9 +105,11 @@ def main():
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
     ce_loss_fn = torch.nn.CrossEntropyLoss()
 
-    os.makedirs(CKPT_DIR, exist_ok=True)
-    best_top5 = 0.0
-    best_top1 = 0.0
+    os.makedirs(os.path.dirname(os.path.abspath(args.checkpoint)), exist_ok=True)
+    # -1: la primera epoca siempre se guarda, aunque valide en 0% (pasa al
+    # validar con una persona nueva); con 0.0 podia no guardarse nada.
+    best_top5 = -1.0
+    best_top1 = -1.0
     epochs_no_improve = 0
 
     for epoch in range(1, args.epochs + 1):
@@ -132,7 +156,9 @@ def main():
                 "labels": train_base.labels,
                 "val_top1": val_acc[1],
                 "val_top5": val_acc[5],
-            }, os.path.join(CKPT_DIR, "best_model.pt"))
+                "aspect_corrected": aspect_correct,
+                "holdout_signer": args.holdout_signer,
+            }, args.checkpoint)
         else:
             epochs_no_improve += 1
             if epochs_no_improve >= args.patience:
@@ -140,7 +166,7 @@ def main():
                 break
 
     print(f"\nMejor val_top5: {best_top5*100:.2f}%")
-    print(f"Checkpoint guardado en: {os.path.join(CKPT_DIR, 'best_model.pt')}")
+    print(f"Checkpoint guardado en: {args.checkpoint}")
 
 
 if __name__ == "__main__":

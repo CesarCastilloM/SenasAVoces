@@ -3,6 +3,27 @@
 Todos los scripts de Python que hacen funcionar el pipeline de reconocimiento
 de señas por cámara (MediaPipe). Organizados por etapa del pipeline.
 
+> **Para agregar videos de entrenamiento (varios por seña) sigue
+> [`videos_entrenamiento/README.md`](../videos_entrenamiento/README.md).**
+> Requisitos: `pip install -r python_scripts/requirements.txt` con Python 3.11.
+
+---
+
+## 0. Varios videos por seña (flujo actual)
+
+### `add_training_videos.py`
+**Qué hace:** Lee `videos_entrenamiento/<SEÑA>/<persona>_<toma>.mp4`, extrae
+manos + cara de cada video nuevo (igual que `extract_face_hands.py`), lo guarda
+como la siguiente grabación real `<SEÑA>_<n>.npy` y regenera las aumentaciones
+de esa seña. Salta los videos ya agregados; `--remove SEÑA/archivo` quita uno.
+
+### `examples_index.py`
+**Qué hace:** Mantiene `public/training_data/examples.json`: por cada `.npy`, si
+es real o aumentado, quién lo grabó y la proporción de su video. Lo usan la
+extracción, la aumentación, `dataset.py` (validación por persona) y el cargador
+de patrones de la app. `python examples_index.py` muestra un resumen y revisa
+que el índice coincida con los archivos.
+
 ---
 
 ## 1. Extracción de landmarks desde videos
@@ -69,10 +90,17 @@ mano que no se mueve). Esto evita que el detector interprete ruido como gesto.
 ## 4. Aumento de datos
 
 ### `augment_npy.py`
-**Qué hace:** Aplica transformaciones de aumento de datos a archivos `.npy`:
-rotación 2D, escalado, espejo horizontal, y time-warp. Preserva la relación
-espacial entre ambas manos (transforma la secuencia completa con los mismos
-parámetros). Genera ejemplos adicionales `_aug1.npy`, `_aug2.npy`, etc.
+**Qué hace:** Regenera las aumentaciones de cada seña desde **cada** grabación
+real de `examples.json` (velocidad, rotación, escala, traslación, ruido y
+recorte; manos y cara juntas, rotando en la proporción real del video).
+Genera menos por grabación cuantas más grabaciones tenga la seña (~13 ejemplos
+en total) y nunca borra grabaciones reales. Las guarda después de las reales:
+`<SEÑA>_<R+1>.npy`, `<SEÑA>_<R+2>.npy`...
+
+**Uso:**
+```bash
+python augment_npy.py --only CASA
+```
 
 ---
 
@@ -84,7 +112,9 @@ detector DTW. El modelo entrenado se usa en el navegador vía ONNX Runtime Web.
 ### `dataset.py`
 **Qué hace:** Carga los `.npy` de `training_data/`, normaliza landmarks
 (centro/escala por manos presentes), remuestrea a 24 frames, y construye
-tensores `(T, 126)` para entrenamiento. Soporta holdout por índice.
+tensores `(T, 372)` para entrenamiento. Con `examples.json` corrige la
+proporción de cada video y separa por persona (`holdout_signer`); sin él,
+holdout por número de ejemplo.
 
 ### `augment.py`
 **Qué hace:** Aumentación on-the-fly para entrenamiento: rotación, escala,
@@ -100,27 +130,31 @@ transformaciones a toda la secuencia (no por mano separada).
 
 ### `train.py`
 **Qué hace:** Entrena el modelo con CrossEntropy + Supervised Contrastive Loss.
-Usa holdout honesto (excluye un ejemplo por seña para validación). Early
-stopping por top-5. Guarda checkpoint en `python_scripts/checkpoints/best_model.pt`.
+Con `--holdout-signer` deja fuera a una persona completa y valida con sus
+grabaciones (la medida honesta); con `--holdout n` valida con el ejemplo n de
+cada seña, que son copias del mismo video (optimista). Early stopping por
+top-5. Guarda checkpoint en `python_scripts/checkpoints/best_model.pt`.
 
 **Uso:**
 ```bash
-python train.py --epochs 60 --holdout 5
+python train.py --epochs 60 --holdout-signer ana
 ```
 
 ### `evaluate.py`
-**Qué hace:** Evalúa el checkpoint entrenado sobre el holdout. Reporta top-1
-y top-5 accuracy, y lista los fallos fuera del top-5 con su ranking completo.
+**Qué hace:** Evalúa el checkpoint entrenado sobre la persona (o el ejemplo)
+de validación. Reporta top-1 y top-5 accuracy, y lista los fallos fuera del
+top-5 con su ranking completo.
 
 **Uso:**
 ```bash
-python evaluate.py --holdout 5
+python evaluate.py
 ```
 
 ### `export_onnx.py`
 **Qué hace:** Exporta el modelo PyTorch a formato ONNX para inferencia en el
-navegador. Genera `sign_model.onnx` y `public/sign_labels.json` (mapa
-índice → nombre de seña).
+navegador. Copia a `public/` el modelo (`sign_model.onnx`), las etiquetas
+(`sign_labels.json`) y `sign_model_meta.json`, que le dice al navegador si el
+modelo espera la proporción corregida.
 
 **Uso:**
 ```bash
@@ -161,10 +195,4 @@ Videos fuente (MP4)
 
 ## Requisitos
 
-```
-torch >= 2.0
-numpy
-mediapipe
-onnx
-onnxruntime
-```
+Python 3.11 y `pip install -r python_scripts/requirements.txt`.

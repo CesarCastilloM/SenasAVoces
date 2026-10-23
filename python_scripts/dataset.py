@@ -27,6 +27,27 @@ def load_manifest():
         return json.load(f)
 
 
+def load_index():
+    """examples.json (ver examples_index.py) o None si todavia no existe."""
+    path = os.path.join(TRAINING_DATA_DIR, "examples.json")
+    if not os.path.exists(path):
+        return None
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def correct_aspect(arr, aspect):
+    """MediaPipe normaliza x y z por el ancho de cada video e y por el alto:
+    multiplicar x y z por ancho/alto deja todo en unidades del alto, para que
+    videos 9:16, 16:9 y la webcam 4:3 compartan geometria (igual que
+    correctFrameAspect en el navegador). Los ausentes siguen en ceros."""
+    out = arr.copy()
+    present = np.any(arr[:, :, :2] != 0, axis=2)
+    out[:, :, 0] = np.where(present, 0.5 + (arr[:, :, 0] - 0.5) * aspect, 0.0)
+    out[:, :, 2] = np.where(present, arr[:, :, 2] * aspect, 0.0)
+    return out
+
+
 def _hand_present(hand):
     # hand: (21, 3). Ausente si todos los puntos son (0,0,0).
     return not np.allclose(hand, 0.0)
@@ -117,18 +138,43 @@ class SignSequenceDataset(Dataset):
     Cada item: (sequence_tensor [T, K*3], label_idx)
     K=42 -> 126 dims (solo manos) o K=124 -> 372 dims (manos + cara).
     Se detecta automaticamente segun la shape del .npy.
+
+    Con examples.json cada ejemplo trae su persona y la proporcion de su video:
+      holdout_signer="ana": entrena con todo lo que no grabo ana y valida
+        (only_holdout=True) con las grabaciones reales de ana. Mide como le va
+        al modelo con alguien que nunca vio.
+      holdout_index=n: valida con el ejemplo n de cada sena. Con aumentaciones
+        de un solo video eso compara contra copias del mismo video (optimista).
+    aspect_correct: aplica correct_aspect con la proporcion de cada ejemplo.
     """
 
     def __init__(self, manifest=None, holdout_index=None, only_holdout=False,
-                 target_frames=TARGET_FRAMES, max_examples_per_sign=20):
+                 target_frames=TARGET_FRAMES, max_examples_per_sign=20,
+                 holdout_signer=None, aspect_correct=False):
         self.manifest = manifest or load_manifest()
         self.target_frames = target_frames
-        self.samples = []  # (filepath, label)
-        self.labels = []
+        self.aspect_correct = aspect_correct
+        self.samples = []  # (filepath, label, aspect)
+        index = load_index()
+        if holdout_signer and index is None:
+            raise ValueError("holdout_signer necesita public/training_data/examples.json")
         for cat, signs in self.manifest.items():
             if not isinstance(signs, list):
                 continue
             for sign in signs:
+                if index is not None and sign in index["examples"]:
+                    for e in index["examples"][sign]:
+                        if holdout_signer:
+                            held = e["signer"] == holdout_signer
+                            keep = (held and e["kind"] == "real") if only_holdout else not held
+                        elif holdout_index is not None:
+                            keep = (e["n"] == holdout_index) == only_holdout
+                        else:
+                            keep = not only_holdout
+                        if keep:
+                            fp = os.path.join(TRAINING_DATA_DIR, cat, f"{sign}_{e['n']}.npy")
+                            self.samples.append((fp, sign, e.get("aspect") or index["default_aspect"]))
+                    continue
                 for n in range(1, max_examples_per_sign + 1):
                     fp = os.path.join(TRAINING_DATA_DIR, cat, f"{sign}_{n}.npy")
                     if not os.path.exists(fp):
@@ -138,18 +184,25 @@ class SignSequenceDataset(Dataset):
                         continue
                     if (not only_holdout) and is_holdout_example:
                         continue
-                    self.samples.append((fp, sign))
-                    if sign not in self.labels:
-                        self.labels.append(sign)
-        self.labels = sorted(set(self.labels))
+                    self.samples.append((fp, sign, 1.0))
+        self.labels = sorted({sign for _, sign, _ in self.samples})
         self.label_to_idx = {l: i for i, l in enumerate(self.labels)}
+
+    def restrict_to_labels(self, label_to_idx):
+        """Usa el mapa de etiquetas de train y descarta ejemplos de senas que
+        train no conoce (p. ej. senas que solo grabo la persona de validacion)."""
+        self.samples = [s for s in self.samples if s[1] in label_to_idx]
+        self.label_to_idx = label_to_idx
+        self.labels = sorted(label_to_idx, key=label_to_idx.get)
 
     def __len__(self):
         return len(self.samples)
 
     def __getitem__(self, idx):
-        fp, sign = self.samples[idx]
+        fp, sign, aspect = self.samples[idx]
         arr = load_npy_sequence(fp)
+        if self.aspect_correct:
+            arr = correct_aspect(arr, aspect)
         arr = normalize_sequence(arr)
         arr = resample_to_length(arr, self.target_frames)
         flat = arr.reshape(self.target_frames, -1)  # (T, K*3)
