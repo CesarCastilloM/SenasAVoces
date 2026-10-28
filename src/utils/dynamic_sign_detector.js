@@ -20,6 +20,145 @@ function flipHand(landmarks) {
   return landmarks.map(lm => ({ x: 1 - lm.x, y: lm.y, z: lm.z }));
 }
 
+// ── Proporción de imagen ──
+// MediaPipe normaliza x e y a [0,1] por separado, así que la misma mano sale
+// "estirada" en x en un video 9:16 respecto a uno 16:9 o a la webcam 4:3.
+// Multiplicar x (y z, que viene en la escala de x) por ancho/alto, centrado en
+// 0.5, deja todo en unidades del alto de la imagen; el espejo x -> 1 - x sigue
+// siendo simétrico alrededor de 0.5.
+export function correctHandAspect(landmarks, aspect) {
+  if (!landmarks || !aspect || aspect === 1) return landmarks;
+  return landmarks.map(lm => ({ x: 0.5 + (lm.x - 0.5) * aspect, y: lm.y, z: (lm.z || 0) * aspect }));
+}
+
+export function correctFrameAspect(frame, aspect) {
+  return {
+    ...frame,
+    landmarksRight: correctHandAspect(frame.landmarksRight ?? null, aspect),
+    landmarksLeft: correctHandAspect(frame.landmarksLeft ?? null, aspect),
+  };
+}
+
+// ── Ejemplos por seña ──
+// Entradas de public/training_data/examples.json (python_scripts/examples_index.py)
+// que se cargan como patrones: las grabaciones reales primero. Cada patrón es
+// un DTW más en cada evaluación en vivo, así que se recorta a `max`.
+export const MAX_PATTERN_EXAMPLES = 24;
+
+export function selectPatternExamples(entries, max = MAX_PATTERN_EXAMPLES) {
+  return [...entries]
+    .sort((a, b) => (a.kind === "real" ? 0 : 1) - (b.kind === "real" ? 0 : 1) || a.n - b.n)
+    .slice(0, max);
+}
+
+// ── Remuestreo temporal ──
+// Cada patrón comprime la seña completa (1–4 s de video) en 24 cuadros. Una
+// ventana en vivo se remuestrea igual antes de compararla, para que el DTW y
+// las velocidades vean la misma escala de tiempo.
+export const PATTERN_FRAMES = 24;
+
+function lerpHand(a, b, f) {
+  return a.map((p, i) => ({
+    x: p.x + (b[i].x - p.x) * f,
+    y: p.y + (b[i].y - p.y) * f,
+    z: (p.z || 0) + ((b[i].z || 0) - (p.z || 0)) * f,
+  }));
+}
+
+export function resampleLandmarkFrames(frames, targetLen = PATTERN_FRAMES) {
+  const n = frames.length;
+  if (n === 0) return [];
+  const out = [];
+  for (let t = 0; t < targetLen; t++) {
+    const s = n === 1 || targetLen === 1 ? 0 : (t * (n - 1)) / (targetLen - 1);
+    const i0 = Math.floor(s);
+    const i1 = Math.min(i0 + 1, n - 1);
+    const f = s - i0;
+    const hand = (key) => {
+      const a = frames[i0][key];
+      const b = frames[i1][key];
+      if (a && b) return lerpHand(a, b, f);
+      // Una mano que solo existe en un extremo no se interpola hacia ceros.
+      return (f < 0.5 ? a || b : b || a) || null;
+    };
+    out.push({ landmarksRight: hand("landmarksRight"), landmarksLeft: hand("landmarksLeft") });
+  }
+  return out;
+}
+
+// ── Huecos de detección ──
+// MediaPipe a veces pierde una mano unos cuadros a mitad de una seña de dos
+// manos; frameInfo trataría esos cuadros como de una mano (otras
+// características y un salto enorme de velocidad). Un hueco de hasta
+// `maxGap` cuadros con la mano presente antes y después se interpola.
+export const PATTERN_MAX_GAP = 3; // cuadros, en patrones de PATTERN_FRAMES
+
+export function fillHandGaps(frames, maxGap) {
+  const out = frames.map(f => ({ ...f }));
+  for (const key of ["landmarksRight", "landmarksLeft"]) {
+    let last = -1;
+    for (let i = 0; i < out.length; i++) {
+      if (!out[i][key]) continue;
+      const gap = i - last - 1;
+      if (last >= 0 && gap > 0 && gap <= maxGap) {
+        for (let j = last + 1; j < i; j++) out[j][key] = lerpHand(out[last][key], out[i][key], (j - last) / (i - last));
+      }
+      last = i;
+    }
+  }
+  return out;
+}
+
+// ── Mano en reposo ──
+// MediaPipe detecta cualquier mano visible, incluida la que solo descansa en el
+// encuadre, y las aumentaciones `_2.._N` se guardaron sin ella. Mismo criterio
+// que python_scripts/analyze_hands.py (con el que se limpiaron), aplicado a las
+// dos manos para no depender de la etiqueta Left/Right de MediaPipe. Pensado
+// para secuencias de PATTERN_FRAMES cuadros: el movimiento es por cuadro.
+const REST_MOTION_RATIO = 0.25; // fracción del movimiento de la otra mano
+const REST_MIN_MOTION = 0.06;   // escalas de mano por cuadro
+const REST_MIN_COVERAGE = 0.4;  // fracción de cuadros con esa mano
+
+function wristMotion(frames, key) {
+  let total = 0, steps = 0, present = 0;
+  for (let i = 0; i < frames.length; i++) {
+    const cur = frames[i][key];
+    if (!cur) continue;
+    present++;
+    const prev = i > 0 ? frames[i - 1][key] : null;
+    if (!prev) continue;
+    const scale = Math.hypot(cur[9].x - cur[0].x, cur[9].y - cur[0].y) || 1e-9;
+    total += Math.hypot(cur[0].x - prev[0].x, cur[0].y - prev[0].y) / scale;
+    steps++;
+  }
+  return { motion: steps ? total / steps : 0, coverage: frames.length ? present / frames.length : 0 };
+}
+
+// Quita la mano que no participa. Si ninguna se mueve lo suficiente (seña
+// estática), se queda la que más se mueve, como hizo la limpieza original.
+export function dropRestingHand(frames) {
+  const r = wristMotion(frames, "landmarksRight");
+  const l = wristMotion(frames, "landmarksLeft");
+  if (r.coverage === 0 || l.coverage === 0) return frames;
+  const participates = (h, other) => h.coverage >= REST_MIN_COVERAGE
+    && h.motion >= REST_MIN_MOTION
+    && h.motion >= REST_MOTION_RATIO * Math.max(other.motion, 1e-9);
+  const keepR = participates(r, l), keepL = participates(l, r);
+  if (keepR && keepL) return frames;
+  const drop = keepR ? "landmarksLeft" : keepL ? "landmarksRight"
+    : (l.motion <= r.motion ? "landmarksLeft" : "landmarksRight");
+  return frames.map(f => ({ ...f, [drop]: null }));
+}
+
+// Un ejemplo de entrenamiento listo para cargarse como patrón del recognizer
+// en vivo: misma geometría que la cámara corregida (aspect = ancho/alto de su
+// video), huecos cortos rellenos y, si cleanRestingHand, sin la mano en reposo.
+export function preparePatternFrames(frames, { aspect = null, cleanRestingHand = false } = {}) {
+  let out = aspect ? frames.map(f => correctFrameAspect(f, aspect)) : frames;
+  out = fillHandGaps(out, PATTERN_MAX_GAP);
+  return cleanRestingHand ? dropRestingHand(out) : out;
+}
+
 // ── Vector de características enriquecido (forma de mano + orientación 3D) ──
 // Describe UNA sola mano. La mayoría de las señas de LSM usan dos manos, así
 // que frameInfo/buildSequence combinan dos llamadas a esta función (Right + Left).
@@ -174,6 +313,11 @@ export function buildSequence(infos) {
     ]);
   }
   return seq;
+}
+
+// Secuencia DTW directamente desde frames {landmarksRight, landmarksLeft}.
+export function sequenceFromFrames(frames) {
+  return buildSequence(frames.map(f => frameInfo(f.landmarksRight, f.landmarksLeft)).filter(Boolean));
 }
 
 // ── Utilidades ──
@@ -422,6 +566,16 @@ export class DynamicSignDetector {
     return c;
   }
 
+  _patternCentroid(pattern, seq) {
+    if (!pattern._centroids) pattern._centroids = new Map();
+    let c = pattern._centroids.get(seq);
+    if (!c) {
+      c = this._computeCentroid(seq);
+      pattern._centroids.set(seq, c);
+    }
+    return c;
+  }
+
   detectRanking() {
     if (this.buffer.length < this.minBufferSize) return [];
     const buf = this.buffer;
@@ -432,12 +586,7 @@ export class DynamicSignDetector {
     for (const pattern of this.patterns) {
       let bestCentDist = Infinity;
       for (const seq of pattern.sequences) {
-        if (!pattern._centroids) pattern._centroids = new Map();
-        let c = pattern._centroids.get(seq);
-        if (!c) {
-          c = this._computeCentroid(seq);
-          pattern._centroids.set(seq, c);
-        }
+        const c = this._patternCentroid(pattern, seq);
         if (c) {
           const d = landmarkDistance(bufCentroid, c);
           if (d < bestCentDist) bestCentDist = d;
@@ -468,6 +617,43 @@ export class DynamicSignDetector {
       }
       if (best === Infinity) continue;
       ranking.push({ name: pattern.name, score: best });
+    }
+    ranking.sort((a, b) => a.score - b.score);
+    return ranking;
+  }
+
+  // Ranking de varias secuencias candidatas a la vez (las ventanas en vivo ya
+  // remuestreadas a PATTERN_FRAMES). Pre-filtro por centroide con la ventana
+  // más cercana a cada seña y DTW solo en las `prefilterN` mejores.
+  // Cada entrada indica qué ventana (`window`, índice en `sequences`) ganó.
+  rankSequences(sequences, prefilterN = PRE_FILTER_N) {
+    const seqs = (sequences || []).filter(s => Array.isArray(s) && s.length > 0);
+    if (seqs.length === 0 || this.patterns.length === 0) return [];
+    const queryCentroids = seqs.map(s => this._computeCentroid(s));
+    const candidates = [];
+    for (const pattern of this.patterns) {
+      let bestCentDist = Infinity;
+      for (const seq of pattern.sequences) {
+        const c = this._patternCentroid(pattern, seq);
+        for (const qc of queryCentroids) {
+          const d = landmarkDistance(qc, c);
+          if (d < bestCentDist) bestCentDist = d;
+        }
+      }
+      candidates.push({ pattern, centDist: bestCentDist });
+    }
+    candidates.sort((a, b) => a.centDist - b.centDist);
+
+    const ranking = [];
+    for (const { pattern } of candidates.slice(0, prefilterN)) {
+      let best = Infinity, window = -1;
+      for (const ps of pattern.sequences) {
+        for (let w = 0; w < seqs.length; w++) {
+          const score = dtw(seqs[w], ps);
+          if (score < best) { best = score; window = w; }
+        }
+      }
+      if (best !== Infinity) ranking.push({ name: pattern.name, score: best, window });
     }
     ranking.sort((a, b) => a.score - b.score);
     return ranking;
@@ -529,6 +715,107 @@ export class DynamicSignDetector {
       totalSequences: this.patterns.reduce((a, p) => a + p.sequences.length, 0),
       bufferSize: this.buffer.length,
     };
+  }
+}
+
+// ── Reconocimiento en vivo por ventanas ──
+// No se sabe cuánto dura la seña de quien está frente a la cámara, así que en
+// cada evaluación se prueban varias duraciones que terminan en el cuadro más
+// reciente; cada una se remuestrea a PATTERN_FRAMES antes del DTW.
+// Umbrales calibrados con scripts/sim_live_detection.mjs: la distancia del #1
+// casi no separa aciertos de errores (medianas 1.2 contra 1.65), el margen
+// contra el #2 sí (0.41 contra 0.10), así que la regla se apoya en el margen.
+// Los errores llegan al principio, con la seña a medias en la ventana
+// (mediana 0.5 s contra 2.1 s de los aciertos): de ahí minAcceptMs.
+export const LIVE_DEFAULTS = {
+  windowsMs: [1200, 2000, 2800], // duraciones de seña probadas al final del buffer
+  bufferMs: 2800,                // lo más viejo que se conserva (= ventana más larga)
+  minWindowFrames: 10,           // ~0.33 s a 30 fps
+  maxGapFrames: 6,               // huecos de una mano que se rellenan (~0.2 s a 30 fps)
+  evalEveryMs: 150,
+  prefilterN: PRE_FILTER_N,
+  // Mano en reposo en cada ventana: "off" tal cual, "drop" sin ella, "both"
+  // compara las dos versiones (el filtro decide distinto que en el patrón
+  // cuando el movimiento está cerca del umbral). Los patrones se cargan con
+  // cleanRestingHand para que coincidan.
+  restingHand: "both",
+  scoreThreshold: 2.0,           // distancia DTW máxima del #1
+  marginThreshold: 0.3,          // distancia del #2 menos la del #1
+  relMarginThreshold: 0,         // ese margen dividido entre la distancia del #1
+  stableEvals: 2,                // evaluaciones seguidas con el mismo #1
+  minAcceptMs: 1200,             // tiempo con manos a la vista antes de aceptar
+};
+
+// Un paso de la regla de aceptación: el #1 debe pasar los umbrales y
+// repetirse en `stableEvals` evaluaciones seguidas, y no antes de
+// `minAcceptMs` desde que aparecieron las manos (`elapsedMs`). Función pura
+// para que la página y la simulación usen exactamente la misma regla.
+export function acceptanceStep(state, ranking, opts, elapsedMs = Infinity) {
+  const guess = ranking[0];
+  if (!guess) return { name: null, count: 0, margin: Infinity, accepted: false };
+  const margin = ranking.length > 1 ? ranking[1].score - guess.score : Infinity;
+  const passes = elapsedMs >= (opts.minAcceptMs ?? 0)
+    && guess.score < opts.scoreThreshold
+    && margin > opts.marginThreshold
+    && margin / Math.max(guess.score, 1e-6) > (opts.relMarginThreshold ?? 0);
+  const count = passes ? (state.name === guess.name ? state.count + 1 : 1) : 0;
+  return { name: passes ? guess.name : null, count, margin, accepted: passes && count >= opts.stableEvals };
+}
+
+export class LiveSignRecognizer {
+  constructor(detector, options = {}) {
+    this.detector = detector;
+    this.opts = { ...LIVE_DEFAULTS, ...options };
+    this.reset();
+  }
+
+  reset() {
+    this.frames = [];
+    this.startedAt = null;
+    this.lastEvalAt = -Infinity;
+    this.state = { name: null, count: 0 };
+  }
+
+  get bufferSize() {
+    return this.frames.length;
+  }
+
+  // frame: {landmarksRight, landmarksLeft} ya corregido por proporción; t en ms.
+  // Devuelve null si no tocaba evaluar, o { ranking, guess, margin, accepted, elapsedMs }.
+  push(frame, t) {
+    const o = this.opts;
+    if (this.startedAt === null) this.startedAt = t;
+    this.frames.push({ landmarksRight: frame.landmarksRight, landmarksLeft: frame.landmarksLeft, t });
+    let drop = 0;
+    while (drop < this.frames.length && this.frames[drop].t < t - o.bufferMs) drop++;
+    if (drop > 0) this.frames.splice(0, drop);
+    if (t - this.lastEvalAt < o.evalEveryMs || this.frames.length < o.minWindowFrames) return null;
+    this.lastEvalAt = t;
+
+    const ranking = this.detector.rankSequences(this.windowSequences(t), o.prefilterN);
+    const elapsedMs = t - this.startedAt;
+    const step = acceptanceStep(this.state, ranking, o, elapsedMs);
+    this.state = { name: step.name, count: step.count };
+    return { ranking, guess: ranking[0] || null, margin: step.margin, accepted: step.accepted, elapsedMs };
+  }
+
+  windowSequences(t) {
+    const o = this.opts;
+    const seqs = [];
+    let prevLen = 0;
+    for (const w of o.windowsMs) {
+      let start = 0;
+      while (start < this.frames.length && this.frames[start].t < t - w) start++;
+      const len = this.frames.length - start;
+      // Una ventana más larga que el buffer repetiría la anterior.
+      if (len < o.minWindowFrames || len === prevLen) continue;
+      prevLen = len;
+      const win = resampleLandmarkFrames(fillHandGaps(this.frames.slice(start), o.maxGapFrames), PATTERN_FRAMES);
+      const cleaned = o.restingHand === "off" ? win : dropRestingHand(win);
+      if (cleaned === win || o.restingHand === "both") seqs.push(sequenceFromFrames(win));
+      if (cleaned !== win) seqs.push(sequenceFromFrames(cleaned));
+    }
+    return seqs;
   }
 }
 

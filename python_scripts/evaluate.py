@@ -3,6 +3,7 @@ Evalua el checkpoint entrenado sobre el holdout, mostrando:
 - top1/top5 accuracy global
 - lista de fallos con su ranking completo (para comparar con el detector DTW)
 Uso:
+  python evaluate.py --holdout-signer ana   # la misma persona que en train.py
   python evaluate.py --holdout 5
 """
 import argparse
@@ -13,7 +14,8 @@ import torch
 from torch.utils.data import DataLoader
 
 sys.path.insert(0, os.path.dirname(__file__))
-from dataset import SignSequenceDataset, load_manifest
+import dataset
+from dataset import SignSequenceDataset, load_manifest, INPUT_DIM
 from model import SignClassifier
 
 CKPT_DIR = os.path.join(os.path.dirname(__file__), "checkpoints")
@@ -22,19 +24,25 @@ CKPT_DIR = os.path.join(os.path.dirname(__file__), "checkpoints")
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--holdout", type=int, default=5)
+    ap.add_argument("--holdout-signer", default=None, help="por defecto, la persona con la que se entreno")
+    ap.add_argument("--data", default=None, help="carpeta training_data (por defecto public/training_data)")
     ap.add_argument("--checkpoint", type=str, default=os.path.join(CKPT_DIR, "best_model.pt"))
     args = ap.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     ckpt = torch.load(args.checkpoint, map_location=device, weights_only=False)
 
+    if args.data:
+        dataset.TRAINING_DATA_DIR = os.path.abspath(args.data)
     manifest = load_manifest()
-    val_base = SignSequenceDataset(manifest, holdout_index=args.holdout, only_holdout=True)
-    val_base.label_to_idx = ckpt["label_to_idx"]
-    val_base.labels = ckpt["labels"]
+    signer = args.holdout_signer or ckpt.get("holdout_signer")
+    split = {"holdout_signer": signer} if signer else {"holdout_index": args.holdout}
+    val_base = SignSequenceDataset(manifest, only_holdout=True,
+                                   aspect_correct=ckpt.get("aspect_corrected", False), **split)
+    val_base.restrict_to_labels(ckpt["label_to_idx"])
 
     model = SignClassifier(
-        input_dim=126,
+        input_dim=ckpt.get("input_dim", INPUT_DIM),
         hidden_dim=ckpt["hidden_dim"],
         num_classes=ckpt["num_classes"],
         embed_dim=ckpt["embed_dim"],

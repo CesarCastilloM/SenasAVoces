@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import "./styles/styles.css";
 import { GLOSARIO_LESSONS, ALPHABET_LESSON } from "./data/lessons_glosario.js";
 import { fingerStates, scoreTarget, detectBestLetter, MATCH_THR, scoreLetter, LSM_ALPHABET, NUMBER_TEMPLATES } from "./utils/lsm_detector.js";
-import { dynamicDetector, featureFromFingerStates, frameInfo, buildSequence, splitHands } from "./utils/dynamic_sign_detector.js";
+import { dynamicDetector, featureFromFingerStates, frameInfo, buildSequence, splitHands, preparePatternFrames, selectPatternExamples } from "./utils/dynamic_sign_detector.js";
 import { parseNpy, npyToFrames } from "./utils/npy_parser.js";
 import { initClassifier, classifySequence, isClassifierReady } from "./utils/onnx_classifier.js";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
@@ -4456,6 +4456,7 @@ function useCameraMediaPipe({ onResults }) {
   const flRef        = useRef(null);
   const rafRef       = useRef(null);
   const slowFrameRef = useRef(-1);
+  const lastVideoTimeRef = useRef(-1);
   const lastPoseRef  = useRef({ landmarks: [] });
   const lastFaceRef  = useRef({ landmarks: [] });
   const streamRef    = useRef(null); // Store stream reference for cleanup
@@ -4523,6 +4524,14 @@ function useCameraMediaPipe({ onResults }) {
             rafRef.current = requestAnimationFrame(detect);
             return;
           }
+          // La cámara da ~30 cuadros/s y requestAnimationFrame corre a la
+          // frecuencia de la pantalla (60 Hz o más): procesar solo cuadros
+          // nuevos, o el detector recibe cada cuadro repetido.
+          if (vid.currentTime === lastVideoTimeRef.current) {
+            rafRef.current = requestAnimationFrame(detect);
+            return;
+          }
+          lastVideoTimeRef.current = vid.currentTime;
 
           const w = vid.videoWidth || 640;
           const h = vid.videoHeight || 480;
@@ -4575,7 +4584,8 @@ function useCameraMediaPipe({ onResults }) {
             }
           }
 
-          if (onResults) onResults({ handRes, poseRes: lastPoseRef.current, faceRes: lastFaceRef.current });
+          // aspect = ancho/alto del cuadro, para corregir la proporción de los landmarks.
+          if (onResults) onResults({ handRes, poseRes: lastPoseRef.current, faceRes: lastFaceRef.current, aspect: w / h });
           rafRef.current = requestAnimationFrame(detect);
         }
         rafRef.current = requestAnimationFrame(detect);
@@ -5320,47 +5330,108 @@ function pathToPublicUrl(absPath) {
   return null;
 }
 
-async function reloadDynamicPatterns() {
+// Cuántas señas se cargan a la vez. Lanzar todo junto (238 señas x 20
+// intentos = 4,760 fetches) hacía que Chrome rechazara la mayoría con
+// "Failed to fetch" y ~166 señas quedaran sin ningún patrón.
+const PATTERN_LOAD_CONCURRENCY = 12;
+const MAX_EXAMPLES_PER_SIGN = 60;
+
+// Lee los patrones desde /training_data/ (estático: funciona igual en dev y
+// en producción; /api/training-data solo existe en el dev server de Vite).
+// En Vercel las rutas inexistentes se reescriben a index.html con status 200,
+// así que un "miss" también es una respuesta HTML o un .npy que no parsea.
+async function fetchPatternFile(url) {
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  const type = res.headers.get('content-type') || '';
+  if (type.includes('text/html')) return null;
+  try {
+    return npyToFrames(parseNpy(await res.arrayBuffer()));
+  } catch {
+    return null;
+  }
+}
+
+async function fetchJson(url) {
+  try {
+    const res = await fetch(url);
+    if (res.ok && (res.headers.get('content-type') || '').includes('json')) return await res.json();
+  } catch { /* el llamador decide el respaldo */ }
+  return null;
+}
+
+// Qué ejemplos cargar de cada seña y con qué proporción. Con examples.json
+// (python_scripts/examples_index.py) cada ejemplo trae la proporción de su
+// propio video y se cargan las grabaciones reales primero, hasta
+// MAX_PATTERN_EXAMPLES. Sin él, se recorre _1, _2... hasta el primer faltante
+// con la proporción por seña de video_aspect.json (scripts/build_video_aspect.mjs).
+async function patternPlan(bust, correctAspect) {
+  const index = await fetchJson('/training_data/examples.json' + bust);
+  if (index) {
+    return (sign) => {
+      const entries = index.examples[sign];
+      if (!entries) return [];
+      return selectPatternExamples(entries).map(e => ({ n: e.n, aspect: correctAspect ? (e.aspect ?? index.default_aspect) : null }));
+    };
+  }
+  console.warn('[DYNAMIC] Sin examples.json: se cargan _1, _2... con la proporción por seña');
+  const aspects = correctAspect ? (await fetchJson('/training_data/video_aspect.json' + bust)) || { default: 4 / 3, signs: {} } : null;
+  return (sign) => {
+    const aspect = aspects ? (aspects.signs[sign] ?? aspects.default) : null;
+    return Array.from({ length: MAX_EXAMPLES_PER_SIGN }, (_, i) => ({ n: i + 1, aspect, stopOnMiss: true }));
+  };
+}
+
+// correctAspect: reescala x de cada patrón según la proporción de su video,
+// para compararlo con una cámara corregida igual (ver correctFrameAspect).
+// cleanRestingHand: quita la mano en reposo de cada ejemplo (ver
+// dropRestingHand); el `_1` real todavía la trae y las aumentaciones no.
+async function reloadDynamicPatterns({ correctAspect = false, cleanRestingHand = false } = {}) {
   dynamicDetector.clearPatterns();
   const bust = `?t=${Date.now()}`;
+  const stats = { patternsLoaded: [], totalSequences: 0, signsTotal: 0, missing: [] };
   try {
-    const manifestRes = await fetch('/api/training-data/manifest' + bust);
+    const manifestRes = await fetch('/training_data/manifest.json' + bust);
     if (!manifestRes.ok) throw new Error(`No se pudo cargar manifest (${manifestRes.status})`);
     const man = await manifestRes.json();
+    const plan = await patternPlan(bust, correctAspect);
 
-    // Cargar todas las seΓö£ΓûÆas en paralelo: cada seΓö£ΓûÆa intenta _1.._20
-    // simultaneamente. Formato principal: .npy (binario, mΓö£├¡s eficiente).
-    const tasks = [];
+    const jobs = [];
     for (const [cat, signs] of Object.entries(man)) {
       if (!Array.isArray(signs)) continue;
-      for (const sign of signs) {
-        for (let n = 1; n <= 20; n++) {
-          tasks.push(
-            fetch(`/api/training-data/${cat}/${sign}_${n}.npy${bust}`)
-              .then(res => {
-                if (res.ok) return res.arrayBuffer().then(buf => {
-                  const parsed = parseNpy(buf);
-                  const frames = npyToFrames(parsed);
-                  return { sign, data: frames };
-                });
-                // Fallback: intentar .json si no hay .npy
-                return fetch(`/api/training-data/${cat}/${sign}_${n}.json${bust}`)
-                  .then(r2 => r2.ok ? r2.json().then(data => ({ sign, data })) : null)
-                  .catch(() => null);
-              })
-              .catch(() => null)
-          );
+      for (const sign of signs) jobs.push({ cat, sign });
+    }
+    stats.signsTotal = jobs.length;
+
+    // Pool de workers: cada seña pide sus ejemplos en orden.
+    let next = 0;
+    async function worker() {
+      while (next < jobs.length) {
+        const { cat, sign } = jobs[next++];
+        let examples = 0;
+        for (const { n, aspect, stopOnMiss } of plan(sign)) {
+          const frames = await fetchPatternFile(`/training_data/${cat}/${sign}_${n}.npy${bust}`);
+          if (!frames) {
+            if (stopOnMiss) break;
+            continue;
+          }
+          dynamicDetector.loadPattern(sign, preparePatternFrames(frames, { aspect, cleanRestingHand }));
+          examples++;
         }
+        if (examples === 0) stats.missing.push(`${cat}/${sign}`);
       }
     }
-    const results = await Promise.all(tasks);
-    let loaded = 0;
-    for (const r of results) {
-      if (r) { dynamicDetector.loadPattern(r.sign, r.data); loaded++; }
+    await Promise.all(Array.from({ length: PATTERN_LOAD_CONCURRENCY }, worker));
+
+    const status = dynamicDetector.getStatus();
+    stats.patternsLoaded = status.patternsLoaded;
+    stats.totalSequences = status.totalSequences;
+    console.log(`[DYNAMIC] ${stats.totalSequences} secuencias cargadas, ${stats.patternsLoaded.length}/${stats.signsTotal} señas`);
+    if (stats.missing.length > 0) {
+      console.warn(`[DYNAMIC] ${stats.missing.length} señas sin ningún patrón:`, stats.missing.join(', '));
     }
-    console.log(`[DYNAMIC] ${loaded} secuencias cargadas`);
   } catch (e) { console.warn('[DYNAMIC] reload error:', e); }
-  return dynamicDetector.getStatus().patternsLoaded;
+  return stats;
 }
 
 // ╬ô├╢├ç╬ô├╢├ç DebugPage: diagnΓö£Γöéstico visual de fingerStates + scores ╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç╬ô├╢├ç
@@ -5570,10 +5641,12 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
   const [trainStatus, setTrainStatus] = useState('idle');
   const [trainMsg, setTrainMsg] = useState('');
   const [patternsLoaded, setPatternsLoaded] = useState([]);
+  const [patternStats, setPatternStats] = useState(null);
   const [dynamicSign, setDynamicSign] = useState(null);
   const [onnxSign, setOnnxSign] = useState(null);
   const [onnxTop5, setOnnxTop5] = useState([]);
   const [onnxReady, setOnnxReady] = useState(false);
+  const [onnxFailed, setOnnxFailed] = useState(false);
   const dynamicCandidateRef = useRef(null);
   const autoFramesRef = useRef([]);
   const autoTrainRef = useRef(true);
@@ -5583,8 +5656,11 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
   autoTrainRef.current = autoTrain;
 
   useEffect(() => {
-    reloadDynamicPatterns().then(setPatternsLoaded);
-    initClassifier().then(setOnnxReady);
+    reloadDynamicPatterns().then(stats => {
+      setPatternsLoaded(stats.patternsLoaded);
+      setPatternStats(stats);
+    });
+    initClassifier().then(ok => { setOnnxReady(ok); setOnnxFailed(!ok); });
   }, []);
 
   const trainInfo = useMemo(() => {
@@ -5594,7 +5670,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
   const trainInfoRef = useRef(null);
   trainInfoRef.current = trainInfo;
 
-  const handleResults = useCallback(({ handRes, faceRes }) => {
+  const handleResults = useCallback(({ handRes, faceRes, aspect }) => {
 
     const { right, left } = splitHands(handRes);
     const lms = right || left;
@@ -5641,6 +5717,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
           landmarksRight: right ? right.map(p => ({ x: p.x, y: p.y, z: p.z })) : null,
           landmarksLeft: left ? left.map(p => ({ x: p.x, y: p.y, z: p.z })) : null,
           landmarksFace: faceLms ? faceLms.map(p => ({ x: p.x, y: p.y, z: p.z })) : null,
+          aspect, // solo lo usa un modelo con aspectCorrected (sign_model_meta.json)
         });
         if (onnxFramesRef.current.length > 60) onnxFramesRef.current.shift();
         onnxFrameCountRef.current++;
@@ -5706,8 +5783,9 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
       });
       const data = await res.json();
       if (!data.ok) throw new Error(data.error || 'error desconocido');
-      const loaded = await reloadDynamicPatterns();
-      setPatternsLoaded(loaded);
+      const stats = await reloadDynamicPatterns();
+      setPatternsLoaded(stats.patternsLoaded);
+      setPatternStats(stats);
       setTrainStatus('done');
       setTrainMsg(`╬ô┬ú├á "${info.sign}" entrenada Γö¼Γòû ${data.saved} ejemplo(s) Γö¼Γòû categorΓö£┬ía ${info.category}`);
     } catch (e) {
@@ -6040,7 +6118,16 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
 
                         <div className='text-lg font-extrabold text-white leading-none'>{dynamicSign || (videoOnly ? 'Analizando video╬ô├ç┬¬' : 'Esperando gesto╬ô├ç┬¬')}</div>
 
-                        <div className='mt-1 text-[9px] text-[#D4EEF4]'>{patternsLoaded.length} seΓö£ΓûÆa(s) entrenada(s) cargada(s)</div>
+                        <div className='mt-1 text-[9px] text-[#D4EEF4]'>
+                          {patternStats
+                            ? `${patternStats.totalSequences} secuencias · ${patternsLoaded.length}/${patternStats.signsTotal} señas`
+                            : `${patternsLoaded.length} seña(s) cargada(s)`}
+                        </div>
+                        {patternStats && patternStats.missing.length > 0 && (
+                          <div className='mt-0.5 text-[9px] font-bold text-yellow-300' title={patternStats.missing.join(', ')}>
+                            ⚠ {patternStats.missing.length} señas sin patrones (ver consola)
+                          </div>
+                        )}
 
                       </div>
 
@@ -6050,7 +6137,7 @@ function DebugPage({ isDark, navigate, videoOnly = false }) {
                       <div className={cx('absolute top-20 right-3 rounded-xl px-4 py-1.5 text-center backdrop-blur', onnxSign ? 'bg-purple-600/90' : 'bg-black/60')}>
                         <div className={cx('text-[9px] font-bold uppercase tracking-widest', onnxSign ? 'text-purple-200' : 'text-[#A8CDD6]')}>LSTM+Attention</div>
                         <div className='text-lg font-extrabold text-white leading-none'>
-                          {onnxReady ? (onnxSign || 'Esperando gesto╬ô├ç┬¬') : 'Cargando modelo╬ô├ç┬¬'}
+                          {onnxReady ? (onnxSign || 'Esperando gesto…') : (onnxFailed ? '⚠ Modelo no disponible' : 'Cargando modelo…')}
                         </div>
                         {onnxTop5.length > 0 && (
                           <div className='mt-1 space-y-0.5'>

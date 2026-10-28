@@ -122,7 +122,11 @@ export function npyToFrames(parsed) {
     throw new Error("Shape no soportado para landmarks: " + shape);
   }
 
-  const isTwoHanded = lmCount === 42;
+  // 42 = dos manos; 124 = dos manos + 82 puntos de cara. En ambos casos las
+  // manos ocupan los primeros 42 landmarks. La cara (indices 42..123) se
+  // ignora aqui a proposito: estos frames alimentan al detector DTW, que solo
+  // trabaja con manos; el clasificador ONNX recibe la cara por otra via.
+  const isTwoHanded = lmCount >= 42;
   const half = 21;
 
   // Una mano en ceros significa "no detectada". Debe viajar como null: si se

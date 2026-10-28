@@ -10,11 +10,18 @@ __pycache__/
 .env
 .env.local
 .env.*.local
+# Archivo "env" sin punto en la raíz (contiene las claves de Supabase);
+# la regla env/ de arriba solo cubre carpetas, no este archivo.
+env
 
 # ── Datos pesados (no subir al repo) ─────────────────────────
 public/training_data/**/*.mp4
 public/training_data/**/*.avi
 public/videos/raw/
+# Videos para entrenar (ver videos_entrenamiento/README.md): se suben solo
+# los .npy que genera add_training_videos.py; respalda los videos aparte.
+videos_entrenamiento/*
+!videos_entrenamiento/README.md
 
 # ── Modelos entrenados (binarios grandes) ────────────────────
 # Los .onnx / .pt que sí se distribuyen viven en python_scripts/checkpoints
@@ -49,12 +56,6 @@ dist/
 *.local
 
 # ── Archivo: contenido archivado (legacy/hardware) ───────────
-# _archive/ se mantiene en el repo (ya commiteado) pero no se toca
-# durante el desarrollo activo. Sin regla de ignore para que git lo
-# rastree, pero los binarios pesados que pudiera contener sí se ignoran:
-_archive/**/*.pyc
-_archive/**/__pycache__/
-_archive/**/.gradle/
-_archive/**/build/
-_archive/**/.dart_tool/
-_archive/**/.pio/
+# Código legacy (guante ESP32, backend Flask, app Flutter). Se conserva
+# en disco como referencia pero git ya no lo rastrea.
+_archive/
