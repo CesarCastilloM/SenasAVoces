@@ -5,7 +5,8 @@
  * Flujo:
  *   1. init() carga el modelo ONNX y el mapa de labels.
  *   2. classify(frameSequence) recibe un array de frames {landmarksRight, landmarksLeft, landmarksFace}
- *      los normaliza, remuestrea a 24 frames, y devuelve {top1, top5, confidence, ranking}.
+ *      los normaliza, remuestrea a 24 frames, y devuelve {top1, top5, confidence, probs, labels}.
+ *      `probs` es la distribución completa; probabilityOf(result, clase) lee una clase concreta.
  *
  * Formato: 42 hand landmarks + 82 face landmarks = 124 total → 372 dims (124*3).
  */
@@ -173,6 +174,22 @@ export function isClassifierReady() {
   return initialized;
 }
 
+/** Nombres de las clases del modelo, en el orden de sus índices (vacío si aún no carga). */
+export function getClassLabels() {
+  return labels ? [...labels] : [];
+}
+
+/**
+ * Probabilidad que el resultado de classifySequence() asigna a UNA clase.
+ * Es lo que usa el verificador de lecciones (ver lesson_engine.js).
+ * @returns {number} 0 si la clase no existe o no hay resultado
+ */
+export function probabilityOf(result, className) {
+  if (!result?.probs || !result?.labels) return 0;
+  const i = result.labels.indexOf(className);
+  return i === -1 ? 0 : result.probs[i];
+}
+
 export function classifySequence(frames) {
   if (!initialized || !frames || frames.length < 2) return null;
   const normalized = normalizeSequence(frames);
@@ -209,6 +226,10 @@ export function classifySequence(frames) {
       top1: top5[0].name,
       confidence: top5[0].prob,
       top5,
+      // Distribución completa (índice => clase en `labels`), para verificar una
+      // clase concreta sin depender de que sea el top-5.
+      probs,
+      labels,
     };
   }).catch((e) => {
     console.warn("[ONNX] Error en inferencia:", e);

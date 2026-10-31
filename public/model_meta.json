@@ -1,0 +1,9 @@
+{
+  "num_classes": 238,
+  "input_dim": 372,
+  "target_frames": 24,
+  "val_top1": 0.084,
+  "val_top5": 0.2185,
+  "source": "python_scripts/checkpoints/best_model.pt (campos val_top1 y val_top5 del checkpoint)",
+  "note": "Precisión de validación del modelo public/sign_model.onnx. src/hooks/useOnnxVerifier.js solo usa el modelo para verificar lecciones si val_top1 >= 0.5; por debajo, las lecciones siguen con la plantilla de dedos. Actualizar estos valores al reentrenar y volver a exportar el ONNX."
+}

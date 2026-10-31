@@ -8,6 +8,7 @@ import { fingerStates, scoreTarget, detectBestLetter, MATCH_THR, scoreLetter, LS
 import { dynamicDetector, featureFromFingerStates, frameInfo, buildSequence, splitHands } from "./utils/dynamic_sign_detector.js";
 import { parseNpy, npyToFrames } from "./utils/npy_parser.js";
 import { initClassifier, classifySequence, isClassifierReady } from "./utils/onnx_classifier.js";
+import { useOnnxVerifier } from "./hooks/useOnnxVerifier.js";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import AuthPage from "./components/AuthPage";
 import EmailConfirmationPage from "./components/EmailConfirmationPage";
@@ -3666,6 +3667,10 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
   const [gestureState, setGestureState] = useState("waiting");
   const [matchScore, setMatchScore] = useState(0);
   const [practiceSuccess, setPracticeSuccess] = useState(false);
+  // Interruptor: usar la cara en la verificación con el modelo (más preciso, más carga de GPU).
+  const [useFace, setUseFace] = useState(() => {
+    try { return localStorage.getItem("lsm_lesson_face") !== "0"; } catch { return true; }
+  });
   const holdStartRef = useRef(null);
   const successRef = useRef(false); // synchronous guard against double-trigger
   const HOLD_MS = 600;
@@ -3687,6 +3692,47 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
     }
   }, [user, sign, moduleId, viewRecorded]);
 
+  // Acierto confirmado (por el modelo o por la plantilla): guarda progreso y avisa al padre.
+  // successRef es el guardia síncrono contra doble disparo entre frames.
+  const confirmSuccess = useCallback((sc) => {
+    if (successRef.current) return;
+    successRef.current = true;
+    setPracticeSuccess(true);
+    setGestureState("confirmed");
+
+    // Save progress
+    if (user) {
+      updateSignProgress(user.id, sign.label || sign.name, moduleId, sc, 0);
+      updateStreak(user.id);
+    }
+
+    // Notify parent so the snake indicator updates
+    if (onSignCompleted) onSignCompleted(sign.label || sign.name);
+
+    // Check if this was the last sign in the module
+    if (allItems && allItems.length > 0 && onModuleCompleted) {
+      const signLabel = sign.label || sign.name;
+      const allDone = allItems.every((item) => {
+        const itemLabel = item.label || item.name;
+        return itemLabel === signLabel || practicedSigns.has(itemLabel);
+      });
+      if (allDone) {
+        onModuleCompleted(moduleId, allItems.length);
+      }
+    }
+
+    // Stay on the same sign — user taps "Continuar" to advance
+  }, [sign, user, moduleId, onSignCompleted, onModuleCompleted, allItems, practicedSigns]);
+
+  // Verificación con el modelo ONNX: probabilidad de la seña objetivo (lesson_engine.js).
+  // Si la seña no tiene clase en el modelo, mode !== "onnx" y se usa la plantilla de dedos.
+  const verifier = useOnnxVerifier({
+    target: sign?.label || sign?.name,
+    onCorrect: ({ score }) => confirmSuccess(score),
+  });
+  const useOnnx = verifier.mode === "onnx";
+  const verifierReset = verifier.reset;
+
   // Reset success state when sign changes (e.g. via "Continuar" or tracker navigation)
   useEffect(() => {
     successRef.current = false;
@@ -3694,13 +3740,23 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
     holdStartRef.current = null;
     setGestureState("waiting");
     setMatchScore(0);
-  }, [sign]);
+    verifierReset();
+  }, [sign, verifierReset]);
 
   // Simplified practice handler for lesson view
-  const handlePracticeResults = useCallback(({ handRes }) => {
+  const handlePracticeResults = useCallback(({ handRes, faceRes, timestamp }) => {
     const lms = handRes?.landmarks?.[0] ?? null;
     setHandDetected(!!lms);
 
+    // Verificación con el modelo: el búfer, el clasificador y el juez viven en el hook.
+    if (useOnnx) {
+      if (!successRef.current) {
+        verifier.push({ handRes, faceRes, timestamp: timestamp ?? performance.now() });
+      }
+      return;
+    }
+
+    // Respaldo: plantilla de dedos (señas sin clase en el modelo, o modelo no disponible).
     // Use successRef for synchronous guard — practiceSuccess in closure may be stale
     if (!lms || successRef.current) {
       holdStartRef.current = null;
@@ -3722,41 +3778,12 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
       const pct = Math.min(1, held / HOLD_MS);
       setGestureState(pct >= 1 ? "match" : "partial");
 
-      if (held >= HOLD_MS) {
-        // Synchronous guard — prevents double-trigger across frames
-        if (successRef.current) return;
-        successRef.current = true;
-        setPracticeSuccess(true);
-        setGestureState("confirmed");
-
-        // Save progress
-        if (user) {
-          updateSignProgress(user.id, sign.label || sign.name, moduleId, sc, 0);
-          updateStreak(user.id);
-        }
-
-        // Notify parent so the snake indicator updates
-        if (onSignCompleted) onSignCompleted(sign.label || sign.name);
-
-        // Check if this was the last sign in the module
-        if (allItems && allItems.length > 0 && onModuleCompleted) {
-          const signLabel = sign.label || sign.name;
-          const allDone = allItems.every((item) => {
-            const itemLabel = item.label || item.name;
-            return itemLabel === signLabel || practicedSigns.has(itemLabel);
-          });
-          if (allDone) {
-            onModuleCompleted(moduleId, allItems.length);
-          }
-        }
-
-        // Stay on the same sign — user taps "Continuar" to advance
-      }
+      if (held >= HOLD_MS) confirmSuccess(sc);
     } else {
       holdStartRef.current = null;
       setGestureState(sc > 0.45 ? "partial" : "waiting");
     }
-  }, [sign, user, moduleId, practiceSuccess, onSignCompleted, onModuleCompleted, allItems, practicedSigns]);
+  }, [sign, useOnnx, verifier.push, confirmSuccess]);
 
   // Handler for the "Continuar" button — advances to next sign and resets state
   const handleContinue = () => {
@@ -3765,6 +3792,7 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
     holdStartRef.current = null;
     setGestureState("waiting");
     setMatchScore(0);
+    verifierReset();
     if (onNextSign) onNextSign();
   };
 
@@ -3775,6 +3803,12 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
     holdStartRef.current = null;
     setGestureState("waiting");
     setMatchScore(0);
+    verifierReset();
+  };
+
+  const handleToggleFace = (checked) => {
+    setUseFace(checked);
+    try { localStorage.setItem("lsm_lesson_face", checked ? "1" : "0"); } catch { /* sin localStorage */ }
   };
 
   // Lock body scroll while success overlay is visible
@@ -3790,9 +3824,29 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
     return () => { document.body.style.overflow = ''; };
   }, []);
 
+  // La cara solo se carga cuando se verifica con el modelo y el interruptor está activo.
   const { videoRef, canvasRef, camReady, camError } = useSimpleCamera({
-    onResults: handlePracticeResults
+    onResults: handlePracticeResults,
+    withFace: useFace && useOnnx,
   });
+
+  // Indicadores: con el modelo se usa la fase del juez; con plantilla, el estado de siempre.
+  const shownState = practiceSuccess
+    ? "confirmed"
+    : useOnnx
+      ? (verifier.phase === "almost" ? (verifier.score >= 0.8 ? "match" : "partial") : "waiting")
+      : gestureState;
+  const shownScore = useOnnx ? verifier.score : matchScore;
+  const statusText =
+    shownState === "confirmed" ? "✓ ¡Correcto!" :
+    shownState === "match" ? "Mantén la pose..." :
+    shownState === "partial" ? (useOnnx ? "¡Casi! Ajusta tu postura" : "Casi...") :
+    handDetected ? "Detectando..." : "Muestra tu mano";
+  const verifierNote =
+    verifier.mode === "loading" ? "Cargando modelo de verificación…" :
+    useOnnx ? (verifier.kind === "directa" ? "Verificación con modelo de IA" : "Verificación con modelo de IA (se compara con la seña principal de esta palabra)") :
+    !sign?.template ? "Esta seña aún no tiene verificación automática: mira el video y avanza con la barra de señas de arriba." :
+    null;
 
   const localVideo = !videoId && isMp4Ref(sign?.video_ref);
   if (!sign || (!videoId && !localVideo)) return null;
@@ -3862,22 +3916,35 @@ function LessonView({ sign, isDark, onClose, moduleId, onNextSign, onSignComplet
               </div>
             </div>
           )}
+          {camReady && useOnnx && !practiceSuccess && (
+            <label className="absolute right-3 top-3 flex cursor-pointer items-center gap-2 rounded-lg bg-brand-deep/80 px-2.5 py-1.5 text-xs font-semibold text-brand-soft">
+              <input
+                type="checkbox"
+                className="h-3.5 w-3.5"
+                checked={useFace}
+                onChange={(e) => handleToggleFace(e.target.checked)}
+              />
+              Usar cara (más preciso)
+            </label>
+          )}
           {camReady && !practiceSuccess && (
             <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
               <div className={cx("rounded-lg px-3 py-2 text-sm font-bold transition-all duration-300 transform",
-                gestureState === "confirmed" ? "bg-brand-teal text-white scale-110 shadow-lg shadow-brand-teal/30" :
-                gestureState === "match" ? "bg-brand-teal/80 text-white scale-105" :
-                gestureState === "partial" ? "bg-brand-orange/60 text-white scale-105" :
+                shownState === "confirmed" ? "bg-brand-teal text-white scale-110 shadow-lg shadow-brand-teal/30" :
+                shownState === "match" ? "bg-brand-teal/80 text-white scale-105" :
+                shownState === "partial" ? "bg-brand-orange/60 text-white scale-105" :
                 "bg-brand-deep/80 text-brand-soft"
               )}>
-                {gestureState === "confirmed" ? "✓ Correcto" :
-                 gestureState === "match" ? "Mantén la pose..." :
-                 gestureState === "partial" ? "Casi..." :
-                 handDetected ? "Detectando..." : "Muestra tu mano"}
+                {statusText}
               </div>
-              {sign.template && (
+              {(useOnnx || sign.template) && (
                 <div className={cx("rounded-lg px-3 py-2 text-sm font-bold transition-all duration-300", isDark ? "bg-brand-deep/80 text-brand-cyan" : "bg-white/80 text-brand-teal")}>
-                  Precisión: {Math.round(matchScore * 100)}%
+                  {useOnnx ? "Similitud" : "Precisión"}: {Math.round(shownScore * 100)}%
+                </div>
+              )}
+              {verifierNote && (
+                <div className="rounded-lg bg-brand-deep/70 px-3 py-1.5 text-xs text-brand-soft">
+                  {verifierNote}
                 </div>
               )}
             </div>
@@ -4339,26 +4406,39 @@ const FACE_KEY_IDXS = [
 function mirror(lm) { return { ...lm, x: 1 - lm.x }; }
 
 // Simplified camera hook for modal - only hands, faster startup, better FPS
-function useSimpleCamera({ onResults }) {
+// Cada cuántos frames se detecta la cara (la cara cambia despacio; entre medias se reutiliza).
+const SIMPLE_CAM_FACE_EVERY = 4;
+
+// `withFace`: además de las manos, carga FaceLandmarker (en segundo plano, sin retrasar las manos).
+// onResults recibe { handRes, faceRes, timestamp, aspect }; faceRes es null si no hay cara/modelo.
+function useSimpleCamera({ onResults, withFace = false }) {
   const videoRef  = useRef(null);
   const canvasRef = useRef(null);
   const hlRef        = useRef(null);
+  const flRef        = useRef(null);
   const rafRef       = useRef(null);
   const streamRef    = useRef(null);
+  // El callback cambia en casi cada render de quien llama: se guarda en un ref para que
+  // la cámara y los modelos no se reinicien cada vez.
+  const onResultsRef = useRef(onResults);
+  onResultsRef.current = onResults;
   const [camReady, setCamReady] = useState(false);
   const [camError, setCamError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
+    let frameN = 0;
+    let faceRes = null;
 
     async function init() {
       try {
         // Start camera first for faster feedback
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: 320, height: 240, facingMode: "user" }, // Lower resolution for better performance
+          // La cara necesita más resolución; solo manos va con la más baja.
+          video: { width: withFace ? 640 : 320, height: withFace ? 480 : 240, facingMode: "user" },
         });
         if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
-        
+
         streamRef.current = stream;
 
         const video = videoRef.current;
@@ -4381,6 +4461,21 @@ function useSimpleCamera({ onResults }) {
         });
         if (cancelled) { hl.close(); stream.getTracks().forEach((t) => t.stop()); return; }
         hlRef.current = hl;
+
+        // La cara se carga aparte: si falla, las manos siguen funcionando.
+        if (withFace) {
+          FaceLandmarker.createFromOptions(vision, {
+            baseOptions: { modelAssetPath: FACE_MODEL, delegate: "GPU" },
+            runningMode: "VIDEO",
+            numFaces: 1,
+            minFaceDetectionConfidence: 0.5,
+            minFacePresenceConfidence: 0.5,
+            minTrackingConfidence: 0.5,
+          }).then((fl) => {
+            if (cancelled) fl.close();
+            else flRef.current = fl;
+          }).catch((e) => console.warn("[useSimpleCamera] FaceLandmarker no disponible:", e));
+        }
 
         function detect() {
           if (cancelled) return;
@@ -4407,15 +4502,18 @@ function useSimpleCamera({ onResults }) {
 
           const draw = new DrawingUtils(ctx);
 
-          // Only detect hands
+          // Manos (siempre) y cara (si se pidió, cada SIMPLE_CAM_FACE_EVERY frames)
           const handRes = hlRef.current.detectForVideo(vid, now);
           for (const lms of (handRes.landmarks || [])) {
             const m = lms.map(mirror);
             draw.drawConnectors(m, HandLandmarker.HAND_CONNECTIONS, { color: "#2AABB8", lineWidth: 2 });
             draw.drawLandmarks(m, { color: "#EC9960", lineWidth: 1, radius: 3 });
           }
+          if (flRef.current && frameN++ % SIMPLE_CAM_FACE_EVERY === 0) {
+            try { faceRes = flRef.current.detectForVideo(vid, now); } catch (e) { faceRes = null; }
+          }
 
-          if (onResults) onResults({ handRes });
+          onResultsRef.current?.({ handRes, faceRes, timestamp: now, aspect: w / h });
           rafRef.current = requestAnimationFrame(detect);
         }
         rafRef.current = requestAnimationFrame(detect);
@@ -4431,18 +4529,20 @@ function useSimpleCamera({ onResults }) {
       cancelled = true;
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       hlRef.current?.close();
-      
+      flRef.current?.close();
+      flRef.current = null;
+
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((t) => t.stop());
         streamRef.current = null;
       }
-      
+
       if (videoRef.current?.srcObject) {
         videoRef.current.srcObject.getTracks().forEach((t) => t.stop());
         videoRef.current.srcObject = null;
       }
     };
-  }, [onResults]);
+  }, [withFace]);
 
   return { videoRef, canvasRef, camReady, camError };
 }
